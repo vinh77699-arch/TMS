@@ -1,0 +1,1600 @@
+﻿<!-- Nextus TMS Admin -->
+<title>Nextus TMS</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,700;1,7..72,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<style>
+:root{--primary:#091851;--primary-container:#222f67;--on-primary:#fff;--secondary:#E47825;--secondary-dark:#c96a21;--on-secondary:#fff;--bg:#f8f9ff;--surface:#fff;--surface-low:#eff4fe;--surface-container:#e9eef8;--surface-variant:#dee3ed;--surface-high:#e3e8f2;--on-surface:#161c23;--on-surface-variant:#454650;--border:#D9DEE8;--outline:#767681;--outline-variant:#c6c5d1;--success:#107C10;--success-bg:#e6f4e6;--error:#A4262C;--error-bg:#ffdad6;--warning:#D83B01;--warning-bg:#fff3e0;--text-primary:#222F67;--sw:260px;--r:2px;--rlg:4px;--rxl:8px;--shadow:0 4px 16px rgba(0,0,0,.10)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--primary:#3d5499;--primary-container:#4e5b95;--bg:#0f1420;--surface:#1a1f2e;--surface-low:#1e2435;--surface-container:#222840;--surface-variant:#2a3048;--surface-high:#2e3550;--on-surface:#e4e8f4;--on-surface-variant:#9ca3c0;--border:#2e3550;--outline:#5a6080;--outline-variant:#3d4560;--text-primary:#8c98d7;--success-bg:#0d2b0d;--error-bg:#2b0a0c;--warning-bg:#2b1500}}
+:root[data-theme="dark"]{--primary:#3d5499;--primary-container:#4e5b95;--bg:#0f1420;--surface:#1a1f2e;--surface-low:#1e2435;--surface-container:#222840;--surface-variant:#2a3048;--surface-high:#2e3550;--on-surface:#e4e8f4;--on-surface-variant:#9ca3c0;--border:#2e3550;--outline:#5a6080;--outline-variant:#3d4560;--text-primary:#8c98d7;--success-bg:#0d2b0d;--error-bg:#2b0a0c;--warning-bg:#2b1500}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;font-size:14px;line-height:20px;color:var(--on-surface);background:var(--bg);display:flex;min-height:100vh;overflow:hidden}
+.sidebar{width:var(--sw);flex-shrink:0;background:var(--primary);display:flex;flex-direction:column;padding:24px 0;position:fixed;top:0;left:0;bottom:0;z-index:20}
+.sidebar-brand{padding:0 20px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-brand h1{font-family:'Literata',serif;font-size:22px;font-weight:700;color:#fff}
+.sidebar-brand p{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
+.sidebar-nav{flex:1;display:flex;flex-direction:column;gap:2px;padding:14px 8px 0}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--rlg);color:rgba(255,255,255,.6);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;text-decoration:none;border:none;background:none;width:100%;text-align:left;font-family:'Inter',sans-serif}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nav-item.active{background:var(--secondary);color:#fff;font-weight:600}
+.nav-item .icon{font-size:20px;flex-shrink:0}
+.sidebar-footer{padding:14px 20px 0;border-top:1px solid rgba(255,255,255,.1);margin-top:auto;display:flex;align-items:center;gap:10px}
+.sidebar-footer .av{width:32px;height:32px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
+.sidebar-footer span{font-size:13px;color:rgba(255,255,255,.8);font-weight:500}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:10;flex-shrink:0}
+.topbar h2{font-family:'Literata',serif;font-size:20px;font-weight:700;color:var(--text-primary)}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{background:none;border:none;cursor:pointer;padding:6px;border-radius:50%;color:var(--on-surface-variant);display:flex;align-items:center;justify-content:center;transition:background .15s;font-family:inherit}
+.icon-btn:hover{background:var(--surface-container);color:var(--on-surface)}
+.canvas{flex:1;overflow-y:auto;padding:24px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;white-space:nowrap;font-family:'Inter',sans-serif}
+.btn-primary{background:var(--secondary);color:#fff}.btn-primary:hover{background:var(--secondary-dark)}
+.btn-navy{background:var(--primary);color:#fff}.btn-navy:hover{background:var(--primary-container)}
+.btn-outline{background:transparent;color:var(--on-surface);border:1px solid var(--border)}.btn-outline:hover{background:var(--surface-container)}
+.btn-ghost{background:transparent;color:var(--primary);border:1px solid var(--primary)}.btn-ghost:hover{background:var(--surface-low)}
+.btn-danger{background:var(--error);color:#fff}.btn-danger:hover{background:#8A2025}
+.btn-success-outline{background:transparent;color:var(--success);border:1px solid var(--success)}.btn-success-outline:hover{background:var(--success-bg)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn .icon{font-size:16px}
+.filter-bar{display:flex;gap:12px;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;font-weight:500;color:var(--on-surface-variant)}
+.input,.select{height:36px;padding:0 10px;border:1px solid var(--border);border-radius:var(--r);font-size:13px;font-family:'Inter',sans-serif;color:var(--on-surface);background:var(--surface);outline:none;transition:border-color .15s}
+.input:focus,.select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(9,24,81,.12)}
+.input-search{padding-left:34px}
+.input-wrap{position:relative}
+.input-wrap .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--outline);pointer-events:none}
+.select{appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23767681' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.table-wrap{border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden;background:var(--surface)}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--primary);color:#fff}
+thead th{padding:10px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surface-low)}
+tbody td{padding:11px 14px;font-size:13px;color:var(--on-surface)}
+.td-link{color:var(--primary);font-weight:600;cursor:pointer}
+.td-link:hover{text-decoration:underline}
+.font-mono{font-variant-numeric:tabular-nums}
+.text-right{text-align:right}.text-center{text-align:center}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-success{background:var(--success-bg);color:var(--success)}
+.badge-warning{background:var(--warning-bg);color:var(--warning)}
+.badge-error{background:var(--error-bg);color:var(--error)}
+.badge-neutral{background:var(--surface-variant);color:var(--on-surface-variant)}
+.badge-info{background:#e8eaf6;color:var(--text-primary)}
+.badge-orange{background:#fff3e0;color:var(--secondary)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rlg)}
+.card-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-header.navy{background:var(--primary)}
+.card-body{padding:16px}
+.card-title{font-family:'Literata',serif;font-size:16px;font-weight:700;color:var(--text-primary)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(2px)}
+.modal{background:var(--surface);border-radius:var(--rlg);box-shadow:var(--shadow);width:100%;max-width:480px;border:1px solid var(--border);overflow:hidden;animation:modal-in .15s ease-out}
+.modal-lg{max-width:640px}.modal-xl{max-width:800px}
+@keyframes modal-in{from{opacity:0;transform:scale(.97) translateY(8px)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.modal-head h3{font-family:'Literata',serif;font-size:18px;font-weight:700;color:var(--text-primary)}
+.modal-body{padding:20px}
+.modal-footer{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border);background:var(--surface-low)}
+.close-btn{background:none;border:none;cursor:pointer;color:var(--on-surface-variant);display:flex;padding:4px;border-radius:var(--r);transition:color .15s;font-family:inherit}
+.close-btn:hover{color:var(--on-surface)}
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:20px}
+.tab{padding:10px 16px;font-size:13px;font-weight:500;color:var(--on-surface-variant);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;display:flex;align-items:center;gap:6px;background:none;border-left:none;border-right:none;border-top:none;font-family:'Inter',sans-serif}
+.tab:hover{color:var(--on-surface)}
+.tab.active{color:var(--secondary);border-bottom-color:var(--secondary);font-weight:600}
+.stepper{display:flex;align-items:center;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rlg);margin-bottom:20px}
+.step{display:flex;align-items:center}
+.step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.step-dot.done{background:var(--primary);color:#fff}
+.step-dot.active{background:var(--secondary);color:#fff}
+.step-dot.pending{background:transparent;border:1.5px solid var(--border);color:var(--outline)}
+.step-label{font-size:12px;font-weight:500;margin-left:8px;white-space:nowrap}
+.step-label.done{color:var(--primary)}.step-label.active{color:var(--secondary);font-weight:700}.step-label.pending{color:var(--outline)}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 12px}
+.step-line.done{background:var(--primary)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rlg);padding:14px 16px}
+.stat-card .label{font-size:12px;color:var(--on-surface-variant);margin-bottom:6px}
+.stat-card .value{font-family:'Literata',serif;font-size:22px;font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums}
+.stat-card .sub{font-size:11px;color:var(--on-surface-variant);margin-top:2px}
+.progress-wrap{margin-bottom:12px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.progress-bar{height:6px;background:var(--surface-container);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px}
+.form-row{display:grid;gap:14px;margin-bottom:14px}
+.form-row.c2{grid-template-columns:1fr 1fr}
+.form-row.c3{grid-template-columns:1fr 1fr 1fr}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:12px;font-weight:500;color:var(--on-surface-variant)}
+.textarea{padding:8px 10px;border:1px solid var(--border);border-radius:var(--r);font-size:13px;font-family:'Inter',sans-serif;color:var(--on-surface);background:var(--surface);outline:none;resize:vertical;transition:border-color .15s}
+.textarea:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(9,24,81,.12)}
+.textarea.error-field{border-color:var(--error)}
+.input-readonly{background:var(--surface-variant);color:var(--on-surface-variant);cursor:not-allowed}
+.req{color:var(--error)}
+.alert{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--rlg);margin-bottom:16px;font-size:13px}
+.alert-error{background:var(--error-bg);color:var(--error);border:1px solid #f5c0c2}
+.alert-success{background:var(--success-bg);color:var(--success);border:1px solid #a8d5a2}
+.alert-warning{background:var(--warning-bg);color:var(--warning);border:1px solid #f5c89a}
+.alert-info{background:var(--surface-low);color:var(--text-primary);border:1px solid var(--border)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 24px}
+.info-item .ilabel{font-size:11px;font-weight:500;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.info-item .ivalue{font-size:14px;color:var(--on-surface)}
+.info-item .ivalue.bold{font-weight:700;color:var(--text-primary)}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--rxl);padding:32px;text-align:center;cursor:pointer;transition:all .15s}
+.upload-zone:hover{border-color:var(--secondary);background:#fff8f3}
+.summary-row{background:var(--surface-low);border:1px solid var(--border);border-radius:var(--rlg);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.summary-row .row{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.summary-row .row.divider{padding-top:8px;border-top:1px solid var(--border)}
+.summary-row .row .key{color:var(--on-surface-variant)}
+.summary-row .row .val{font-weight:600;color:var(--on-surface)}
+.summary-row .row .val.primary{color:var(--text-primary)}.summary-row .row .val.orange{color:var(--secondary)}
+.empty{padding:48px 24px;text-align:center;color:var(--on-surface-variant)}
+.empty .eicon{font-size:48px;margin-bottom:12px;color:var(--outline);display:block}
+.empty h3{font-size:16px;font-weight:600;margin-bottom:6px;color:var(--on-surface)}
+.empty p{font-size:13px}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.skeleton{background:linear-gradient(90deg,var(--surface-container) 25%,var(--surface-high) 50%,var(--surface-container) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--r)}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.toast{position:fixed;bottom:24px;right:24px;z-index:200;color:#fff;padding:12px 16px;border-radius:var(--rlg);font-size:13px;font-weight:500;box-shadow:var(--shadow);display:flex;align-items:center;gap:8px;animation:toast-in .2s ease-out;max-width:360px}
+.toast.success{background:var(--success)}.toast.error{background:var(--error)}.toast.info{background:var(--primary)}
+@keyframes toast-in{from{opacity:0;transform:translateY(12px)}}
+.net-error{padding:48px 24px;text-align:center}
+.net-error .ne-icon{font-size:52px;color:var(--outline);margin-bottom:12px}
+.net-error h3{font-size:18px;font-weight:700;color:var(--on-surface);margin-bottom:6px;font-family:'Literata',serif}
+.net-error p{font-size:13px;color:var(--on-surface-variant);margin-bottom:16px}
+.flight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rlg);padding:14px 16px;cursor:pointer;transition:all .15s;margin-bottom:10px}
+.flight-card:hover{border-color:var(--secondary);box-shadow:0 2px 8px rgba(228,120,37,.15)}
+.flight-card.selected{border-color:var(--secondary);background:#fff8f3}
+.demo-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px;padding:8px 12px;background:var(--surface-variant);border-radius:var(--rlg);font-size:11px;color:var(--on-surface-variant)}
+.demo-bar strong{color:var(--on-surface);margin-right:4px}
+.demo-btn{font-size:11px;padding:3px 8px;border-radius:20px;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--on-surface-variant);transition:all .15s;font-family:'Inter',sans-serif}
+.demo-btn:hover,.demo-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mb-5{margin-bottom:20px}
+.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
+.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.flex-1{flex:1}
+.text-sm{font-size:12px}.text-xs{font-size:11px}.font-600{font-weight:600}.font-700{font-weight:700}
+.text-primary-c{color:var(--text-primary)}.text-muted{color:var(--on-surface-variant)}.text-error{color:var(--error)}.text-success{color:var(--success)}.text-warning{color:var(--warning)}.text-orange{color:var(--secondary)}
+.w-full{width:100%}.hidden{display:none!important}
+.section-title{font-family:'Literata',serif;font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:16px}
+.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+</style>
+
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <h1>Nextus TMS</h1>
+    <p>Admin Portal</p>
+  </div>
+  <nav class="sidebar-nav" id="sidebar-nav">
+    <button class="nav-item active" data-nav="accounts" onclick="navigate('accounts')">
+      <span class="material-symbols-outlined icon">account_balance_wallet</span>Tài khoản/Hợp đồng
+    </button>
+    <button class="nav-item" data-nav="limits" onclick="navigate('limits')">
+      <span class="material-symbols-outlined icon">account_tree</span>Hạn mức
+    </button>
+    <button class="nav-item" data-nav="orders" onclick="navigate('orders')">
+      <span class="material-symbols-outlined icon">local_shipping</span>Đơn hàng
+    </button>
+    <button class="nav-item" data-nav="reports" onclick="navigate('reports')">
+      <span class="material-symbols-outlined icon">analytics</span>Báo cáo
+    </button>
+    <button class="nav-item" data-nav="config" onclick="navigate('config')">
+      <span class="material-symbols-outlined icon">settings_suggest</span>Cấu hình Mark-up
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="av">A</div><span>Admin User</span>
+  </div>
+</div>
+
+<div class="main">
+  <header class="topbar">
+    <h2 id="page-title">Danh sách tài khoản B2B</h2>
+    <div class="topbar-actions">
+      <button class="icon-btn"><span class="material-symbols-outlined">notifications</span></button>
+      <button class="icon-btn"><span class="material-symbols-outlined">help</span></button>
+      <button class="icon-btn"><span class="material-symbols-outlined">account_circle</span></button>
+    </div>
+  </header>
+  <div class="canvas" id="canvas"></div>
+</div>
+<div id="modal-layer"></div>
+<div id="toast-layer"></div>
+
+<script>
+const S={
+  nav:'accounts',
+  // Accounts
+  accountView:'list', accountListState:'data', accountTab:'info', accountNetErr:false,
+  accountDetailVariant:'normal', // normal|blocked|temp-limit|activated|validation-err
+  annexEmpty:false,
+  // Limits
+  limitTab:'planner', limitView:'list', // list|detail (chi tiet yeu cau tin)
+  limitDetailVariant:'ready', // ready|holding|about-expire|expired|blocked-debt|missing-info|empty
+  approveState:'normal', // normal|network-err|conflict|approved|rejected|empty
+  requestState:'normal', // normal|network-err|validation-err|no-ncc|restricted|missing-info
+  // Orders
+  orderView:'list', orderListState:'data', // data|empty|network-err|by-account
+  orderDetailTab:'info', orderDetailVariant:'normal', // info|payment|audit; normal|network-err|inv-fail|inv-resent
+  orderImportState:'idle', // idle|loading|checking|success|error|template|preview-valid|preview-err
+  orderInvoiceVariant:'empty', // empty|data|network-err|mst-err|success
+  // Reports
+  reportTab:'revenue', reportNetErr:false, reportEmpty:false,
+  // Config
+  configNetErr:false, configTab:'planner', // planner|markup
+  configMarkupVariant:'ready', // ready|def|network-err|validation-err|success
+  // Wizard / modals
+  wizardStep:2, wizardService:null, wizardOrderBlocked:false, wizardStep1Err:false,
+  flightHoldState:null, // null|success|fail|price-change
+  flightDetailView:false,
+  modal:null,
+  cancelVariant:'default', // default|ncc|ncc2|validation|network|success
+  paymentVariant:'1', // 1|2|debt-locked|debt|transfer|visa
+  addCostVariant:'base', // base|custom|price-err|date-err|visa
+  createAccVariant:'normal', // normal|validation-err|network-err|with-contract
+  selectedAcc:null, selectedOrder:null,
+};
+
+const accounts=[
+  {id:'ACC-001',name:'Công ty ABC',tax:'0100000001',status:'active',limit:500e6,used:320e6,manager:'Nguyễn Văn A',ccs:'Trần Thị B'},
+  {id:'ACC-002',name:'Công ty DEF',tax:'0101234567',status:'inactive',limit:300e6,used:100e6,manager:'Nguyễn Văn A',ccs:'Trần Thị B'},
+  {id:'ACC-003',name:'Tập đoàn GHI',tax:'0201234568',status:'active',limit:1000e6,used:750e6,manager:'Lê Văn C',ccs:'Phạm Thị D'},
+  {id:'ACC-004',name:'Công ty JKL',tax:'0301234569',status:'active',limit:200e6,used:50e6,manager:'Hoàng Văn E',ccs:'Ngô Thị F'},
+  {id:'ACC-005',name:'CTCP MNO',tax:'0401234570',status:'inactive',limit:150e6,used:0,manager:'Lê Văn C',ccs:'Trần Thị B'},
+];
+const orders=[
+  {id:'ORD-001',account:'Công ty ABC',service:'Vé máy bay SGN→HAN',date:'15/08/2026',amount:12500000,status:'processing',provider:'Vietnam Airlines'},
+  {id:'ORD-002',account:'Tập đoàn GHI',service:'Vận chuyển hàng hóa',date:'14/08/2026',amount:8300000,status:'done',provider:'Nhà cung cấp X'},
+  {id:'ORD-003',account:'Công ty JKL',service:'Vé máy bay HAN→DAD',date:'13/08/2026',amount:5200000,status:'cancelled',provider:'Vietjet Air'},
+  {id:'ORD-004',account:'Công ty ABC',service:'Khách sạn Hà Nội',date:'12/08/2026',amount:3600000,status:'pending',provider:'Khách sạn A'},
+  {id:'ORD-005',account:'CTCP MNO',service:'Vé máy bay SGN→PQC',date:'11/08/2026',amount:2100000,status:'processing',provider:'Bamboo Airways'},
+];
+const limitReqs=[
+  {id:'REQ-001',account:'Công ty ABC',current:500e6,req:700e6,reason:'Mở rộng hoạt động Q4',date:'18/08/2026',status:'pending'},
+  {id:'REQ-002',account:'Tập đoàn GHI',current:1000e6,req:1500e6,reason:'Hợp đồng dài hạn mới',date:'17/08/2026',status:'approved'},
+  {id:'REQ-003',account:'Công ty JKL',current:200e6,req:350e6,reason:'Tăng volume tháng 9',date:'16/08/2026',status:'rejected'},
+];
+const flights=[
+  {airline:'Vietnam Airlines',code:'VN123',dep:'06:00',arr:'08:10',dur:'2h10',price:2500000,seats:12},
+  {airline:'Vietjet Air',code:'VJ456',dep:'08:30',arr:'10:35',dur:'2h05',price:1850000,seats:5},
+  {airline:'Bamboo Airways',code:'QH789',dep:'11:00',arr:'13:15',dur:'2h15',price:2100000,seats:18},
+  {airline:'Vietnam Airlines',code:'VN234',dep:'14:20',arr:'16:30',dur:'2h10',price:2700000,seats:7},
+  {airline:'Vietjet Air',code:'VJ567',dep:'18:00',arr:'20:10',dur:'2h10',price:1950000,seats:3},
+];
+
+function fmt(n){return n.toLocaleString('vi-VN')+' VNĐ'}
+function fmtM(n){return (n/1e6).toFixed(0)+'tr'}
+function statusBadge(s){
+  const m={active:['badge-success','Đang hoạt động'],inactive:['badge-neutral','Chưa kích hoạt'],processing:['badge-info','Đang xử lý'],done:['badge-success','Hoàn thành'],cancelled:['badge-error','Đã hủy'],pending:['badge-warning','Chờ duyệt'],approved:['badge-success','Đã duyệt'],rejected:['badge-error','Từ chối']};
+  const[cls,label]=m[s]||['badge-neutral',s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+function ic(name,style=''){return `<span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;${style}">${name}</span>`}
+
+function navigate(nav){
+  S.nav=nav;S.accountView='list';S.orderView='list';S.accountNetErr=false;S.reportNetErr=false;S.configNetErr=false;S.limitView='list';
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.nav===nav));
+  const titles={accounts:'Danh sách tài khoản B2B',limits:'Quản lý hạn mức',orders:'Quản lý đơn hàng',reports:'Báo cáo tổng hợp',config:'Cấu hình Mark-up'};
+  document.getElementById('page-title').textContent=titles[nav];
+  render();
+}
+function showModal(id){S.modal=id;renderModal()}
+function closeModal(){S.modal=null;document.getElementById('modal-layer').innerHTML=''}
+function doCancelOrder(){
+  if(S.cancelVariant==='validation'){renderModal();return}
+  S.cancelVariant='success';renderModal();
+}
+function doSaveMarkup(){
+  if(S.configMarkupVariant==='validation-err'){showToast('Giá trị không hợp lệ, vui lòng kiểm tra lại','error');return;}
+  S.configMarkupVariant='success';render();
+}
+function doSubmitLimitRequest(){
+  if(S.requestState==='validation-err'){showToast('Vui lòng kiểm tra lại dữ liệu','error');return;}
+  closeModal();S.requestState=undefined;showToast('Gửi đề xuất thành công!','success');
+}
+function doCreateAccount(){
+  const v=S.createAccVariant||'normal';
+  if(v==='validation-err'||v==='with-contract'){showToast('Dữ liệu không hợp lệ, vui lòng kiểm tra lại','error');return;}
+  closeModal();S.createAccVariant=undefined;showToast('Tạo tài khoản thành công!','success');
+}
+function doAddCost(){
+  const av=S.addCostVariant;
+  if(av==='price-err'||av==='date-err'){showToast('Dữ liệu không hợp lệ','error');return;}
+  closeModal();showToast('Thêm chi phí thành công!','success');
+}
+function showToast(msg,type='info'){
+  const t=document.getElementById('toast-layer');
+  const icon=type==='success'?'check_circle':type==='error'?'cancel':'info';
+  t.innerHTML=`<div class="toast ${type}">${ic(icon)} ${msg}</div>`;
+  setTimeout(()=>t.innerHTML='',3500);
+}
+function render(){
+  const views={accounts:renderAccounts,limits:renderLimits,orders:renderOrders,reports:renderReports,config:renderConfig};
+  document.getElementById('canvas').innerHTML=(views[S.nav]||renderAccounts)();
+}
+
+// ═══════════════════════════════════════════════════════════════ ACCOUNTS ═══
+function renderAccounts(){
+  if(S.accountView==='detail') return renderAccountDetail();
+  return renderAccountList();
+}
+
+function renderAccountList(){
+  const demoBar=`<div class="demo-bar"><strong>Trạng thái danh sách:</strong>
+    <button class="demo-btn ${S.accountListState==='data'?'active':''}" onclick="S.accountListState='data';render()">Có dữ liệu</button>
+    <button class="demo-btn ${S.accountListState==='loading'?'active':''}" onclick="S.accountListState='loading';render()">Đang tải</button>
+    <button class="demo-btn ${S.accountListState==='empty'?'active':''}" onclick="S.accountListState='empty';render()">Trống</button>
+    <button class="demo-btn ${S.accountListState==='network-err'?'active':''}" onclick="S.accountListState='network-err';render()">Lỗi kết nối</button>
+  </div>`;
+
+  const filterBar=`<div class="filter-bar">
+    <div class="field" style="width:240px"><label>Tên tài khoản</label>
+      <div class="input-wrap"><span class="material-symbols-outlined si">search</span>
+        <input class="input input-search w-full" placeholder="Nhập tên tài khoản..."/></div></div>
+    <div class="field" style="width:180px"><label>Trạng thái</label>
+      <select class="select w-full"><option>Tất cả trạng thái</option><option>Đang hoạt động</option><option>Chưa kích hoạt</option></select></div>
+    <div class="field" style="width:180px"><label>Người phụ trách</label>
+      <select class="select w-full"><option>Tất cả</option><option>Nguyễn Văn A</option><option>Lê Văn C</option></select></div>
+    <button class="btn btn-outline">${ic('filter_list')} Lọc</button>
+    <div style="flex:1"></div>
+    <button class="btn btn-primary" onclick="showModal('create-account')">${ic('add')} Tạo tài khoản</button>
+  </div>`;
+
+  if(S.accountListState==='network-err'){
+    return `${demoBar}${filterBar}<div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải danh sách</h3><p>Lỗi kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.</p><button class="btn btn-primary" onclick="S.accountListState='data';render()">${ic('refresh')} Thử lại</button></div>`;
+  }
+  if(S.accountListState==='loading'){
+    const skRows=Array(5).fill(0).map(()=>`<tr>${Array(6).fill(0).map(()=>`<td><div class="skeleton" style="height:14px;border-radius:3px;width:${70+Math.random()*30}%"></div></td>`).join('')}</tr>`).join('');
+    return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>Tên tài khoản</th><th>Mã tài khoản</th><th>Trạng thái</th><th class="text-right">Hạn mức</th><th>Người phụ trách</th><th class="text-center">Hành động</th></tr></thead><tbody>${skRows}</tbody></table></div>`;
+  }
+
+  if(S.accountListState==='empty'){
+    return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>Tên tài khoản</th><th>Mã tài khoản</th><th>Trạng thái</th><th class="text-right">Hạn mức</th><th>Người phụ trách</th><th class="text-center">Hành động</th></tr></thead>
+    <tbody><tr><td colspan="6"><div class="empty"><span class="material-symbols-outlined eicon">group</span><h3>Chưa có tài khoản B2B</h3><p class="mb-3">Bắt đầu bằng cách tạo tài khoản đầu tiên</p><button class="btn btn-primary" onclick="showModal('create-account')">${ic('add')} Tạo tài khoản</button></div></td></tr></tbody></table></div>`;
+  }
+
+  const rows=accounts.map(a=>`<tr>
+    <td><span class="td-link" onclick="openAcc('${a.id}')">${a.name}</span></td>
+    <td class="font-mono">${a.id}</td><td>${statusBadge(a.status)}</td>
+    <td class="text-right font-mono">${fmtM(a.limit)}</td><td>${a.manager}</td>
+    <td class="text-center"><button class="btn btn-ghost btn-sm" onclick="openAcc('${a.id}')">Xem chi tiết</button></td>
+  </tr>`).join('');
+
+  return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>Tên tài khoản</th><th>Mã tài khoản</th><th>Trạng thái</th><th class="text-right">Hạn mức (VNĐ)</th><th>Người phụ trách</th><th class="text-center">Hành động</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <div style="padding:10px 14px;font-size:12px;color:var(--on-surface-variant);background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px">Hiển thị ${accounts.length} / ${accounts.length} tài khoản</div>`;
+}
+
+function openAcc(id){S.selectedAcc=accounts.find(a=>a.id===id);S.accountView='detail';S.accountTab='info';S.accountNetErr=false;document.getElementById('page-title').textContent='Chi tiết tài khoản';render()}
+function backToList(){S.accountView='list';document.getElementById('page-title').textContent='Danh sách tài khoản B2B';render()}
+function setAccTab(t){S.accountTab=t;render()}
+
+function renderAccDetailDemoBar(){
+  const dv=S.accountDetailVariant;
+  const ne=S.accountNetErr;
+  return `<div class="demo-bar"><strong>Trạng thái:</strong>
+    <button class="demo-btn ${!ne&&dv==='normal'?'active':''}" onclick="S.accountDetailVariant='normal';S.accountNetErr=false;render()">Bình thường</button>
+    <button class="demo-btn ${ne?'active':''}" onclick="S.accountDetailVariant='normal';S.accountNetErr=true;render()">Lỗi kết nối</button>
+    <button class="demo-btn ${dv==='blocked'?'active':''}" onclick="S.accountDetailVariant='blocked';S.accountNetErr=false;render()">Bị chặn tạo đơn</button>
+    <button class="demo-btn ${dv==='temp-limit'?'active':''}" onclick="S.accountDetailVariant='temp-limit';S.accountNetErr=false;render()">HM tạm thời hiệu lực</button>
+    <button class="demo-btn ${dv==='activated'?'active':''}" onclick="S.accountDetailVariant='activated';S.accountNetErr=false;render()">Kích hoạt thành công</button>
+    <button class="demo-btn ${dv==='validation-err'?'active':''}" onclick="S.accountDetailVariant='validation-err';S.accountNetErr=false;render()">Lỗi validation</button>
+    <span style="margin-left:8px;font-size:11px;color:var(--on-surface-variant)">Modal:</span>
+    <button class="demo-btn" onclick="S.accountDetailVariant='normal';S.accountNetErr=false;render();setTimeout(()=>showModal('activate-neterr'),100)">Kích hoạt — lỗi mạng</button>
+    <button class="demo-btn" onclick="S.createAccVariant='normal';showModal('create-account')">Tạo tài khoản</button>
+    <button class="demo-btn" onclick="S.requestState='normal';showModal('request-limit')">Đề xuất hạn mức</button>
+  </div>`;
+}
+function renderAccountDetail(){
+  const a=S.selectedAcc;
+  if(S.accountNetErr){
+    return `<button class="btn btn-outline mb-4" onclick="backToList()">${ic('arrow_back')} Quay lại</button>
+    ${renderAccDetailDemoBar()}
+    <div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải dữ liệu</h3><p>Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet và thử lại.</p>
+    <button class="btn btn-primary" onclick="S.accountNetErr=false;render()">${ic('refresh')} Thử lại</button></div>`;
+  }
+  const pct=Math.round(a.used/a.limit*100);
+  const infoTab=`<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+    <div class="card"><div class="card-header"><h3 class="card-title">Thông tin chung</h3></div><div class="card-body">
+      <div class="info-grid">
+        <div class="info-item"><div class="ilabel">Tên công ty</div><div class="ivalue bold">${a.name}</div></div>
+        <div class="info-item"><div class="ilabel">Mã số thuế</div><div class="ivalue">${a.tax}</div></div>
+        <div class="info-item"><div class="ilabel">Mã tài khoản</div><div class="ivalue font-mono">${a.id}</div></div>
+        <div class="info-item"><div class="ilabel">Trạng thái</div><div class="ivalue">${statusBadge(a.status)}</div></div>
+        <div class="info-item"><div class="ilabel">Key Account</div><div class="ivalue">${ic('person','color:var(--primary)')} ${a.manager}</div></div>
+        <div class="info-item"><div class="ilabel">CCS vận hành</div><div class="ivalue">${ic('support_agent','color:var(--primary)')} ${a.ccs}</div></div>
+      </div></div></div>
+    <div class="card"><div class="card-header"><h3 class="card-title">Hạn mức công nợ</h3></div><div class="card-body">
+      <div class="progress-wrap"><div class="progress-label"><span class="text-muted" style="font-size:12px">Hạn mức tổng</span><span class="font-600" style="font-size:12px;color:var(--text-primary)">${fmtM(a.limit)}</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--primary)"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span class="text-muted" style="font-size:12px">Đã sử dụng</span><span class="font-600" style="font-size:12px;color:var(--warning)">${fmtM(a.used)}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--warning)"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span class="text-muted" style="font-size:12px">Còn lại</span><span class="font-600" style="font-size:12px;color:var(--success)">${fmtM(a.limit-a.used)}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${100-pct}%;background:var(--success)"></div></div></div>
+      <div style="margin-top:10px;padding:8px;background:var(--surface-low);border-radius:4px;text-align:center;font-size:12px;color:var(--on-surface-variant)">Sử dụng <strong style="color:var(--warning)">${pct}%</strong> hạn mức</div>
+    </div></div></div>
+  <div class="card" style="margin-top:16px"><div class="card-header navy"><h3 style="color:#fff;font-family:Literata,serif;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px">${ic('description','color:#fff')} Hợp đồng khung</h3></div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Mã hợp đồng</th><th>Ngày ký</th><th>Ngày hết hạn</th><th>Trạng thái</th><th class="text-right">Thao tác</th></tr></thead>
+    <tbody>
+      <tr><td class="td-link font-mono">HD-${a.id.replace('ACC-','')}-2026-001</td><td>01/01/2026</td><td>31/12/2026</td><td>${statusBadge('active')}</td><td class="text-right"><button class="btn btn-ghost btn-sm">Xem</button></td></tr>
+      <tr><td class="td-link font-mono">HD-${a.id.replace('ACC-','')}-2025-045</td><td>01/01/2025</td><td>31/12/2025</td><td>${statusBadge('cancelled')}</td><td class="text-right"><button class="btn btn-ghost btn-sm">Xem</button></td></tr>
+    </tbody></table></div></div>`;
+
+  const annexDataTab=`<div class="card"><div class="card-header"><h3 class="card-title">Thành viên phụ lục bảo lãnh</h3><div style="display:flex;gap:8px"><button class="demo-btn ${!S.annexEmpty?'active':''}" onclick="S.annexEmpty=false;render()">Có dữ liệu</button><button class="demo-btn ${S.annexEmpty?'active':''}" onclick="S.annexEmpty=true;render()">Trống</button><button class="btn btn-primary btn-sm" style="margin-left:8px">${ic('add')} Thêm thành viên</button></div></div>
+    ${S.annexEmpty?`<div class="empty"><span class="material-symbols-outlined eicon">group_off</span><h3>Chưa có thành viên phụ lục bảo lãnh</h3><p class="mb-3">Thêm người ký và người bảo lãnh cho hợp đồng</p><button class="btn btn-primary btn-sm">${ic('add')} Thêm thành viên</button></div>`:`<div style="overflow-x:auto"><table><thead><tr><th>Họ tên</th><th>Chức vụ</th><th>CMND/CCCD</th><th>Điện thoại</th><th>Vai trò</th><th class="text-center">Thao tác</th></tr></thead>
+    <tbody>
+      <tr><td class="font-600">${a.manager}</td><td>Giám đốc</td><td class="font-mono">079001234567</td><td>0901234567</td><td><span class="badge badge-info">Người ký</span></td><td class="text-center"><button class="btn btn-outline btn-sm">${ic('edit')}</button></td></tr>
+      <tr><td class="font-600">${a.ccs}</td><td>Kế toán trưởng</td><td class="font-mono">079001234568</td><td>0901234568</td><td><span class="badge badge-neutral">Bảo lãnh</span></td><td class="text-center"><button class="btn btn-outline btn-sm">${ic('edit')}</button></td></tr>
+    </tbody></table></div>`}
+  </div>`;
+  const annexTab=annexDataTab;
+
+  // Extra account detail variants
+  const dv=S.accountDetailVariant;
+  if(dv==='blocked'){
+    const extraBanner=`<div class="alert alert-error mb-4">${ic('block','font-size:20px')} <div><strong>Tài khoản bị chặn tạo đơn</strong><br>Hợp đồng khung đã hết hạn hoặc bị tạm ngừng. Liên hệ bộ phận pháp lý để xử lý.</div></div>`;
+    return `<button class="btn btn-outline mb-4" onclick="backToList()">${ic('arrow_back')} Quay lại danh sách</button>
+    ${renderAccDetailDemoBar()}
+    ${extraBanner}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div><h2 style="font-family:Literata,serif;font-size:22px;font-weight:700;color:var(--text-primary)">${a.name}</h2>
+        <div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">MST: ${a.tax} · ${a.id}</div></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline disabled" style="opacity:.5;cursor:not-allowed" disabled>${ic('add_shopping_cart')} Tạo đơn hộ</button>
+        <button class="btn btn-outline" onclick="showModal('block-contract')">${ic('lock_open')} Gỡ chặn</button>
+      </div></div>
+    <div class="tabs"><button class="tab active" onclick="setAccTab('info')">Thông tin chung</button><button class="tab" onclick="setAccTab('annex')">${ic('group','font-size:15px')} Phụ lục bảo lãnh</button></div>
+    ${infoTab}`;
+  }
+  if(dv==='temp-limit'){
+    const tempBanner=`<div class="alert alert-warning mb-4">${ic('schedule','font-size:20px')} <div><strong>Hạn mức tạm thời đang hiệu lực</strong><br>Hạn mức tăng thêm <strong>200.000.000 VNĐ</strong> có hiệu lực đến <strong>31/10/2026</strong>.</div></div>`;
+    return `<button class="btn btn-outline mb-4" onclick="backToList()">${ic('arrow_back')} Quay lại danh sách</button>
+    ${renderAccDetailDemoBar()}${tempBanner}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div><h2 style="font-family:Literata,serif;font-size:22px;font-weight:700;color:var(--text-primary)">${a.name}</h2>
+        <div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">MST: ${a.tax} · ${a.id}</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline" onclick="showModal('block-contract')">${ic('block')} Chặn hợp đồng</button>
+        <button class="btn btn-outline" onclick="showModal('request-limit')">${ic('trending_up')} Đề xuất tăng hạn mức</button>
+        <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add_shopping_cart')} Tạo đơn hộ</button>
+      </div></div>
+    <div class="tabs"><button class="tab active" onclick="setAccTab('info')">Thông tin chung</button><button class="tab" onclick="setAccTab('annex')">${ic('group','font-size:15px')} Phụ lục bảo lãnh</button></div>
+    ${infoTab}`;
+  }
+  if(dv==='activated'){
+    setTimeout(()=>showToast('Kích hoạt tài khoản thành công!','success'),80);
+    S.accountDetailVariant='normal';
+  }
+  if(dv==='validation-err'){
+    return `<button class="btn btn-outline mb-4" onclick="backToList()">${ic('arrow_back')} Quay lại danh sách</button>
+    ${renderAccDetailDemoBar()}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div><h2 style="font-family:Literata,serif;font-size:22px;font-weight:700;color:var(--text-primary)">${a.name}</h2>
+        <div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">MST: ${a.tax} · ${a.id}</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${a.status==='inactive'?`<button class="btn btn-success-outline" onclick="showModal('activate')">${ic('check_circle')} Kích hoạt</button>`:''}
+        <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add_shopping_cart')} Tạo đơn hộ</button>
+      </div></div>
+    <div class="alert alert-error mb-3">${ic('error')} <div><strong>Lỗi validation dữ liệu</strong><br>Một số trường thông tin không hợp lệ hoặc bị thiếu.</div></div>
+    <div class="tabs"><button class="tab active">Thông tin chung</button><button class="tab">${ic('group','font-size:15px')} Phụ lục bảo lãnh</button></div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+      <div class="card"><div class="card-header"><h3 class="card-title">Thông tin chung</h3></div><div class="card-body">
+        <div class="info-grid">
+          <div class="info-item"><div class="ilabel">Tên công ty</div><div class="ivalue bold" style="color:var(--error)">${a.name} <span style="font-size:11px;color:var(--error)">⚠ Tên trùng lặp</span></div></div>
+          <div class="info-item"><div class="ilabel">Mã số thuế</div><div class="ivalue" style="color:var(--error)">— <span style="font-size:11px">Chưa xác minh</span></div></div>
+          <div class="info-item"><div class="ilabel">Mã tài khoản</div><div class="ivalue font-mono">${a.id}</div></div>
+          <div class="info-item"><div class="ilabel">Trạng thái</div><div class="ivalue">${statusBadge(a.status)}</div></div>
+        </div></div></div>
+      <div class="card"><div class="card-header"><h3 class="card-title">Hạn mức công nợ</h3></div><div class="card-body">
+        <div style="padding:16px;text-align:center;color:var(--error);font-size:13px">${ic('error')} Không thể hiển thị hạn mức</div>
+      </div></div></div>`;
+  }
+
+  return `<button class="btn btn-outline mb-4" onclick="backToList()">${ic('arrow_back')} Quay lại danh sách</button>
+  ${renderAccDetailDemoBar()}
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+    <div><h2 style="font-family:Literata,serif;font-size:22px;font-weight:700;color:var(--text-primary)">${a.name}</h2>
+      <div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">MST: ${a.tax} · ${a.id}</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${a.status==='inactive'?`<button class="btn btn-success-outline" onclick="showModal('activate')">${ic('check_circle')} Kích hoạt</button>`:''}
+      <button class="btn btn-outline" onclick="showModal('block-contract')">${ic('block')} Chặn hợp đồng</button>
+      <button class="btn btn-outline" onclick="showModal('request-limit')">${ic('trending_up')} Đề xuất tăng hạn mức</button>
+      <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add_shopping_cart')} Tạo đơn hộ</button>
+    </div></div>
+  <div class="tabs">
+    <button class="tab ${S.accountTab==='info'?'active':''}" onclick="setAccTab('info')">Thông tin chung</button>
+    <button class="tab ${S.accountTab==='annex'?'active':''}" onclick="setAccTab('annex')">${ic('group','font-size:15px')} Phụ lục bảo lãnh</button>
+    <button class="tab ${S.accountTab==='ai-planner'?'active':''}" onclick="setAccTab('ai-planner')">${ic('smart_toy','font-size:15px')} Cấu hình AI Planner</button>
+  </div>
+  ${S.accountTab==='ai-planner'?renderAccAIPlanner():S.accountTab==='info'?infoTab:annexTab}`;
+}
+
+// ═══════════════════════════════════════════════════════════════ LIMITS ═════
+function renderAccAIPlanner(){
+  return `<div class="card" style="max-width:560px"><div class="card-header"><h3 class="card-title">Cấu hình AI Planner</h3></div>
+    <div class="card-body">
+      <div class="field" style="margin-bottom:20px">
+        <label style="font-size:12px;font-weight:600;color:var(--on-surface-variant);display:block;margin-bottom:8px">Trạng thái AI Planner</label>
+        <div style="display:flex;align-items:center;gap:20px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;color:var(--on-surface-variant)">
+            <input type="radio" name="ai_status" value="default" checked style="accent-color:var(--secondary)"> Dùng mặc định
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;color:var(--on-surface-variant)">
+            <input type="radio" name="ai_status" value="on" style="accent-color:var(--secondary)"> Bật
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;color:var(--on-surface-variant)">
+            <input type="radio" name="ai_status" value="off" style="accent-color:var(--secondary)"> Tắt
+          </label>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:20px">
+        <label style="font-size:12px;font-weight:600;color:var(--on-surface-variant);display:block;margin-bottom:4px">Người đi</label>
+        <select class="select" style="width:100%">
+          <option value="">Chọn thành viên</option>
+          <option>Nguyễn Văn A</option>
+          <option>Trần Thị B</option>
+          <option>Lê Văn C</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;padding-top:14px;border-top:1px solid var(--border)">
+        <button class="btn btn-outline" onclick="setAccTab('info')">Hủy</button>
+        <button class="btn btn-primary" onclick="showToast('Đã lưu cấu hình AI Planner!','success')">${ic('save')} Lưu</button>
+      </div>
+    </div></div>`;
+}
+function renderLimits(){
+  if(S.limitView==='detail') return renderLimitReqDetail();
+  const plannerRows=accounts.map(a=>{
+    const pct=Math.round(a.used/a.limit*100);
+    return `<tr><td class="font-600">${a.name}</td>
+    <td class="font-mono text-right">${fmt(a.limit)}</td>
+    <td class="font-mono text-right">${fmt(a.used)}</td>
+    <td class="font-mono text-right" style="color:var(--success)">${fmt(a.limit-a.used)}</td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:${pct}%;background:${pct>80?'var(--error)':pct>60?'var(--warning)':'var(--success)'}"></div></div>
+      <span style="font-size:12px;color:var(--on-surface-variant)">${pct}%</span></div></td>
+    <td class="text-center"><button class="btn btn-outline btn-sm" onclick="showModal('request-limit')">${ic('trending_up','font-size:14px')} Đề xuất</button></td></tr>`;
+  }).join('');
+  const reqRows=limitReqs.map(r=>`<tr>
+    <td class="font-mono">${r.id}</td><td>${r.account}</td>
+    <td class="font-mono text-right">${fmt(r.current)}</td>
+    <td class="font-mono text-right text-orange">${fmt(r.req)}</td>
+    <td style="font-size:12px">${r.reason}</td><td>${r.date}</td><td>${statusBadge(r.status)}</td>
+    <td class="text-center">${r.status==='pending'?`<button class="btn btn-primary btn-sm" onclick="showModal('approve-limit')">${ic('done','font-size:14px')} Duyệt</button>`:'—'}</td>
+  </tr>`).join('');
+  return `<div class="tabs">
+    <button class="tab ${S.limitTab==='planner'?'active':''}" onclick="S.limitTab='planner';render()">${ic('hub','font-size:15px')} AI Planner — Hạn mức</button>
+    <button class="tab ${S.limitTab==='requests'?'active':''}" onclick="S.limitTab='requests';render()">${ic('pending_actions','font-size:15px')} Yêu cầu tăng hạn mức</button>
+  </div>
+  ${S.limitTab==='planner'?`
+    <div class="section-title" style="margin-bottom:16px">Hạn mức AI Planner</div>
+    <div class="card" style="max-width:560px"><div class="card-header"><h3 class="card-title">Thiết lập hạn mức theo thành viên</h3></div>
+      <div class="card-body">
+        <div class="field" style="margin-bottom:16px">
+          <label>Thành viên</label>
+          <select class="select" style="width:100%">
+            <option value="">Chọn thành viên</option>
+            <option>Nguyễn Văn A</option>
+            <option>Trần Thị B</option>
+            <option>Lê Văn C</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+          <div class="field"><label>Vé</label><input type="number" class="input" placeholder="0" min="0" style="width:100%"></div>
+          <div class="field"><label>Phòng</label><input type="number" class="input" placeholder="0" min="0" style="width:100%"></div>
+          <div class="field"><label>Xe</label><input type="number" class="input" placeholder="0" min="0" style="width:100%"></div>
+        </div>
+        <div style="display:flex;gap:10px;padding-top:14px;border-top:1px solid var(--border)">
+          <button class="btn btn-outline">Hủy</button>
+          <button class="btn btn-primary" onclick="showToast('Lưu hạn mức thành công!','success')">${ic('save')} Lưu</button>
+        </div>
+      </div></div>`:`
+    <div class="demo-bar"><strong>Trạng thái phê duyệt:</strong>
+      <button class="demo-btn ${S.approveState==='normal'?'active':''}" onclick="S.approveState='normal';render()">Bình thường</button>
+      <button class="demo-btn ${S.approveState==='empty'?'active':''}" onclick="S.approveState='empty';render()">Trống</button>
+      <button class="demo-btn ${S.approveState==='approved'?'active':''}" onclick="S.approveState='approved';render()">Đã duyệt</button>
+      <button class="demo-btn ${S.approveState==='rejected'?'active':''}" onclick="S.approveState='rejected';render()">Đã từ chối</button>
+    </div>
+    <div class="flex justify-between items-center mb-4">
+      <div class="section-title" style="margin-bottom:0">Yêu cầu tăng hạn mức tạm thời</div>
+      <button class="btn btn-primary" onclick="showModal('request-limit')">${ic('add')} Tạo yêu cầu</button></div>
+    ${S.approveState==='empty'?`<div class="card"><div class="card-body"><div class="empty"><span class="material-symbols-outlined eicon">pending_actions</span><h3>Không có yêu cầu nào</h3><p>Chưa có yêu cầu tăng hạn mức nào chờ xử lý</p></div></div></div>`
+    :S.approveState==='approved'?`<div class="alert alert-success mb-3">${ic('check_circle')} Đã phê duyệt tăng hạn mức cho <strong>Công ty ABC</strong> lên 700.000.000 VNĐ thành công.</div>
+    <div class="table-wrap"><table><thead><tr><th>Mã yêu cầu</th><th>Tài khoản</th><th class="text-right">Hiện tại</th><th class="text-right">Hạn mức mới</th><th>Ngày</th><th>Trạng thái</th></tr></thead>
+    <tbody><tr><td class="font-mono">REQ-001</td><td>Công ty ABC</td><td class="font-mono text-right">500.000.000</td><td class="font-mono text-right text-success">700.000.000</td><td>18/08/2026</td><td>${statusBadge('approved')}</td></tr></tbody></table></div>`
+    :S.approveState==='rejected'?`<div class="alert alert-error mb-3">${ic('cancel')} Đã từ chối yêu cầu tăng hạn mức của <strong>Công ty JKL</strong>.</div>
+    <div class="table-wrap"><table><thead><tr><th>Mã yêu cầu</th><th>Tài khoản</th><th class="text-right">Yêu cầu</th><th>Lý do từ chối</th><th>Trạng thái</th></tr></thead>
+    <tbody><tr><td class="font-mono">REQ-003</td><td>Công ty JKL</td><td class="font-mono text-right">350.000.000</td><td style="font-size:12px;color:var(--on-surface-variant)">Không đủ điều kiện theo chính sách tín dụng</td><td>${statusBadge('rejected')}</td></tr></tbody></table></div>`
+    :`<div class="table-wrap"><table><thead><tr><th>Mã yêu cầu</th><th>Tài khoản</th><th class="text-right">Hiện tại</th><th class="text-right">Yêu cầu tăng</th><th>Lý do</th><th>Ngày</th><th>Trạng thái</th><th class="text-center">Duyệt</th></tr></thead>
+    <tbody>${reqRows}</tbody></table></div>
+    <div style="margin-top:10px"><button class="btn btn-outline btn-sm" onclick="S.limitView='detail';S.limitDetailVariant='ready';document.getElementById('page-title').textContent='Chi tiết yêu cầu tín';render()">${ic('open_in_new','font-size:14px')} Xem chi tiết yêu cầu tín</button></div>`}`}`;
+}
+
+function renderLimitReqDetail(){
+  const v=S.limitDetailVariant;
+  const back=`<button class="btn btn-outline mb-4" onclick="S.limitView='list';document.getElementById('page-title').textContent='Quản lý hạn mức';render()">${ic('arrow_back')} Quay lại</button>`;
+  const demoBar=`<div class="demo-bar"><strong>Trạng thái yêu cầu tín:</strong>
+    <button class="demo-btn ${v==='ready'?'active':''}" onclick="S.limitDetailVariant='ready';render()">Sẵn sàng tạo đơn</button>
+    <button class="demo-btn ${v==='holding'?'active':''}" onclick="S.limitDetailVariant='holding';render()">Đang giữ chỗ</button>
+    <button class="demo-btn ${v==='about-expire'?'active':''}" onclick="S.limitDetailVariant='about-expire';render()">Sắp hết hạn giữ chỗ</button>
+    <button class="demo-btn ${v==='expired'?'active':''}" onclick="S.limitDetailVariant='expired';render()">Hết hạn giữ chỗ</button>
+    <button class="demo-btn ${v==='blocked-debt'?'active':''}" onclick="S.limitDetailVariant='blocked-debt';render()">Bị chặn hạn mức</button>
+    <button class="demo-btn ${v==='missing-info'?'active':''}" onclick="S.limitDetailVariant='missing-info';render()">Thiếu thông tin</button>
+    <button class="demo-btn ${v==='empty'?'active':''}" onclick="S.limitDetailVariant='empty';render()">Trống</button>
+  </div>`;
+  if(v==='empty') return `${back}${demoBar}<div class="card"><div class="card-body"><div class="empty"><span class="material-symbols-outlined eicon">credit_score</span><h3>Không có yêu cầu tín nào</h3><p>Chưa có yêu cầu tín nào trong hệ thống</p></div></div></div>`;
+  const holdExpiry=v==='about-expire'?`<div class="alert alert-warning mb-3">${ic('timer')} <strong>Sắp hết hạn giữ chỗ!</strong> Còn <strong>12 phút</strong> để hoàn tất đặt vé. Vui lòng tạo đơn ngay.</div>`:
+    v==='expired'?`<div class="alert alert-error mb-3">${ic('timer_off')} <strong>Đã hết hạn giữ chỗ!</strong> Chỗ giữ đã bị hủy. Cần tìm kiếm lại dịch vụ.</div>`:
+    v==='blocked-debt'?`<div class="alert alert-error mb-3">${ic('lock')} <strong>Bị chặn — Vượt hạn mức công nợ!</strong> Tài khoản đã sử dụng ${ic('warning','font-size:14px')} 98% hạn mức. Liên hệ quản lý để xử lý.</div>`:
+    v==='missing-info'?`<div class="alert alert-warning mb-3">${ic('edit_note')} <strong>Thiếu thông tin bắt buộc!</strong> Vui lòng bổ sung thông tin hành khách trước khi tạo đơn.</div>`:'';
+  const statusChip=v==='holding'?statusBadge('pending'):v==='about-expire'?`<span class="badge badge-warning">${ic('timer','font-size:13px')} Sắp hết hạn</span>`:v==='expired'?statusBadge('cancelled'):v==='blocked-debt'?statusBadge('cancelled'):v==='missing-info'?statusBadge('pending'):statusBadge('approved');
+  const canCreate=v==='ready'||v==='holding';
+  return `${back}${demoBar}${holdExpiry}
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+    <div><h2 style="font-family:Literata,serif;font-size:20px;font-weight:700;color:var(--text-primary)">Yêu cầu tín — YC-000482</h2>
+      <div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">Tạo ngày 28/08/2026 bởi Admin User</div></div>
+    <div style="display:flex;gap:8px">
+      ${canCreate?`<button class="btn btn-primary" onclick="showModal('payment-method')">${ic('payment')} Thanh toán</button>`:''}
+      ${v==='expired'||v==='blocked-debt'?`<button class="btn btn-outline" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('refresh')} Tìm kiếm lại</button>`:''}
+    </div></div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+    <div class="card"><div class="card-header"><h3 class="card-title">Thông tin yêu cầu</h3>${statusChip}</div>
+      <div class="card-body"><div class="info-grid">
+        <div class="info-item"><div class="ilabel">Tài khoản</div><div class="ivalue bold">Công ty ABC</div></div>
+        <div class="info-item"><div class="ilabel">Loại dịch vụ</div><div class="ivalue">${ic('flight','color:var(--primary)')} Vé máy bay</div></div>
+        <div class="info-item"><div class="ilabel">Hành trình</div><div class="ivalue">SGN → HAN · 05/09/2026</div></div>
+        <div class="info-item"><div class="ilabel">Số hành khách</div><div class="ivalue">2 người lớn</div></div>
+        <div class="info-item"><div class="ilabel">Nhà cung cấp</div><div class="ivalue">Vietnam Airlines · VN123</div></div>
+        <div class="info-item"><div class="ilabel">Hạng vé</div><div class="ivalue">Phổ thông</div></div>
+        ${v==='missing-info'?`<div class="info-item" style="grid-column:span 2"><div class="ilabel" style="color:var(--error)">Thông tin thiếu</div><div class="ivalue" style="color:var(--error)">Chưa nhập số hộ chiếu hành khách</div></div>`:''}
+      </div></div></div>
+    <div class="card"><div class="card-header"><h3 class="card-title">Chi phí</h3></div><div class="card-body">
+      <div class="summary-row">
+        <div class="row"><span class="key">Giá vé/người</span><span class="val font-mono">2.500.000 VNĐ</span></div>
+        <div class="row"><span class="key">Số người</span><span class="val">× 2</span></div>
+        <div class="row"><span class="key">Phí dịch vụ</span><span class="val font-mono">200.000 VNĐ</span></div>
+        <div class="row divider"><span class="key font-700">Tổng cộng</span><span class="val orange font-mono" style="font-size:15px">5.200.000 VNĐ</span></div>
+      </div>
+      ${v==='holding'||v==='about-expire'?`<div style="margin-top:10px;padding:8px;border-radius:4px;background:var(--warning-bg);border:1px solid #f5c89a;font-size:12px;text-align:center;color:var(--warning)">
+        ${ic('schedule','font-size:14px')} Giữ chỗ đến: <strong>${v==='about-expire'?'28/08/2026 15:32':'28/08/2026 16:00'}</strong></div>`:''}
+    </div></div></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════ ORDERS ═════
+function renderOrders(){
+  if(S.orderView==='import') return renderImport();
+  if(S.orderView==='detail') return renderOrderDetail();
+  if(S.orderView==='invoice') return renderInvoice();
+  if(S.orderView==='hotel') return renderHotelSearch();
+  return renderOrderList();
+}
+function renderOrderList(){
+  const listDemoBar=`<div class="demo-bar"><strong>Trạng thái danh sách:</strong>
+    <button class="demo-btn ${S.orderListState==='data'?'active':''}" onclick="S.orderListState='data';render()">Có dữ liệu</button>
+    <button class="demo-btn ${S.orderListState==='empty'?'active':''}" onclick="S.orderListState='empty';render()">Trống</button>
+    <button class="demo-btn ${S.orderListState==='network-err'?'active':''}" onclick="S.orderListState='network-err';render()">Lỗi kết nối</button>
+    <button class="demo-btn ${S.orderListState==='by-account'?'active':''}" onclick="S.orderListState='by-account';render()">Theo tài khoản</button>
+  </div>`;
+  if(S.orderListState==='network-err'){
+    return `${listDemoBar}<div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải danh sách đơn hàng</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary" onclick="S.orderListState='data';render()">${ic('refresh')} Thử lại</button></div>`;
+  }
+  if(S.orderListState==='empty'){
+    return `${listDemoBar}<div class="filter-bar">
+      <div class="field" style="width:200px"><label>Mã / Tên đơn hàng</label><div class="input-wrap"><span class="material-symbols-outlined si">search</span><input class="input input-search w-full" placeholder="Tìm đơn hàng..."/></div></div>
+      <button class="btn btn-outline">${ic('filter_list')} Lọc</button><div style="flex:1"></div>
+      <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add')} Tạo đơn hộ</button></div>
+    <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Tài khoản</th><th>Dịch vụ</th><th>Ngày tạo</th><th class="text-right">Tổng tiền</th><th>Trạng thái</th><th class="text-center">Thao tác</th></tr></thead>
+    <tbody><tr><td colspan="7"><div class="empty"><span class="material-symbols-outlined eicon">local_shipping</span><h3>Chưa có đơn hàng nào</h3><p class="mb-3">Tạo đơn hàng đầu tiên cho khách hàng</p><button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add')} Tạo đơn hộ</button></div></td></tr></tbody></table></div>`;
+  }
+  if(S.orderListState==='by-account'){
+    const accOrders=orders.filter(o=>o.account==='Công ty DEF');
+    const rows2=accOrders.length?accOrders.map(o=>`<tr><td class="font-mono"><span class="td-link" onclick="openOrder('${o.id}')">${o.id}</span></td><td>${o.account}</td><td>${o.service}</td><td>${o.provider}</td><td>${o.date}</td><td class="font-mono text-right">${fmt(o.amount)}</td><td>${statusBadge(o.status)}</td><td class="text-center"><button class="btn btn-outline btn-sm" onclick="openOrder('${o.id}')">Chi tiết</button></td></tr>`).join('')
+    :`<tr><td colspan="8"><div class="empty" style="padding:24px"><p>Không có đơn hàng cho Công ty DEF</p></div></td></tr>`;
+    return `${listDemoBar}<div class="alert alert-info mb-3">${ic('filter_list')} Đang lọc: <strong>Công ty DEF</strong> <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="S.orderListState='data';render()">Xóa bộ lọc</button></div>
+    <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Tài khoản</th><th>Dịch vụ</th><th>Nhà cung cấp</th><th>Ngày tạo</th><th class="text-right">Tổng tiền</th><th>Trạng thái</th><th class="text-center">Thao tác</th></tr></thead><tbody>${rows2}</tbody></table></div>`;
+  }
+  const rows=orders.map(o=>`<tr>
+    <td class="font-mono"><span class="td-link" onclick="openOrder('${o.id}')">${o.id}</span></td>
+    <td>${o.account}</td><td>${o.service}</td><td>${o.provider}</td><td>${o.date}</td>
+    <td class="font-mono text-right">${fmt(o.amount)}</td><td>${statusBadge(o.status)}</td>
+    <td class="text-center"><button class="btn btn-outline btn-sm" onclick="openOrder('${o.id}')">Chi tiết</button></td>
+  </tr>`).join('');
+  return `${listDemoBar}<div class="filter-bar">
+    <div class="field" style="width:200px"><label>Mã / Tên đơn hàng</label>
+      <div class="input-wrap"><span class="material-symbols-outlined si">search</span><input class="input input-search w-full" placeholder="Tìm đơn hàng..."/></div></div>
+    <div class="field" style="width:180px"><label>Tài khoản</label>
+      <select class="select w-full"><option>Tất cả tài khoản</option>${accounts.map(a=>`<option>${a.name}</option>`).join('')}</select></div>
+    <div class="field" style="width:130px"><label>Trạng thái</label>
+      <select class="select w-full"><option>Tất cả</option><option>Đang xử lý</option><option>Hoàn thành</option><option>Đã hủy</option></select></div>
+    <button class="btn btn-outline">${ic('filter_list')} Lọc</button>
+    <div style="flex:1"></div>
+    <button class="btn btn-outline" onclick="S.orderView='invoice';S.orderInvoiceVariant='empty';document.getElementById('page-title').textContent='Phê duyệt hóa đơn';render()">${ic('receipt_long')} Phê duyệt hóa đơn</button>
+    <button class="btn btn-outline" onclick="S.orderView='import';S.orderImportState='idle';document.getElementById('page-title').textContent='Nhập dữ liệu từ file';render()">${ic('upload_file')} Nhập từ file</button>
+    <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add')} Tạo đơn hộ</button>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Tài khoản</th><th>Dịch vụ</th><th>Nhà cung cấp</th><th>Ngày tạo</th><th class="text-right">Tổng tiền</th><th>Trạng thái</th><th class="text-center">Thao tác</th></tr></thead>
+  <tbody>${rows}</tbody></table></div>`;
+}
+function openOrder(id){S.selectedOrder=orders.find(o=>o.id===id);S.orderView='detail';document.getElementById('page-title').textContent=`Chi tiết ${id}`;render()}
+
+function renderOrderDetail(){
+  const o=S.selectedOrder;
+  const backBtn=`<button class="btn btn-outline mb-4" onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()">${ic('arrow_back')} Quay lại</button>`;
+  const canCancel=o.status==='processing'||o.status==='pending';
+  // Demo bars
+  const detailDemoBar=`<div class="demo-bar"><strong>Trạng thái chi tiết:</strong>
+    <button class="demo-btn ${S.orderDetailVariant==='normal'?'active':''}" onclick="S.orderDetailVariant='normal';render()">Bình thường</button>
+    <button class="demo-btn ${S.orderDetailVariant==='network-err'?'active':''}" onclick="S.orderDetailVariant='network-err';render()">Lỗi kết nối</button>
+    <button class="demo-btn ${S.orderDetailVariant==='inv-fail'?'active':''}" onclick="S.orderDetailVariant='inv-fail';render()">Gửi HĐ điện tử thất bại</button>
+    <button class="demo-btn ${S.orderDetailVariant==='inv-resent'?'active':''}" onclick="S.orderDetailVariant='inv-resent';render()">Gửi lại HĐ thành công</button>
+  </div>`;
+  const cancelDemoBar=canCancel?`<div class="demo-bar"><strong>Modal hủy đơn:</strong>
+    <button class="demo-btn" onclick="S.cancelVariant='default';showModal('cancel-order')">Đang xử lý</button>
+    <button class="demo-btn" onclick="S.cancelVariant='ncc';showModal('cancel-order')">Trước XN NCC</button>
+    <button class="demo-btn" onclick="S.cancelVariant='ncc2';showModal('cancel-order')">Sau XN NCC (phí hủy)</button>
+    <button class="demo-btn" onclick="S.cancelVariant='validation';showModal('cancel-order')">Lỗi validation</button>
+    <button class="demo-btn" onclick="S.cancelVariant='network';showModal('cancel-order')">Lỗi kết nối</button>
+    <button class="demo-btn" onclick="S.cancelVariant='success';showModal('cancel-order')">Hủy thành công</button>
+    <span style="margin-left:8px;font-size:11px;color:var(--on-surface-variant)">Phương thức TT:</span>
+    <button class="demo-btn" onclick="S.paymentVariant='1';showModal('payment-method')">Thanh toán ngay</button>
+    <button class="demo-btn" onclick="S.paymentVariant='debt-locked';showModal('payment-method')">Công nợ khóa</button>
+    <button class="demo-btn" onclick="S.paymentVariant='visa';showModal('payment-method')">Visa</button>
+    <span style="margin-left:8px;font-size:11px;color:var(--on-surface-variant)">Chi phí:</span>
+    <button class="demo-btn" onclick="S.addCostVariant='base';showModal('add-cost')">Thêm chi phí</button>
+    <button class="demo-btn" onclick="S.addCostVariant='visa';showModal('add-cost')">Chi phí visa</button>
+    <button class="demo-btn" onclick="S.addCostVariant='price-err';showModal('add-cost')">Lỗi giá</button>
+  </div>`:'';
+  // Network error state
+  if(S.orderDetailVariant==='network-err'){
+    return `${backBtn}${detailDemoBar}${cancelDemoBar}<div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải chi tiết đơn hàng</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary" onclick="S.orderDetailVariant='normal';render()">${ic('refresh')} Thử lại</button></div>`;
+  }
+  const invFailBanner=S.orderDetailVariant==='inv-fail'?`<div class="alert alert-error mb-3">${ic('error')} <div><strong>Gửi hóa đơn điện tử thất bại</strong><br>Email hóa đơn đến địa chỉ ketoan@congtyabc.vn bị từ chối. <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="S.orderDetailVariant='inv-resent';render()">Gửi lại</button></div></div>`
+    :S.orderDetailVariant==='inv-resent'?`<div class="alert alert-success mb-3">${ic('check_circle')} <strong>Đã gửi lại hóa đơn điện tử thành công!</strong> Email đã được gửi đến ketoan@congtyabc.vn lúc 14:32.</div>`:'';
+  // Tabs
+  const tabs=`<div class="tabs">
+    <button class="tab ${S.orderDetailTab==='info'?'active':''}" onclick="S.orderDetailTab='info';render()">Thông tin đơn hàng</button>
+    <button class="tab ${S.orderDetailTab==='payment'?'active':''}" onclick="S.orderDetailTab='payment';render()">${ic('payment','font-size:15px')} Giao dịch thanh toán</button>
+    <button class="tab ${S.orderDetailTab==='audit'?'active':''}" onclick="S.orderDetailTab='audit';render()">${ic('history','font-size:15px')} Lịch sử audit</button>
+  </div>`;
+  // Tab content
+  let tabContent='';
+  if(S.orderDetailTab==='payment'){
+    tabContent=`<div class="card"><div class="card-header"><h3 class="card-title">Giao dịch thanh toán</h3><button class="btn btn-primary btn-sm" onclick="showModal('payment-method')">${ic('add')} Thanh toán</button></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>Mã giao dịch</th><th>Ngày</th><th>Phương thức</th><th class="text-right">Số tiền</th><th>Trạng thái</th></tr></thead>
+      <tbody>
+        <tr><td class="font-mono td-link">TXN-2026-0891</td><td>15/08/2026</td><td>${ic('credit_card','font-size:14px')} Công nợ</td><td class="font-mono text-right">${fmt(o.amount)}</td><td>${statusBadge('approved')}</td></tr>
+      </tbody></table></div></div>`;
+  } else if(S.orderDetailTab==='audit'){
+    const auditRows=[
+      {time:'28/08/2026 14:32',user:'Admin User',action:'Gửi lại hóa đơn điện tử'},
+      {time:'15/08/2026 09:15',user:'Admin User',action:'Tạo đơn hàng thành công'},
+      {time:'15/08/2026 09:10',user:'Hệ thống',action:'Khởi tạo yêu cầu đặt vé'},
+    ].map(r=>`<tr><td style="font-size:12px;color:var(--on-surface-variant)">${r.time}</td><td>${r.user}</td><td>${r.action}</td></tr>`).join('');
+    tabContent=`<div class="card"><div class="card-header"><h3 class="card-title">Lịch sử audit</h3></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>Thời gian</th><th>Người thực hiện</th><th>Hành động</th></tr></thead>
+      <tbody>${auditRows}</tbody></table></div></div>`;
+  } else {
+    tabContent=`<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+      <div class="card"><div class="card-header"><h3 class="card-title">Thông tin đơn hàng</h3>${statusBadge(o.status)}</div>
+        <div class="card-body"><div class="info-grid">
+          <div class="info-item"><div class="ilabel">Tài khoản</div><div class="ivalue bold">${o.account}</div></div>
+          <div class="info-item"><div class="ilabel">Dịch vụ</div><div class="ivalue">${o.service}</div></div>
+          <div class="info-item"><div class="ilabel">Nhà cung cấp</div><div class="ivalue">${o.provider}</div></div>
+          <div class="info-item"><div class="ilabel">Ngày tạo</div><div class="ivalue">${o.date}</div></div>
+          <div class="info-item"><div class="ilabel">Tổng tiền</div><div class="ivalue bold" style="color:var(--text-primary)">${fmt(o.amount)}</div></div>
+          <div class="info-item"><div class="ilabel">Người tạo</div><div class="ivalue">Admin User</div></div>
+        </div></div></div>
+      <div class="card"><div class="card-header"><h3 class="card-title">Dịch vụ bổ sung</h3><button class="btn btn-outline btn-sm" onclick="showModal('add-cost')">${ic('add')} Thêm chi phí</button></div>
+        <div class="card-body"><div class="empty" style="padding:20px 0;"><span class="material-symbols-outlined eicon" style="font-size:32px">inbox</span><p>Chưa có dịch vụ bổ sung</p></div></div></div>
+    </div>`;
+  }
+  return `${backBtn}${detailDemoBar}${cancelDemoBar}${invFailBanner}
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+    <div><h2 style="font-family:Literata,serif;font-size:20px;font-weight:700;color:var(--text-primary)">${o.id}</h2>
+      <div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">${o.account} · ${o.date}</div></div>
+    <div style="display:flex;gap:8px">
+      ${canCancel?`<button class="btn btn-danger" onclick="showModal('cancel-order')">${ic('cancel')} Hủy đơn</button>`:''}
+      <button class="btn btn-outline" onclick="showModal('add-service')">${ic('add_circle')} Thêm dịch vụ bổ sung</button>
+    </div></div>
+  ${tabs}${tabContent}`;
+}
+
+// ── Import from file ────────────────────────────────────────────────────────
+function renderImport(){
+  const s=S.orderImportState;
+  const stepper=`<div class="stepper">
+    <div class="step"><div class="step-dot ${s!=='idle'?'done':'active'}">${s!=='idle'?ic('check','font-size:16px'):'1'}</div><span class="step-label ${s!=='idle'?'done':'active'}">Chọn file</span></div>
+    <div class="step-line ${['checking','success','error'].includes(s)?'done':''}"></div>
+    <div class="step"><div class="step-dot ${s==='checking'?'active':s==='success'||s==='error'?'done':'pending'}">${s==='success'||s==='error'?ic('check','font-size:16px'):2}</div><span class="step-label ${s==='checking'?'active':s==='success'||s==='error'?'done':'pending'}">Kiểm tra file</span></div>
+    <div class="step-line ${s==='success'?'done':''}"></div>
+    <div class="step"><div class="step-dot ${s==='success'?'done':'pending'}">${s==='success'?ic('check','font-size:16px'):3}</div><span class="step-label ${s==='success'?'done':'pending'}">Hoàn thành</span></div>
+  </div>`;
+  const importDemoBar=`<div class="demo-bar"><strong>Trạng thái import:</strong>
+    <button class="demo-btn ${s==='idle'?'active':''}" onclick="S.orderImportState='idle';render()">Idle</button>
+    <button class="demo-btn ${s==='template'?'active':''}" onclick="S.orderImportState='template';render()">Tải file mẫu</button>
+    <button class="demo-btn ${s==='loading'?'active':''}" onclick="S.orderImportState='loading';render()">Đang tải</button>
+    <button class="demo-btn ${s==='checking'?'active':''}" onclick="S.orderImportState='checking';render()">Kiểm tra</button>
+    <button class="demo-btn ${s==='preview-valid'?'active':''}" onclick="S.orderImportState='preview-valid';render()">Preview hợp lệ</button>
+    <button class="demo-btn ${s==='preview-err'?'active':''}" onclick="S.orderImportState='preview-err';render()">Preview có lỗi</button>
+    <button class="demo-btn ${s==='success'?'active':''}" onclick="S.orderImportState='success';render()">Thành công</button>
+    <button class="demo-btn ${s==='error'?'active':''}" onclick="S.orderImportState='error';render()">Lỗi file</button>
+  </div>`;
+  let body='';
+  if(s==='template') body=`<div class="alert alert-info mb-3">${ic('info')} Tải về file template để đảm bảo đúng định dạng import.</div>
+  <div class="card mb-4"><div class="card-body"><div style="display:flex;gap:12px;align-items:center">
+    <span class="material-symbols-outlined" style="font-size:40px;color:var(--primary)">table_chart</span>
+    <div style="flex:1"><div style="font-weight:600;margin-bottom:2px">Template nhập đơn hàng.xlsx</div><div style="font-size:12px;color:var(--on-surface-variant)">Excel · 45KB · 3 sheet (Hướng dẫn, Dữ liệu, Danh mục)</div></div>
+    <button class="btn btn-primary">${ic('download')} Tải xuống</button>
+  </div></div></div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Hướng dẫn sử dụng</h3></div><div class="card-body">
+    <ol style="font-size:13px;line-height:2;color:var(--on-surface);padding-left:20px">
+      <li>Tải file template ở trên</li>
+      <li>Điền dữ liệu đơn hàng vào sheet "Dữ liệu"</li>
+      <li>Không thay đổi tên cột header</li>
+      <li>Tham khảo sheet "Danh mục" để lấy mã tài khoản, mã dịch vụ</li>
+      <li>Lưu file và upload lên hệ thống</li>
+    </ol>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="S.orderImportState='idle';render()">${ic('upload_file')} Upload file</button>
+  </div></div>`;
+  else if(s==='preview-valid') body=`<div class="alert alert-success mb-3">${ic('check_circle')} File hợp lệ — <strong>23 đơn hàng</strong> sẵn sàng import.</div>
+  <div class="table-wrap mb-4" style="max-height:280px;overflow-y:auto"><table><thead><tr><th>#</th><th>Tài khoản</th><th>Dịch vụ</th><th>Ngày</th><th class="text-right">Số tiền</th><th>Trạng thái</th></tr></thead>
+  <tbody>${['Công ty ABC · Vé bay SGN→HAN · 5/9 · 2.500.000','Tập đoàn GHI · Khách sạn HAN · 5-7/9 · 4.200.000','Công ty JKL · Vé bay HAN→DAD · 8/9 · 1.850.000'].map((r,i)=>{const p=r.split(' · ');return `<tr><td>${i+1}</td><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td><td class="font-mono text-right">${p[3]}</td><td>${statusBadge('pending')}</td></tr>`}).join('')}
+  <tr><td colspan="6" style="text-align:center;color:var(--on-surface-variant);font-size:12px">... và 20 đơn hàng khác</td></tr></tbody></table></div>
+  <div style="display:flex;gap:8px"><button class="btn btn-outline" onclick="S.orderImportState='idle';render()">Chọn file khác</button><button class="btn btn-primary" onclick="S.orderImportState='success';render()">${ic('upload')} Xác nhận import</button></div>`;
+  else if(s==='preview-err') body=`<div class="alert alert-warning mb-3">${ic('warning')} File có <strong>3 lỗi</strong> — Vui lòng sửa trước khi import.</div>
+  <div class="table-wrap mb-4" style="max-height:280px;overflow-y:auto"><table><thead><tr><th>#</th><th>Tài khoản</th><th>Dịch vụ</th><th>Ngày</th><th class="text-right">Số tiền</th><th>Lỗi</th></tr></thead>
+  <tbody>
+    <tr style="background:var(--error-bg)"><td>3</td><td>Công ty ABC</td><td>Vé bay</td><td style="color:var(--error)">35/09/2026</td><td class="font-mono text-right">—</td><td style="font-size:11px;color:var(--error)">Ngày không hợp lệ</td></tr>
+    <tr><td>4</td><td>Tập đoàn GHI</td><td>Khách sạn</td><td>06/09/2026</td><td class="font-mono text-right">4.200.000</td><td>—</td></tr>
+    <tr style="background:var(--error-bg)"><td>7</td><td style="color:var(--error)">ACC-999</td><td>Vé bay</td><td>07/09/2026</td><td class="font-mono text-right">—</td><td style="font-size:11px;color:var(--error)">Tài khoản không tồn tại</td></tr>
+    <tr style="background:var(--error-bg)"><td>12</td><td>Công ty JKL</td><td>Xe hơi</td><td>08/09/2026</td><td class="font-mono text-right" style="color:var(--error)">abc</td><td style="font-size:11px;color:var(--error)">Số tiền không hợp lệ</td></tr>
+  </tbody></table></div>
+  <div style="display:flex;gap:8px"><button class="btn btn-outline" onclick="S.orderImportState='idle';render()">Chọn file khác</button><button class="btn btn-outline" disabled style="opacity:.5">Không thể import — Còn lỗi</button></div>`;
+  else if(s==='idle') body=`<div class="upload-zone" onclick="simulateUpload()">
+    <span class="material-symbols-outlined" style="font-size:48px;color:var(--outline);display:block;margin-bottom:8px">upload_file</span>
+    <div style="font-size:15px;font-weight:600;margin-bottom:6px">Kéo thả file hoặc nhấn để chọn</div>
+    <div style="font-size:13px;color:var(--on-surface-variant)">.xlsx, .xls, .csv · Tối đa 10MB</div>
+    <button class="btn btn-primary" style="margin-top:14px" onclick="event.stopPropagation();simulateUpload()">${ic('folder_open')} Chọn file</button>
+  </div>
+  <div style="margin-top:10px;padding:10px 14px;background:var(--surface-low);border-radius:4px;border:1px solid var(--border);font-size:12px;color:var(--on-surface-variant)">
+    ${ic('info','font-size:15px')} Tải <span style="color:var(--primary);cursor:pointer;font-weight:600">template mẫu</span> để đảm bảo đúng định dạng
+  </div>`;
+  else if(s==='loading') body=`<div style="text-align:center;padding:48px">
+    <div class="spinner" style="width:36px;height:36px;margin:0 auto 16px"></div>
+    <div style="font-size:15px;font-weight:600">Đang tải file lên...</div>
+    <div style="font-size:13px;color:var(--on-surface-variant);margin-top:4px">orders_aug2026.xlsx · 2.4 MB</div>
+    <div style="width:240px;margin:14px auto 0"><div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--primary)"></div></div></div>
+  </div>`;
+  else if(s==='checking') body=`<div class="alert alert-info" style="margin-bottom:12px">${ic('info')} <div><strong>Đang kiểm tra file...</strong><br>orders_aug2026.xlsx · 2.4 MB · 158 dòng</div></div>
+  <div style="font-size:13px;color:var(--on-surface-variant);display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+    <div class="flex items-center gap-2">${ic('check_circle','color:var(--success)')} Định dạng file hợp lệ</div>
+    <div class="flex items-center gap-2">${ic('check_circle','color:var(--success)')} Header cột đúng template</div>
+    <div class="flex items-center gap-2"><div class="spinner" style="width:16px;height:16px"></div> Đang validate dữ liệu...</div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-primary" onclick="S.orderImportState='success';render()">✓ Hoàn thành (demo)</button>
+    <button class="btn btn-outline" onclick="S.orderImportState='error';render()">✕ Mô phỏng lỗi (demo)</button>
+  </div>`;
+  else if(s==='success') body=`<div class="alert alert-success">${ic('check_circle','font-size:20px')} <div><strong>Import thành công!</strong><br>155 / 158 đơn hàng đã nhập vào hệ thống</div></div>
+  <div class="card mb-4"><div class="card-body"><div class="info-grid">
+    <div class="info-item"><div class="ilabel">Tổng dòng</div><div class="ivalue bold">158</div></div>
+    <div class="info-item"><div class="ilabel">Thành công</div><div class="ivalue bold" style="color:var(--success)">155</div></div>
+    <div class="info-item"><div class="ilabel">Cảnh báo</div><div class="ivalue bold" style="color:var(--warning)">3</div></div>
+    <div class="info-item"><div class="ilabel">Lỗi</div><div class="ivalue bold" style="color:var(--error)">0</div></div>
+  </div></div></div>
+  <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()">Xem danh sách đơn hàng</button><button class="btn btn-outline" onclick="S.orderImportState='idle';render()">Import thêm</button></div>`;
+  else if(s==='error') body=`<div class="alert alert-error">${ic('error','font-size:20px')} <div><strong>Lỗi định dạng file!</strong><br>File không đúng template. Vui lòng kiểm tra lại.</div></div>
+  <div class="table-wrap mb-4"><table><thead><tr><th>Dòng</th><th>Cột</th><th>Lỗi</th></tr></thead>
+  <tbody><tr><td class="font-mono">3</td><td>Ngày đi</td><td>Định dạng ngày không hợp lệ (dd/MM/yyyy)</td></tr>
+  <tr><td class="font-mono">7</td><td>Tài khoản</td><td>Mã tài khoản không tồn tại</td></tr>
+  <tr><td class="font-mono">12</td><td>Số tiền</td><td>Giá trị không phải số</td></tr></tbody></table></div>
+  <div style="display:flex;gap:8px"><button class="btn btn-outline" onclick="S.orderImportState='idle';render()">Chọn file khác</button><button class="btn btn-ghost">Tải template mẫu</button></div>`;
+  return `<button class="btn btn-outline mb-4" onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()">${ic('arrow_back')} Quay lại</button>
+  ${importDemoBar}
+  <div class="section-title">Nhập dữ liệu từ file</div>
+  <div style="max-width:640px">${s==='template'||s==='preview-valid'||s==='preview-err'?'':stepper}${body}</div>`;
+}
+function simulateUpload(){S.orderImportState='loading';render();setTimeout(()=>{S.orderImportState='checking';render()},1500)}
+
+// ── Invoice approval ────────────────────────────────────────────────────────
+function renderInvoice(){
+  const iv=S.orderInvoiceVariant;
+  const demoBar=`<div class="demo-bar"><strong>Trạng thái hóa đơn:</strong>
+    <button class="demo-btn ${iv==='empty'?'active':''}" onclick="S.orderInvoiceVariant='empty';render()">Trống</button>
+    <button class="demo-btn ${iv==='data'?'active':''}" onclick="S.orderInvoiceVariant='data';render()">Có dữ liệu</button>
+    <button class="demo-btn ${iv==='network-err'?'active':''}" onclick="S.orderInvoiceVariant='network-err';render()">Lỗi kết nối</button>
+    <button class="demo-btn ${iv==='mst-err'?'active':''}" onclick="S.orderInvoiceVariant='mst-err';render()">Lỗi MST thuế</button>
+    <button class="demo-btn ${iv==='success'?'active':''}" onclick="S.orderInvoiceVariant='success';render()">Duyệt thành công</button>
+  </div>`;
+  const back=`<button class="btn btn-outline mb-4" onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()">${ic('arrow_back')} Quay lại</button>`;
+  if(iv==='empty') return `${back}${demoBar}
+  <div class="flex justify-between items-center mb-4"><div class="section-title" style="margin-bottom:0">Phê duyệt hóa đơn NCC</div><button class="btn btn-primary" onclick="S.orderInvoiceVariant='data';render()">${ic('add')} Nhập hóa đơn</button></div>
+  <div class="card"><div class="card-body"><div class="empty"><span class="material-symbols-outlined eicon">receipt_long</span><h3>Chưa có hóa đơn chờ phê duyệt</h3><p>Các hóa đơn từ nhà cung cấp sẽ hiển thị tại đây</p></div></div></div>`;
+  if(iv==='network-err') return `${back}${demoBar}
+  <div class="flex justify-between items-center mb-4"><div class="section-title" style="margin-bottom:0">Phê duyệt hóa đơn NCC</div></div>
+  <div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải danh sách hóa đơn</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary" onclick="S.orderInvoiceVariant='data';render()">${ic('refresh')} Thử lại</button></div>`;
+  if(iv==='success') return `${back}${demoBar}
+  <div class="alert alert-success mb-4">${ic('check_circle','font-size:20px')} <div><strong>Phê duyệt hóa đơn thành công!</strong><br>Hóa đơn HĐ-2026-0089 đã được phê duyệt. Vietnam Airlines sẽ nhận thanh toán trong 3-5 ngày làm việc.</div></div>
+  <div class="flex justify-between items-center mb-4"><div class="section-title" style="margin-bottom:0">Phê duyệt hóa đơn NCC</div><button class="btn btn-primary" onclick="S.orderInvoiceVariant='data';render()">${ic('add')} Nhập hóa đơn mới</button></div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Hóa đơn đã xử lý</h3></div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Số HĐ</th><th>NCC</th><th class="text-right">Số tiền</th><th>Ngày duyệt</th><th>Trạng thái</th></tr></thead>
+    <tbody><tr><td class="font-mono td-link">HĐ-2026-0089</td><td>Vietnam Airlines</td><td class="font-mono text-right">12.500.000</td><td>28/08/2026</td><td>${statusBadge('approved')}</td></tr></tbody></table></div></div>`;
+  const mstErrBanner=iv==='mst-err'?`<div class="alert alert-error mb-3">${ic('error')} <div><strong>Lỗi MST thuế đã tồn tại</strong><br>Số hóa đơn này đã được nhập vào hệ thống. Vui lòng kiểm tra lại hoặc liên hệ nhà cung cấp.</div></div>`:'';
+  return `${back}${demoBar}
+  <div class="flex justify-between items-center mb-4"><div class="section-title" style="margin-bottom:0">Phê duyệt hóa đơn NCC</div></div>
+  ${mstErrBanner}
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card"><div class="card-header"><h3 class="card-title">Nhập thông tin hóa đơn</h3></div><div class="card-body">
+      <div class="form-row c2"><div class="fg"><label>Số hóa đơn <span class="req">*</span></label><input class="input w-full font-mono ${iv==='mst-err'?'error-field':''}" value="${iv==='mst-err'?'HĐ-2026-0089':''}" placeholder="HĐ-2026-0089"></div>
+      <div class="fg"><label>Ngày hóa đơn</label><input class="input w-full" type="text" value="28/08/2026"></div></div>
+      <div class="fg mb-3"><label>Nhà cung cấp <span class="req">*</span></label><select class="select w-full"><option>Vietnam Airlines</option><option>Vietjet Air</option><option>Bamboo Airways</option></select></div>
+      <div class="form-row c2"><div class="fg"><label>Số tiền (VNĐ) <span class="req">*</span></label><input class="input w-full font-mono" value="12.500.000"></div>
+      <div class="fg"><label>Thuế VAT</label><select class="select w-full"><option>10%</option><option>8%</option><option>0%</option></select></div></div>
+      <div class="fg mb-4"><label>Đơn hàng liên quan</label><select class="select w-full"><option>ORD-001 — Công ty ABC</option><option>ORD-004 — Công ty ABC</option></select></div>
+      <div class="fg mb-4"><label>Ghi chú</label><textarea class="textarea w-full" rows="2" placeholder="Ghi chú phê duyệt..."></textarea></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-danger" onclick="showToast('Đã từ chối hóa đơn','error')">${ic('thumb_down')} Từ chối</button>
+        <div style="flex:1"></div>
+        <button class="btn btn-outline" onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()">Đóng</button>
+        <button class="btn btn-success-outline" onclick="S.orderInvoiceVariant='success';render()">${ic('thumb_up')} Phê duyệt</button>
+      </div></div></div>
+    <div class="card"><div class="card-header"><h3 class="card-title">Hóa đơn chờ phê duyệt</h3></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>Số HĐ</th><th>NCC</th><th class="text-right">Số tiền</th><th>Trạng thái</th></tr></thead>
+      <tbody>
+        <tr><td class="font-mono td-link">HĐ-2026-0089</td><td>Vietnam Airlines</td><td class="font-mono text-right">12.500.000</td><td>${statusBadge('pending')}</td></tr>
+        <tr><td class="font-mono td-link">HĐ-2026-0082</td><td>Vietjet Air</td><td class="font-mono text-right">5.200.000</td><td>${statusBadge('approved')}</td></tr>
+        <tr><td class="font-mono td-link">HĐ-2026-0075</td><td>Nhà cung cấp X</td><td class="font-mono text-right">8.300.000</td><td>${statusBadge('rejected')}</td></tr>
+      </tbody></table></div></div>
+  </div>`;
+}
+
+function renderHotelSearch(){
+  const hotels=[
+    {name:'Sofitel Legend Metropole Hanoi',stars:5,loc:'Hoàn Kiếm, Hà Nội',price:4500000,rooms:3,img:'hotel'},
+    {name:'JW Marriott Hotel Hanoi',stars:5,loc:'Cầu Giấy, Hà Nội',price:3800000,rooms:8,img:'hotel'},
+    {name:'Lotte Hotel Hanoi',stars:5,loc:'Liễu Giai, Hà Nội',price:3200000,rooms:12,img:'hotel'},
+    {name:'Silk Path Hotel Hanoi',stars:4,loc:'Hoàn Kiếm, Hà Nội',price:1800000,rooms:15,img:'hotel'},
+    {name:'Hanoi Boutique Hotel & Spa',stars:4,loc:'Hồ Tây, Hà Nội',price:1400000,rooms:6,img:'hotel'},
+  ];
+  const rows=hotels.map(h=>`<tr>
+    <td><div class="flex items-center gap-3">
+      <div style="width:40px;height:40px;background:var(--surface-container);border-radius:var(--rlg);display:flex;align-items:center;justify-content:center">${ic('hotel','color:var(--primary)')}</div>
+      <div><div class="font-600">${h.name}</div><div style="font-size:11px;color:var(--on-surface-variant)">${h.loc}</div></div>
+    </div></td>
+    <td><span style="color:#f5a623;letter-spacing:2px">${'★'.repeat(h.stars)}${'☆'.repeat(5-h.stars)}</span></td>
+    <td class="font-mono text-right" style="color:var(--secondary);font-weight:600">${fmt(h.price)}<div style="font-size:11px;color:var(--on-surface-variant);font-weight:400">/phòng/đêm</div></td>
+    <td><span class="badge ${h.rooms<5?'badge-warning':'badge-success'}">${h.rooms} phòng trống</span></td>
+    <td class="text-center"><div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <button class="btn btn-primary btn-sm">Chọn</button>
+      <button class="btn btn-ghost btn-sm" style="font-size:11px">Xem chi tiết</button>
+    </div></td>
+  </tr>`).join('');
+  return `<button class="btn btn-outline mb-4" onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()">${ic('arrow_back')} Quay lại</button>
+  <div class="card mb-4"><div class="card-body" style="padding:12px 16px">
+    <div class="flex gap-3 items-center flex-wrap">
+      <div class="flex items-center gap-2" style="font-size:14px;font-weight:600">${ic('hotel','color:var(--primary)')} Hà Nội · 05/09 → 08/09 · 1 phòng</div>
+      <button class="btn btn-outline btn-sm">${ic('edit','font-size:14px')} Sửa tiêu chí</button>
+    </div></div></div>
+  <div class="flex items-center justify-between mb-3">
+    <div style="font-size:13px;font-weight:600;color:var(--on-surface)">${hotels.length} khách sạn phù hợp</div>
+    <div class="flex gap-2">
+      <select class="select" style="height:32px;font-size:12px;width:160px"><option>Giá tăng dần</option><option>Giá giảm dần</option><option>Đánh giá cao nhất</option></select>
+      <select class="select" style="height:32px;font-size:12px;width:120px"><option>Tất cả hạng</option><option>5 sao</option><option>4 sao</option></select>
+    </div></div>
+  <div class="table-wrap"><table><thead><tr><th>Khách sạn</th><th>Hạng</th><th class="text-right">Giá</th><th>Phòng trống</th><th class="text-center">Thao tác</th></tr></thead>
+  <tbody>${rows}</tbody></table></div>
+  <div style="margin-top:10px;padding:10px;background:var(--surface-low);border-radius:4px;font-size:12px;color:var(--on-surface-variant);border:1px solid var(--border)">${ic('info','font-size:14px')} Giá đã bao gồm thuế VAT. Nhấn "Nhập thủ công" nếu cần nhập thông tin khách sạn không có trong danh sách.
+  <button class="btn btn-ghost btn-sm" style="margin-left:8px">Nhập thủ công</button></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════ REPORTS ════
+function renderReports(){
+  const netErrBar=`<div class="demo-bar"><strong>Trạng thái:</strong>
+    <button class="demo-btn ${!S.reportNetErr&&!S.reportEmpty?'active':''}" onclick="S.reportNetErr=false;S.reportEmpty=false;render()">Bình thường</button>
+    <button class="demo-btn ${S.reportNetErr?'active':''}" onclick="S.reportNetErr=true;S.reportEmpty=false;render()">Lỗi kết nối mạng</button>
+    <button class="demo-btn ${S.reportEmpty?'active':''}" onclick="S.reportEmpty=true;S.reportNetErr=false;render()">Trống</button>
+  </div>`;
+  const filterBar=`<div class="filter-bar mb-5">
+    <div class="field"><label>Từ ngày</label><input class="input" type="text" value="01/08/2026" style="width:130px"></div>
+    <div class="field"><label>Đến ngày</label><input class="input" type="text" value="28/08/2026" style="width:130px"></div>
+    <div class="field" style="width:200px"><label>Tài khoản</label><select class="select w-full"><option>Tất cả tài khoản</option>${accounts.map(a=>`<option>${a.name}</option>`).join('')}</select></div>
+    <button class="btn btn-primary">${ic('search')} Xem báo cáo</button>
+    <div style="flex:1"></div><button class="btn btn-outline">${ic('download')} Xuất Excel</button>
+  </div>`;
+  const tabs=`<div class="tabs">
+    <button class="tab ${S.reportTab==='revenue'?'active':''}" onclick="S.reportTab='revenue';render()">${ic('bar_chart','font-size:15px')} Doanh thu / Lợi nhuận</button>
+    <button class="tab ${S.reportTab==='debt'?'active':''}" onclick="S.reportTab='debt';render()">${ic('account_balance','font-size:15px')} Công nợ</button>
+  </div>`;
+  if(S.reportEmpty) return `${netErrBar}${filterBar}${tabs}<div class="card"><div class="card-body"><div class="empty"><span class="material-symbols-outlined eicon">analytics</span><h3>Không có dữ liệu báo cáo</h3><p>Không có dữ liệu cho khoảng thời gian đã chọn. Vui lòng chọn khoảng thời gian khác.</p></div></div></div>`;
+  if(S.reportNetErr) return `${netErrBar}${filterBar}${tabs}<div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải báo cáo</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary" onclick="S.reportNetErr=false;render()">${ic('refresh')} Thử lại</button></div>`;
+  const months=['T1','T2','T3','T4','T5','T6','T7','T8'];
+  const rev=[320,450,280,510,620,490,740,680];
+  const prof=[80,120,60,140,180,110,210,190];
+  const maxR=Math.max(...rev);
+  const bars=months.map((m,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+    <div style="flex:1;width:100%;display:flex;flex-direction:column;justify-content:flex-end;gap:2px">
+      <div style="height:${Math.round(prof[i]/maxR*160)}px;background:var(--secondary);border-radius:3px 3px 0 0"></div>
+      <div style="height:${Math.round((rev[i]-prof[i])/maxR*160)}px;background:var(--primary);border-radius:3px 3px 0 0"></div>
+    </div><div style="font-size:11px;color:var(--on-surface-variant)">${m}</div>
+  </div>`).join('');
+  const revenueContent=`<div class="stats-row">
+    <div class="stat-card"><div class="label">Doanh thu T8</div><div class="value">68tr</div><div class="sub" style="color:var(--success)">▲ 8.2% so với T7</div></div>
+    <div class="stat-card"><div class="label">Lợi nhuận T8</div><div class="value">19tr</div><div class="sub" style="color:var(--success)">▲ 5.1% so với T7</div></div>
+    <div class="stat-card"><div class="label">Số đơn hàng</div><div class="value">247</div><div class="sub">Tháng 8/2026</div></div>
+    <div class="stat-card"><div class="label">Tỷ suất LN</div><div class="value">27.9%</div><div class="sub">Trung bình 8 tháng</div></div>
+  </div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Doanh thu & Lợi nhuận (VNĐ triệu)</h3>
+    <div style="display:flex;gap:12px;font-size:12px">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--primary);display:inline-block"></span>Doanh thu</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--secondary);display:inline-block"></span>Lợi nhuận</span>
+    </div></div>
+    <div class="card-body"><div style="display:flex;gap:6px;align-items:flex-end;height:180px">${bars}</div></div></div>
+  <div class="card" style="margin-top:14px"><div class="card-header"><h3 class="card-title">Chi tiết theo tài khoản</h3></div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Tài khoản</th><th class="text-right">Doanh thu</th><th class="text-right">Chi phí NCC</th><th class="text-right">Lợi nhuận</th><th class="text-right">Tỷ suất</th></tr></thead>
+    <tbody>${accounts.map(a=>`<tr><td class="font-600">${a.name}</td><td class="font-mono text-right">${fmt(a.used)}</td><td class="font-mono text-right">${fmt(Math.round(a.used*.65))}</td><td class="font-mono text-right" style="color:var(--success)">${fmt(Math.round(a.used*.35))}</td><td class="text-right">35%</td></tr>`).join('')}</tbody></table></div></div>`;
+  const debtContent=`<div class="stats-row">
+    <div class="stat-card"><div class="label">Tổng công nợ</div><div class="value">1.22 tỷ</div><div class="sub" style="color:var(--warning)">▲ 12% so với T7</div></div>
+    <div class="stat-card"><div class="label">Trong hạn</div><div class="value">980tr</div><div class="sub" style="color:var(--success)">80.3%</div></div>
+    <div class="stat-card"><div class="label">Quá hạn</div><div class="value">240tr</div><div class="sub" style="color:var(--error)">19.7%</div></div>
+    <div class="stat-card"><div class="label">Cần thu ngay</div><div class="value">2</div><div class="sub">Quá hạn >30 ngày</div></div>
+  </div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Công nợ theo tài khoản</h3><button class="btn btn-outline btn-sm">${ic('download')} Xuất báo cáo</button></div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Tài khoản</th><th class="text-right">Tổng công nợ</th><th class="text-right">0–30 ngày</th><th class="text-right">30–60 ngày</th><th class="text-right">Quá 60 ngày</th><th>Mức độ</th></tr></thead>
+    <tbody>${accounts.map(a=>`<tr><td class="font-600">${a.name}</td><td class="font-mono text-right">${fmt(a.used)}</td><td class="font-mono text-right">${fmt(Math.round(a.used*.3))}</td><td class="font-mono text-right">${fmt(Math.round(a.used*.5))}</td><td class="font-mono text-right" style="color:var(--error)">${fmt(Math.round(a.used*.2))}</td><td>${a.used>400e6?statusBadge('pending'):statusBadge('active')}</td></tr>`).join('')}</tbody></table></div></div>`;
+  return `${netErrBar}${filterBar}${tabs}${S.reportTab==='revenue'?revenueContent:debtContent}`;
+}
+
+// ═══════════════════════════════════════════════════════════════ CONFIG ═════
+function renderConfig(){
+  const mv=S.configMarkupVariant;
+  const netErrBar=`<div class="demo-bar"><strong>Trạng thái:</strong>
+    <button class="demo-btn ${!S.configNetErr?'active':''}" onclick="S.configNetErr=false;S.configTab='planner';render()">AI Planner</button>
+    <button class="demo-btn ${S.configNetErr?'active':''}" onclick="S.configNetErr=true;render()">Lỗi kết nối</button>
+    <button class="demo-btn ${S.configTab==='markup'&&mv==='ready'?'active':''}" onclick="S.configNetErr=false;S.configTab='markup';S.configMarkupVariant='ready';render()">Mark-up mặc định</button>
+    <button class="demo-btn ${mv==='def'?'active':''}" onclick="S.configNetErr=false;S.configTab='markup';S.configMarkupVariant='def';render()">Mark-up Công ty DEF</button>
+    <button class="demo-btn ${mv==='validation-err'?'active':''}" onclick="S.configNetErr=false;S.configTab='markup';S.configMarkupVariant='validation-err';render()">Lỗi giá trị âm</button>
+    <button class="demo-btn ${mv==='success'?'active':''}" onclick="S.configNetErr=false;S.configTab='markup';S.configMarkupVariant='success';render()">Lưu thành công</button>
+  </div>`;
+  const tabs=`<div class="tabs">
+    <button class="tab ${S.configTab==='planner'?'active':''}" onclick="S.configTab='planner';S.configNetErr=false;render()">${ic('smart_toy','font-size:15px')} Cấu hình AI Planner</button>
+    <button class="tab ${S.configTab==='markup'?'active':''}" onclick="S.configTab='markup';S.configNetErr=false;render()">${ic('percent','font-size:15px')} Mark-up theo dịch vụ</button>
+  </div>`;
+  if(S.configNetErr) return `${netErrBar}${tabs}
+  <div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải cấu hình</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary" onclick="S.configNetErr=false;render()">${ic('refresh')} Thử lại</button></div>`;
+  if(S.configTab==='markup'){
+    const mkServices=[['Vé máy bay','8.5'],['Vận chuyển hàng hóa','12.0'],['Khách sạn','10.0'],['Visa & dịch vụ','15.0'],['MICE / Sự kiện','18.5']];
+    const isDefAcc=mv==='def';
+    const isValErr=mv==='validation-err';
+    const isSuccess=mv==='success';
+    const accSelect=`<div class="field" style="margin-bottom:16px"><label>Tài khoản (để trống = áp dụng mặc định)</label>
+      <select class="select" style="width:320px" onchange="if(this.value){S.configMarkupVariant='def';render()}else{S.configMarkupVariant='ready';render()}">
+        <option value="">Mặc định (tất cả)</option>
+        <option ${isDefAcc?'selected':''} value="def">Công ty DEF</option>
+        ${accounts.filter(a=>a.id!=='ACC-002').map(a=>`<option value="${a.id}">${a.name}</option>`).join('')}
+      </select></div>`;
+    const successBanner=isSuccess?`<div class="alert alert-success mb-3">${ic('check_circle')} Đã lưu cài đặt Mark-up thành công!</div>`:'';
+    const valErrRow=(svc,val)=>`<tr ${isValErr&&svc==='Visa & dịch vụ'?'style="background:var(--error-bg)"':''}>
+      <td>${svc}</td>
+      <td class="text-right"><input class="input font-mono" style="width:80px;text-align:right${isValErr&&svc==='Visa & dịch vụ'?';border-color:var(--error)':''}" value="${isValErr&&svc==='Visa & dịch vụ'?'-5':val}">%
+      ${isValErr&&svc==='Visa & dịch vụ'?`<div style="font-size:11px;color:var(--error);margin-top:2px">Giá trị không được âm</div>`:''}</td>
+      <td class="text-center"><button class="btn btn-outline btn-sm">${ic('edit','font-size:13px')}</button></td></tr>`;
+    const rows=mkServices.map(([s,p])=>isValErr?valErrRow(s,p):`<tr><td>${s}</td><td class="font-mono text-right font-600">${isDefAcc&&s==='Vé máy bay'?'9.5':p}%</td><td class="text-center"><button class="btn btn-outline btn-sm">${ic('edit','font-size:13px')}</button></td></tr>`).join('');
+    return `${netErrBar}${tabs}${successBanner}
+    ${isDefAcc?`<div class="alert alert-info mb-3">${ic('info')} Đang xem cài đặt Mark-up riêng cho <strong>Công ty DEF</strong>. Vé máy bay tăng thêm 1% so với mặc định.</div>`:''}
+    ${accSelect}
+    <div><div class="card"><div class="card-header"><h3 class="card-title">Mark-up ${isDefAcc?'— Công ty DEF':'mặc định'}</h3><button class="btn btn-primary btn-sm">${ic('add')} Thêm</button></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>Loại dịch vụ</th><th class="text-right">Mark-up (%)</th><th class="text-center">Sửa</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+      <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px">
+        <button class="btn btn-outline" onclick="S.configMarkupVariant='ready';render()">Hủy</button>
+        <button class="btn btn-primary" onclick="doSaveMarkup()">${ic('save')} Lưu cài đặt</button>
+      </div></div></div>`;
+  }
+  return `${netErrBar}${tabs}
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:860px">
+    <div class="card"><div class="card-header"><h3 class="card-title">Cài đặt AI Planner</h3></div><div class="card-body">
+      <div class="form-row" style="margin-bottom:12px"><div class="fg"><label>Ngưỡng cảnh báo hạn mức (%)</label><input class="input w-full" type="number" value="80"></div></div>
+      <div class="form-row" style="margin-bottom:12px"><div class="fg"><label>Chu kỳ kiểm tra tự động</label><select class="select w-full"><option>Hàng ngày</option><option>Hàng tuần</option><option>Hàng tháng</option></select></div></div>
+      <div class="form-row" style="margin-bottom:12px"><div class="fg"><label>Email nhận cảnh báo</label><input class="input w-full" type="email" value="admin@nextus.vn"></div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border)">
+        <div><div style="font-size:13px;font-weight:600">Tự động đề xuất tăng hạn mức</div><div style="font-size:12px;color:var(--on-surface-variant)">AI gửi đề xuất khi gần ngưỡng</div></div>
+        <div style="width:40px;height:22px;border-radius:11px;background:var(--secondary);cursor:pointer;position:relative" onclick="this.style.background=this.style.background==='var(--outline-variant)'?'var(--secondary)':'var(--outline-variant)'"><div style="position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff"></div></div>
+      </div>
+      <div style="margin-top:14px"><button class="btn btn-primary" onclick="showToast('Đã lưu cài đặt AI Planner!','success')">${ic('save')} Lưu cài đặt</button></div>
+    </div></div>
+    <div class="card"><div class="card-header"><h3 class="card-title">Mark-up mặc định</h3><button class="btn btn-primary btn-sm">${ic('add')} Thêm</button></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>Loại dịch vụ</th><th class="text-right">Mark-up (%)</th><th class="text-center">Sửa</th></tr></thead>
+      <tbody>${[['Vé máy bay','8.5'],['Vận chuyển hàng hóa','12.0'],['Khách sạn','10.0'],['Visa & dịch vụ','15.0'],['MICE / Sự kiện','18.5']].map(([s,p])=>`
+        <tr><td>${s}</td><td class="font-mono text-right font-600">${p}%</td><td class="text-center"><button class="btn btn-outline btn-sm">${ic('edit','font-size:13px')}</button></td></tr>`).join('')}
+      </tbody></table></div></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════ MODALS ════
+function renderModal(){
+  const layer=document.getElementById('modal-layer');
+  const m=S.modal;
+  if(!m){layer.innerHTML='';return}
+  const wrap=(title,body,footer,size='')=>`
+    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal ${size}">
+        <div class="modal-head"><h3>${title}</h3><button class="close-btn" onclick="closeModal()"><span class="material-symbols-outlined">close</span></button></div>
+        <div class="modal-body">${body}</div>
+        <div class="modal-footer">${footer}</div>
+      </div></div>`;
+  let html='';
+
+  // ── Activate ──────────────────────────────────────────────────────────────
+  if(m==='activate'){
+    const a=S.selectedAcc||{name:'Công ty DEF',id:'ACC-002',limit:300e6};
+    html=wrap('Xác nhận kích hoạt tài khoản',
+      `<div class="alert alert-info">${ic('info')} Hành động này sẽ kích hoạt tài khoản <strong>${a.name}</strong> và cho phép tạo đơn hàng.</div>
+       <div class="summary-row"><div class="row"><span class="key">Tài khoản</span><span class="val">${a.name}</span></div><div class="row"><span class="key">Mã tài khoản</span><span class="val font-mono">${a.id}</span></div><div class="row divider"><span class="key">Hạn mức được cấp</span><span class="val orange">${fmt(a.limit||300e6)}</span></div></div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button><button class="btn btn-success-outline" onclick="closeModal();showToast('Kích hoạt tài khoản thành công!','success')">${ic('check_circle')} Xác nhận kích hoạt</button>`);
+  }
+  // ── Block contract ────────────────────────────────────────────────────────
+  else if(m==='block-contract'){
+    html=wrap('Chặn hợp đồng',
+      `<div class="alert alert-warning">${ic('warning')} Tài khoản sẽ không thể tạo đơn hàng mới sau khi bị chặn.</div>
+       <div class="fg"><label>Lý do chặn <span class="req">*</span></label><textarea class="textarea w-full" rows="3" placeholder="Nhập lý do chặn hợp đồng..."></textarea></div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-danger" onclick="closeModal();showToast('Đã chặn hợp đồng','error')">${ic('block')} Chặn hợp đồng</button>`);
+  }
+  // ── Request limit ─────────────────────────────────────────────────────────
+  else if(m==='request-limit'){
+    const rs=S.requestState||'normal';
+    const rsDemoBar=`<div class="demo-bar" style="margin-bottom:14px"><strong>Trạng thái:</strong>
+      <button class="demo-btn ${rs==='normal'?'active':''}" onclick="S.requestState='normal';renderModal()">Bình thường</button>
+      <button class="demo-btn ${rs==='validation-err'?'active':''}" onclick="S.requestState='validation-err';renderModal()">Lỗi nhập liệu</button>
+      <button class="demo-btn ${rs==='network-err'?'active':''}" onclick="S.requestState='network-err';renderModal()">Lỗi kết nối</button>
+      <button class="demo-btn ${rs==='no-ncc'?'active':''}" onclick="S.requestState='no-ncc';renderModal()">Không có NCC</button>
+      <button class="demo-btn ${rs==='restricted'?'active':''}" onclick="S.requestState='restricted';renderModal()">Không có quyền</button>
+      <button class="demo-btn ${rs==='missing-info'?'active':''}" onclick="S.requestState='missing-info';renderModal()">Thiếu thông tin</button>
+    </div>`;
+    const isValErr=rs==='validation-err';
+    const isNet=rs==='network-err';
+    const isNoNcc=rs==='no-ncc';
+    const isRestricted=rs==='restricted';
+    const isMissing=rs==='missing-info';
+    let rlBody=rsDemoBar;
+    if(isNet){
+      rlBody+=`<div class="net-error" style="padding:24px 0"><div class="ne-icon">${ic('wifi_off','font-size:40px')}</div><h3 style="font-size:16px">Không thể tải dữ liệu</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary btn-sm" onclick="S.requestState='normal';renderModal()">${ic('refresh')} Thử lại</button></div>`;
+    } else if(isRestricted){
+      rlBody+=`<div class="alert alert-error">${ic('lock')} Bạn không có quyền tạo yêu cầu tăng hạn mức. Vui lòng liên hệ quản trị viên.</div>`;
+    } else if(isNoNcc){
+      rlBody+=`<div class="alert alert-warning mb-3">${ic('warning')} Không tìm thấy nhà cung cấp (NCC) phù hợp cho tài khoản này.</div>
+        <div class="summary-row"><div class="row"><span class="key">Tài khoản</span><span class="val">Công ty ABC</span></div>
+        <div class="row divider"><span class="key">Trạng thái NCC</span><span class="val"><span class="badge badge-error">Chưa liên kết</span></span></div></div>`;
+    } else if(isMissing){
+      rlBody+=`<div class="alert alert-warning mb-3">${ic('info')} Tài khoản chưa có đủ thông tin để tạo yêu cầu. Vui lòng cập nhật thông tin hợp đồng.</div>
+        <div class="summary-row"><div class="row"><span class="key">Thiếu thông tin</span><span class="val" style="color:var(--error)">Hợp đồng chưa được ký kết</span></div>
+        <div class="row divider"><span class="key">Hành động</span><span class="val"><a href="#" onclick="closeModal();S.nav='accounts';render()" style="color:var(--secondary);font-weight:600">Cập nhật hợp đồng</a></span></div></div>`;
+    } else {
+      rlBody+=`<div class="form-row c2"><div class="fg"><label>Tài khoản</label><select class="select w-full"><option>Công ty ABC</option>${accounts.map(a=>`<option>${a.name}</option>`).join('')}</select></div>
+       <div class="fg"><label>Hạn mức hiện tại</label><input class="input input-readonly w-full" readonly value="500.000.000 VNĐ"></div></div>
+       <div class="form-row c2"><div class="fg"><label>Hạn mức đề xuất <span class="req">*</span></label>
+        <input class="input w-full font-mono ${isValErr?'error-field':''}" placeholder="VD: 700.000.000">
+        ${isValErr?'<div style="font-size:12px;color:var(--error);margin-top:4px">Hạn mức phải lớn hơn hạn mức hiện tại</div>':''}</div>
+       <div class="fg"><label>Thời hạn tạm thời</label>
+        <input class="input w-full ${isValErr?'error-field':''}" value="31/10/2026">
+        ${isValErr?'<div style="font-size:12px;color:var(--error);margin-top:4px">Thời hạn không hợp lệ</div>':''}</div></div>
+       <div class="fg" style="margin-top:8px"><label>Lý do đề xuất <span class="req">*</span></label><textarea class="textarea w-full" rows="3" placeholder="Lý do cần tăng hạn mức..."></textarea></div>`;
+    }
+    const blockFooter=(isNet||isRestricted||isNoNcc||isMissing);
+    html=wrap('Tạo yêu cầu tăng hạn mức tạm thời', rlBody,
+      blockFooter
+        ?`<button class="btn btn-outline" onclick="closeModal()">Đóng</button>`
+        :`<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-primary" onclick="doSubmitLimitRequest()">${ic('send')} Gửi yêu cầu</button>`,
+      'modal-lg');
+  }
+  // ── Approve limit ─────────────────────────────────────────────────────────
+  else if(m==='approve-limit'){
+    html=wrap('Duyệt yêu cầu tăng hạn mức',
+      `<div class="demo-bar" style="margin-bottom:14px"><strong>Variant:</strong>
+        <button class="demo-btn active" onclick="S.modal='approve-limit';renderModal()">Bình thường</button>
+        <button class="demo-btn" onclick="S.modal='approve-limit-neterr';renderModal()">Lỗi mạng (demo)</button>
+       </div>
+       <div class="summary-row mb-4"><div class="row"><span class="key">Tài khoản</span><span class="val">Công ty ABC</span></div>
+       <div class="row"><span class="key">Hạn mức hiện tại</span><span class="val font-mono">500.000.000 VNĐ</span></div>
+       <div class="row"><span class="key">Yêu cầu tăng lên</span><span class="val orange font-mono">700.000.000 VNĐ</span></div>
+       <div class="row divider"><span class="key">Thời hạn tạm thời</span><span class="val">31/10/2026</span></div></div>
+       <div class="fg"><label>Ghi chú duyệt</label><textarea class="textarea w-full" rows="2" placeholder="Ghi chú (tùy chọn)..."></textarea></div>`,
+      `<button class="btn btn-danger" onclick="closeModal();showToast('Đã từ chối yêu cầu','error')">${ic('close')} Từ chối</button><div style="flex:1"></div>
+       <button class="btn btn-outline" onclick="closeModal()">Đóng</button>
+       <button class="btn btn-success-outline" onclick="closeModal();showToast('Đã phê duyệt tăng hạn mức!','success')">${ic('check')} Phê duyệt</button>`);
+  }
+  else if(m==='approve-limit-neterr'){
+    html=wrap('Duyệt yêu cầu tăng hạn mức',
+      `<div class="demo-bar" style="margin-bottom:14px"><strong>Variant:</strong>
+        <button class="demo-btn" onclick="S.modal='approve-limit';renderModal()">Bình thường</button>
+        <button class="demo-btn active" onclick="S.modal='approve-limit-neterr';renderModal()">Lỗi mạng (demo)</button>
+       </div>
+       <div class="net-error" style="padding:24px 0"><div class="ne-icon">${ic('wifi_off','font-size:40px')}</div><h3 style="font-size:16px">Không thể tải dữ liệu</h3><p>Lỗi kết nối mạng</p><button class="btn btn-primary btn-sm" onclick="S.modal='approve-limit';renderModal()">${ic('refresh')} Thử lại</button></div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Đóng</button>`);
+  }
+  // ── Cancel order ──────────────────────────────────────────────────────────
+  else if(m==='cancel-order'){
+    const v=S.cancelVariant;
+    const o=S.selectedOrder||{id:'ORD-001',account:'Công ty ABC',amount:12500000};
+    const cvDemoBar=`<div class="demo-bar" style="margin-bottom:12px"><strong>Trạng thái:</strong>
+      <button class="demo-btn ${v==='default'?'active':''}" onclick="S.cancelVariant='default';renderModal()">Bình thường</button>
+      <button class="demo-btn ${v==='ncc'?'active':''}" onclick="S.cancelVariant='ncc';renderModal()">Trước xác nhận NCC</button>
+      <button class="demo-btn ${v==='ncc2'?'active':''}" onclick="S.cancelVariant='ncc2';renderModal()">Sau xác nhận NCC</button>
+      <button class="demo-btn ${v==='validation'?'active':''}" onclick="S.cancelVariant='validation';renderModal()">Lỗi validation</button>
+      <button class="demo-btn ${v==='network'?'active':''}" onclick="S.cancelVariant='network';renderModal()">Lỗi kết nối</button>
+      <button class="demo-btn ${v==='success'?'active':''}" onclick="S.cancelVariant='success';renderModal()">Hủy thành công</button>
+    </div>`;
+    const isNet=v==='network';
+    const isVal=v==='validation';
+    const isNcc2=v==='ncc2';
+    const isSuccess=v==='success';
+    const statusLabel=v==='ncc'?`<span class="badge badge-neutral">Trước xác nhận NCC</span>`:isNcc2?`<span class="badge badge-warning">Sau xác nhận NCC — Có phí hủy</span>`:`<span class="badge badge-info">Đang xử lý</span>`;
+    let body=cvDemoBar;
+    if(isSuccess){
+      body+=`<div class="alert alert-success">${ic('check_circle')} Đơn hàng <strong class="font-mono">${o.id}</strong> đã được hủy thành công.</div>`;
+    } else if(isNet){
+      body+=`<div class="summary-row mb-3"><div class="row"><span class="key">Mã đơn</span><span class="val font-mono">${o.id}</span></div></div>
+      <div class="net-error" style="padding:20px 0"><div class="ne-icon">${ic('wifi_off','font-size:36px')}</div><h3 style="font-size:15px">Lỗi kết nối mạng</h3><p style="font-size:12px">Không thể hủy đơn lúc này. Vui lòng thử lại.</p></div>`;
+    } else if(isNcc2){
+      body+=`<div class="alert alert-warning mb-3">${ic('warning')} Đơn đã được NCC xác nhận. Hủy đơn sẽ phát sinh <strong>phí hủy vé</strong>.</div>
+      <div class="summary-row mb-3">
+        <div class="row"><span class="key">Trạng thái</span><span class="val">${statusLabel}</span></div>
+        <div class="row"><span class="key">Mã đơn</span><span class="val font-mono">${o.id}</span></div>
+        <div class="row"><span class="key">Tài khoản</span><span class="val">${o.account}</span></div>
+        <div class="row"><span class="key">Giá trị đơn</span><span class="val font-mono">${fmt(o.amount)}</span></div>
+        <div class="row divider"><span class="key">Phí hủy ước tính</span><span class="val font-mono" style="color:var(--error);font-weight:700">${fmt(Math.round(o.amount*0.15))} (15%)</span></div>
+      </div>
+      <div class="fg"><label>Lý do hủy <span class="req">*</span></label><textarea class="textarea w-full" rows="3" placeholder="Nhập lý do hủy đơn..."></textarea></div>`;
+    } else {
+      body+=`<div class="summary-row mb-3">
+        <div class="row"><span class="key">Trạng thái</span><span class="val">${statusLabel}</span></div>
+        <div class="row"><span class="key">Mã đơn</span><span class="val font-mono">${o.id}</span></div>
+        <div class="row"><span class="key">Tài khoản</span><span class="val">${o.account}</span></div>
+        <div class="row divider"><span class="key">Tổng tiền</span><span class="val primary font-mono">${fmt(o.amount)}</span></div>
+      </div>
+      <div class="fg"><label>Lý do hủy đơn <span class="req">*</span></label>
+        <textarea class="textarea w-full ${isVal?'error-field':''}" rows="4" placeholder="Nhập lý do..."></textarea>
+        ${isVal?'<div style="font-size:12px;color:var(--error);margin-top:4px">Vui lòng nhập lý do hủy đơn</div>':''}
+      </div>`;
+    }
+    html=wrap('Hủy đơn hàng', body,
+      isSuccess
+        ?`<button class="btn btn-primary" onclick="closeModal()">${ic('check')} Đóng</button>`
+        :isNet
+          ?`<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-primary" onclick="S.cancelVariant='default';renderModal()">${ic('refresh')} Thử lại</button>`
+          :`<button class="btn btn-outline" onclick="closeModal()">Không hủy</button><button class="btn btn-danger" onclick="doCancelOrder()">${ic('cancel')} Xác nhận hủy đơn</button>`);
+  }
+  // ── Add service ───────────────────────────────────────────────────────────
+  else if(m==='add-service'){
+    html=wrap('Thêm dịch vụ bổ sung',
+      `<div class="demo-bar" style="margin-bottom:14px"><strong>Variant:</strong>
+        <button class="demo-btn active">Nhập form</button>
+        <button class="demo-btn" onclick="closeModal();showToast('Thêm dịch vụ bổ sung thành công!','success')">Thành công (demo)</button>
+        <button class="demo-btn" onclick="document.querySelector('.add-sv-err').classList.toggle('hidden')">Lỗi validation (demo)</button>
+       </div>
+       <div class="alert-error alert add-sv-err hidden">${ic('error')} Vui lòng điền đầy đủ các trường bắt buộc.</div>
+       <div class="fg mb-3"><label>Loại dịch vụ <span class="req">*</span></label>
+         <select class="select w-full"><option>-- Chọn dịch vụ --</option><option>Visa</option><option>Bảo hiểm du lịch</option><option>Cho thuê xe</option><option>Phòng chờ sân bay</option><option>Đón/tiễn sân bay</option></select></div>
+       <div class="form-row c2"><div class="fg"><label>Nhà cung cấp</label><input class="input w-full" placeholder="Tên nhà cung cấp"></div>
+       <div class="fg"><label>Đơn giá (VNĐ) <span class="req">*</span></label><input class="input w-full font-mono" placeholder="0"></div></div>
+       <div class="fg" style="margin-top:8px"><label>Ghi chú</label><textarea class="textarea w-full" rows="2" placeholder="Mô tả dịch vụ bổ sung..."></textarea></div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-primary" onclick="closeModal();showToast('Đã thêm dịch vụ bổ sung thành công!','success')">${ic('add')} Thêm dịch vụ</button>`);
+  }
+  // ── Create account ────────────────────────────────────────────────────────
+  else if(m==='create-account'){
+    const cav=S.createAccVariant||'normal';
+    const caDemoBar=`<div class="demo-bar" style="margin-bottom:14px"><strong>Trạng thái:</strong>
+      <button class="demo-btn ${cav==='normal'?'active':''}" onclick="S.createAccVariant='normal';renderModal()">Bình thường</button>
+      <button class="demo-btn ${cav==='validation-err'?'active':''}" onclick="S.createAccVariant='validation-err';renderModal()">Lỗi validation</button>
+      <button class="demo-btn ${cav==='network-err'?'active':''}" onclick="S.createAccVariant='network-err';renderModal()">Lỗi kết nối</button>
+      <button class="demo-btn ${cav==='with-contract'?'active':''}" onclick="S.createAccVariant='with-contract';renderModal()">MST trùng hợp đồng</button>
+    </div>`;
+    const isValErr=cav==='validation-err';
+    const isNetErr=cav==='network-err';
+    const isContract=cav==='with-contract';
+    let caBody=caDemoBar;
+    if(isNetErr){
+      caBody+=`<div class="net-error" style="padding:24px 0"><div class="ne-icon">${ic('wifi_off','font-size:40px')}</div><h3 style="font-size:16px">Không thể tạo tài khoản</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p></div>`;
+    } else {
+      caBody+=`<div class="form-row c2"><div class="fg"><label>Tên công ty <span class="req">*</span></label>
+        <input class="input w-full ${isValErr?'error-field':''}" placeholder="Nhập tên công ty" value="${isValErr?'':isContract?'Công ty ABC':''}">
+        ${isValErr?'<div style="font-size:12px;color:var(--error);margin-top:4px">Vui lòng nhập tên công ty</div>':''}</div>
+       <div class="fg"><label>Mã số thuế <span class="req">*</span></label>
+        <input class="input w-full font-mono ${isContract?'error-field':''}" placeholder="0100000000" value="${isContract?'0101234567':''}" oninput="if(this.value==='0101234567'){document.getElementById('mst-warn').classList.remove('hidden')}else{document.getElementById('mst-warn').classList.add('hidden')}">
+        ${isContract?'<div style="font-size:12px;color:var(--error);margin-top:4px">MST đã có hợp đồng khung</div>':''}</div></div>
+       <div class="alert alert-warning ${isContract?'':'hidden'}" id="mst-warn" style="margin:0 0 12px">${ic('warning')} MST này đã có hợp đồng khung đang hiệu lực. <span style="font-weight:600;cursor:pointer;text-decoration:underline" onclick="closeModal();showModal('mst-conflict')">Xem tài khoản hiện có</span></div>
+       <div class="form-row c2" style="margin-top:0"><div class="fg"><label>Key Account</label><select class="select w-full"><option>Nguyễn Văn A</option><option>Lê Văn C</option></select></div>
+       <div class="fg"><label>CCS vận hành</label><select class="select w-full"><option>Trần Thị B</option><option>Phạm Thị D</option></select></div></div>
+       <div class="fg" style="margin-top:8px"><label>Hạn mức công nợ (VNĐ) <span class="req">*</span></label>
+        <input class="input w-full font-mono ${isValErr?'error-field':''}" placeholder="VD: 300.000.000">
+        ${isValErr?'<div style="font-size:12px;color:var(--error);margin-top:4px">Hạn mức không được để trống</div>':''}</div>
+       <div class="fg" style="margin-top:8px"><label>Ghi chú</label><textarea class="textarea w-full" rows="2" placeholder="Thông tin bổ sung..."></textarea></div>`;
+    }
+    html=wrap('Tạo tài khoản B2B mới', caBody,
+      isNetErr
+        ?`<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-primary" onclick="S.createAccVariant='normal';renderModal()">${ic('refresh')} Thử lại</button>`
+        :`<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-primary" onclick="doCreateAccount()">${ic('add')} Tạo tài khoản</button>`,
+      'modal-lg');
+  }
+  // ── Activate (network-err variant) ───────────────────────────────────────
+  else if(m==='activate-neterr'){
+    html=wrap('Xác nhận kích hoạt tài khoản',
+      `<div class="net-error" style="padding:24px 0"><div class="ne-icon">${ic('wifi_off','font-size:40px')}</div><h3 style="font-size:16px">Không thể kích hoạt</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary btn-sm" onclick="closeModal();showToast('Kích hoạt tài khoản thành công!','success')">${ic('refresh')} Thử lại</button></div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Đóng</button>`);
+  }
+  // ── Payment method ────────────────────────────────────────────────────────
+  else if(m==='payment-method'){
+    const pv=S.paymentVariant;
+    const pvDemoBar=`<div class="demo-bar" style="margin-bottom:14px"><strong>Phương thức:</strong>
+      <button class="demo-btn ${pv==='1'?'active':''}" onclick="S.paymentVariant='1';renderModal()">Thanh toán ngay</button>
+      <button class="demo-btn ${pv==='2'?'active':''}" onclick="S.paymentVariant='2';renderModal()">Công nợ</button>
+      <button class="demo-btn ${pv==='debt-locked'?'active':''}" onclick="S.paymentVariant='debt-locked';renderModal()">Công nợ (khóa)</button>
+      <button class="demo-btn ${pv==='debt'?'active':''}" onclick="S.paymentVariant='debt';renderModal()">Công nợ (cảnh báo)</button>
+      <button class="demo-btn ${pv==='transfer'?'active':''}" onclick="S.paymentVariant='transfer';renderModal()">Chuyển khoản</button>
+      <button class="demo-btn ${pv==='visa'?'active':''}" onclick="S.paymentVariant='visa';renderModal()">Thẻ Visa</button>
+    </div>`;
+    const o=S.selectedOrder||{amount:12500000,account:'Công ty ABC'};
+    let payBody='';
+    if(pv==='1'){
+      payBody=`<div class="alert alert-info mb-3">${ic('info')} Thanh toán ngay — Tổng tiền sẽ bị trừ ngay từ số dư của tài khoản.</div>
+        <div class="summary-row"><div class="row"><span class="key">Tài khoản</span><span class="val">${o.account}</span></div>
+        <div class="row"><span class="key">Số dư hiện tại</span><span class="val font-mono">350.000.000 VNĐ</span></div>
+        <div class="row divider"><span class="key">Số tiền thanh toán</span><span class="val orange font-mono font-700">${fmt(o.amount)}</span></div></div>`;
+    } else if(pv==='2'){
+      payBody=`<div class="summary-row"><div class="row"><span class="key">Phương thức</span><span class="val">Công nợ</span></div>
+        <div class="row"><span class="key">Hạn mức công nợ</span><span class="val font-mono">500.000.000 VNĐ</span></div>
+        <div class="row"><span class="key">Đã sử dụng</span><span class="val font-mono">120.000.000 VNĐ</span></div>
+        <div class="row divider"><span class="key">Còn lại</span><span class="val font-mono" style="color:var(--success)">380.000.000 VNĐ</span></div></div>`;
+    } else if(pv==='debt-locked'){
+      payBody=`<div class="alert alert-error mb-3">${ic('lock')} Tài khoản công nợ đang bị khóa. Không thể sử dụng phương thức này.</div>
+        <div class="summary-row"><div class="row"><span class="key">Lý do khóa</span><span class="val">Quá hạn thanh toán 15 ngày</span></div>
+        <div class="row divider"><span class="key">Ngày quá hạn</span><span class="val" style="color:var(--error)">01/07/2026</span></div></div>`;
+    } else if(pv==='debt'){
+      payBody=`<div class="alert alert-warning mb-3">${ic('warning')} Tài khoản sắp đạt giới hạn công nợ. Vui lòng chú ý.</div>
+        <div class="summary-row"><div class="row"><span class="key">Hạn mức</span><span class="val font-mono">500.000.000 VNĐ</span></div>
+        <div class="row"><span class="key">Đã dùng</span><span class="val font-mono" style="color:var(--warning)">470.000.000 VNĐ (94%)</span></div>
+        <div class="row divider"><span class="key">Còn lại</span><span class="val font-mono" style="color:var(--warning);font-weight:700">30.000.000 VNĐ</span></div></div>`;
+    } else if(pv==='transfer'){
+      payBody=`<div class="fg mb-3"><label>Ngân hàng</label><select class="select w-full"><option>Vietcombank</option><option>BIDV</option><option>Techcombank</option><option>MB Bank</option></select></div>
+        <div class="fg mb-3"><label>Số tài khoản <span class="req">*</span></label><input class="input w-full font-mono" placeholder="Nhập số tài khoản người nhận"></div>
+        <div class="fg"><label>Ghi chú chuyển khoản</label><input class="input w-full" value="Thanh toan don hang ${o.id||'ORD-001'}"></div>`;
+    } else if(pv==='visa'){
+      payBody=`<div class="fg mb-3"><label>Số thẻ <span class="req">*</span></label><input class="input w-full font-mono" placeholder="•••• •••• •••• ••••"></div>
+        <div class="form-row c2 mb-3"><div class="fg"><label>MM/YY</label><input class="input w-full" placeholder="12/28"></div>
+        <div class="fg"><label>CVV</label><input class="input w-full font-mono" placeholder="•••"></div></div>
+        <div class="fg"><label>Tên chủ thẻ</label><input class="input w-full" placeholder="NGUYEN VAN A"></div>`;
+    }
+    html=wrap('Chọn phương thức thanh toán',
+      `${pvDemoBar}${payBody}`,
+      pv==='debt-locked'
+        ?`<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-primary" onclick="S.nav='accounts';closeModal();render()">Xem tài khoản</button>`
+        :`<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-primary" onclick="closeModal();showToast('Xác nhận phương thức thanh toán thành công!','success')">${ic('check')} Xác nhận</button>`);
+  }
+  // ── Add cost (thêm chi phí dịch vụ) ─────────────────────────────────────
+  else if(m==='add-cost'){
+    const av=S.addCostVariant;
+    const acDemoBar=`<div class="demo-bar" style="margin-bottom:14px"><strong>Loại chi phí:</strong>
+      <button class="demo-btn ${av==='base'?'active':''}" onclick="S.addCostVariant='base';renderModal()">Chi phí cơ bản</button>
+      <button class="demo-btn ${av==='custom'?'active':''}" onclick="S.addCostVariant='custom';renderModal()">Chi phí tùy chỉnh</button>
+      <button class="demo-btn ${av==='price-err'?'active':''}" onclick="S.addCostVariant='price-err';renderModal()">Lỗi giá âm</button>
+      <button class="demo-btn ${av==='date-err'?'active':''}" onclick="S.addCostVariant='date-err';renderModal()">Lỗi ngày</button>
+      <button class="demo-btn ${av==='visa'?'active':''}" onclick="S.addCostVariant='visa';renderModal()">Visa/Passport</button>
+    </div>`;
+    const isPriceErr=av==='price-err';
+    const isDateErr=av==='date-err';
+    const isVisa=av==='visa';
+    const isCustom=av==='custom';
+    let costBody='';
+    if(isVisa){
+      costBody=`<div class="fg mb-3"><label>Loại chi phí</label><input class="input input-readonly w-full" readonly value="Visa / Hộ chiếu"></div>
+        <div class="form-row c2 mb-3"><div class="fg"><label>Quốc gia</label><select class="select w-full"><option>Nhật Bản</option><option>Hàn Quốc</option><option>Mỹ</option><option>Châu Âu (Schengen)</option></select></div>
+        <div class="fg"><label>Số lượng hồ sơ <span class="req">*</span></label><input class="input w-full" type="number" value="2"></div></div>
+        <div class="form-row c2"><div class="fg"><label>Phí visa/người (VNĐ) <span class="req">*</span></label><input class="input w-full font-mono" value="2500000"></div>
+        <div class="fg"><label>Ngày nộp hồ sơ <span class="req">*</span></label><input class="input w-full" value="10/09/2026"></div></div>`;
+    } else {
+      costBody=`<div class="form-row c2 mb-3">
+        <div class="fg"><label>Loại chi phí <span class="req">*</span></label>
+          <select class="select w-full"><option>${isCustom?'Chi phí tùy chỉnh':'-- Chọn loại --'}</option><option>Phí dịch vụ</option><option>Phí vận chuyển</option><option>Phụ thu nhiên liệu</option><option>Chi phí tùy chỉnh</option></select></div>
+        <div class="fg"><label>Nhà cung cấp</label><input class="input w-full" placeholder="Tên NCC" ${isCustom?'value="Dịch vụ bên ngoài"':''}></div></div>
+        <div class="form-row c2 mb-3">
+          <div class="fg"><label>Đơn giá (VNĐ) <span class="req">*</span></label>
+            <input class="input w-full font-mono ${isPriceErr?'error-field':''}" value="${isPriceErr?'-500000':''}">
+            ${isPriceErr?'<div style="font-size:12px;color:var(--error);margin-top:4px">Giá không được âm</div>':''}</div>
+          <div class="fg"><label>Ngày áp dụng <span class="req">*</span></label>
+            <input class="input w-full ${isDateErr?'error-field':''}" value="${isDateErr?'45/13/2026':'05/09/2026'}">
+            ${isDateErr?'<div style="font-size:12px;color:var(--error);margin-top:4px">Ngày không hợp lệ</div>':''}</div>
+        </div>
+        <div class="fg"><label>Ghi chú</label><textarea class="textarea w-full" rows="2" placeholder="Mô tả chi phí..."></textarea></div>`;
+    }
+    html=wrap('Thêm chi phí dịch vụ',
+      `${acDemoBar}${costBody}`,
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-primary" onclick="doAddCost()">${ic('add')} Thêm chi phí</button>`);
+  }
+  // ── MST conflict ──────────────────────────────────────────────────────────
+  else if(m==='mst-conflict'){
+    html=wrap('Hợp đồng khung đã tồn tại',
+      `<p style="font-size:13px;color:var(--on-surface);margin-bottom:14px">Mã số thuế này đã có hợp đồng khung đang hiệu lực.</p>
+       <div class="summary-row"><div class="row"><span class="key">Tên công ty</span><span class="val">Công ty ABC</span></div>
+       <div class="row"><span class="key">Mã số thuế</span><span class="val font-mono">0101234567</span></div>
+       <div class="row"><span class="key">Hợp đồng</span><span class="val font-mono">HĐ-2026-001</span></div>
+       <div class="row divider"><span class="key">Trạng thái</span><span class="val">${statusBadge('active')}</span></div></div>`,
+      `<button class="btn btn-outline" onclick="closeModal();showModal('create-account')">Hủy</button><button class="btn btn-primary" onclick="closeModal();openAcc('ACC-001')">Xem tài khoản hiện có</button>`);
+  }
+  // ── Create order wizard ───────────────────────────────────────────────────
+  else if(m==='create-order'){
+    const step=S.wizardStep;
+    const stepBar=`<div class="stepper" style="margin-bottom:18px">
+      <div class="step"><div class="step-dot ${step===1?'active':'done'}">${step>1?ic('check','font-size:16px'):'1'}</div><span class="step-label ${step===1?'active':'done'}">Chọn tài khoản</span></div>
+      <div class="step-line ${step>1?'done':''}"></div>
+      <div class="step"><div class="step-dot ${step===2?'active':step>2?'done':'pending'}">${step>2?ic('check','font-size:16px'):'2'}</div><span class="step-label ${step===2?'active':step>2?'done':'pending'}">Chọn dịch vụ</span></div>
+      <div class="step-line ${step>2?'done':''}"></div>
+      <div class="step"><div class="step-dot ${step===3?'active':step>3?'done':'pending'}">${step>3?ic('check','font-size:16px'):3}</div><span class="step-label ${step===3?'active':step>3?'done':'pending'}">Chi tiết & giá</span></div>
+      <div class="step-line ${step>3?'done':''}"></div>
+      <div class="step"><div class="step-dot ${step===4?'active':'pending'}">${step===4?'4':4}</div><span class="step-label ${step===4?'active':'pending'}">Xác nhận</span></div>
+    </div>`;
+
+    // Step 1: Account selection
+    if(step===1){
+      const err=S.wizardStep1Err;
+      const accRows=accounts.map((a,i)=>`<div style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;${S.selectedAcc&&S.selectedAcc.id===a.id?'background:var(--surface-container-low)':''}" onclick="S.selectedAcc=accounts[${i}];S.wizardStep=2;S.wizardStep1Err=false;renderModal()">
+          <div><div style="font-weight:600;font-size:13px">${a.name}</div><div style="font-size:12px;color:var(--on-surface-variant)">${a.id} · Hạn mức: ${fmt(a.limit||300e6)}</div></div>
+          <span class="material-symbols-outlined" style="font-size:18px;color:var(--on-surface-variant)">chevron_right</span>
+        </div>`).join('');
+      html=wrap('Tạo đơn hộ — Chọn tài khoản',
+        `${stepBar}
+        <div class="fg mb-3"><label>Tìm kiếm tài khoản</label>
+          <input class="input w-full ${err?'error-field':''}" placeholder="Nhập tên hoặc mã tài khoản...">
+          ${err?'<div style="font-size:12px;color:var(--error);margin-top:4px">Vui lòng chọn một tài khoản trước khi tiếp tục</div>':''}
+        </div>
+        <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;max-height:260px;overflow-y:auto">${accRows}</div>
+        <div class="demo-bar" style="margin-top:14px"><strong>Demo:</strong>
+          <button class="demo-btn ${!err?'active':''}" onclick="S.wizardStep1Err=false;renderModal()">Bình thường</button>
+          <button class="demo-btn ${err?'active':''}" onclick="S.wizardStep1Err=true;S.selectedAcc=null;renderModal()">Lỗi validation</button>
+        </div>`,
+        `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><div style="flex:1"></div>
+         <button class="btn btn-primary" onclick="if(!S.selectedAcc){S.wizardStep1Err=true;renderModal();}else{S.wizardStep=2;renderModal();}">${ic('arrow_forward')} Tiếp theo</button>`,
+        'modal-xl');
+    }
+    // Step 2: Flight results / hold state / detail
+    else if(step===2){
+      const hs=S.flightHoldState;
+      const dv=S.flightDetailView;
+      const holdDemoBar=`<div class="demo-bar" style="margin-bottom:12px"><strong>Trạng thái:</strong>
+        <button class="demo-btn ${!hs&&!dv?'active':''}" onclick="S.flightHoldState=null;S.flightDetailView=false;renderModal()">Kết quả bay</button>
+        <button class="demo-btn ${dv?'active':''}" onclick="S.flightHoldState=null;S.flightDetailView=true;renderModal()">Chi tiết chuyến bay</button>
+        <button class="demo-btn ${hs==='success'?'active':''}" onclick="S.flightHoldState='success';S.flightDetailView=false;renderModal()">Giữ chỗ thành công</button>
+        <button class="demo-btn ${hs==='fail'?'active':''}" onclick="S.flightHoldState='fail';S.flightDetailView=false;renderModal()">Giữ chỗ thất bại</button>
+        <button class="demo-btn ${hs==='price-change'?'active':''}" onclick="S.flightHoldState='price-change';S.flightDetailView=false;renderModal()">Giá thay đổi</button>
+      </div>`;
+      if(dv){
+        // Flight detail view
+        const f=flights[S.wizardService||0]||flights[0];
+        html=wrap('Chi tiết chuyến bay',
+          `${holdDemoBar}${stepBar}
+          <div class="summary-row mb-3">
+            <div class="row"><span class="key">Hãng hàng không</span><span class="val font-600">${f.airline}</span></div>
+            <div class="row"><span class="key">Số hiệu chuyến</span><span class="val font-mono">${f.code}</span></div>
+            <div class="row"><span class="key">Tuyến bay</span><span class="val">${f.dep} → ${f.arr}</span></div>
+            <div class="row"><span class="key">Khởi hành</span><span class="val">${f.dep_time||'07:00'}</span></div>
+            <div class="row"><span class="key">Đến nơi</span><span class="val">${f.arr_time||'09:10'}</span></div>
+            <div class="row"><span class="key">Thời gian bay</span><span class="val">${f.dur}</span></div>
+            <div class="row"><span class="key">Hạng vé</span><span class="val">Phổ thông</span></div>
+            <div class="row"><span class="key">Số ghế còn</span><span class="val"><span class="badge badge-${f.seats<5?'warning':'neutral'}">${f.seats} ghế</span></span></div>
+            <div class="row divider"><span class="key">Giá/người</span><span class="val orange font-mono font-700" style="font-size:16px">${fmt(f.price)}</span></div>
+          </div>`,
+          `<button class="btn btn-outline" onclick="S.flightDetailView=false;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+           <button class="btn btn-primary" onclick="S.wizardService=${S.wizardService||0};S.flightDetailView=false;renderModal()">${ic('check')} Chọn chuyến này</button>`,
+          'modal-xl');
+      } else if(hs==='success'){
+        const f=flights[S.wizardService||0]||flights[0];
+        html=wrap('Giữ chỗ thành công',
+          `${holdDemoBar}${stepBar}
+          <div class="alert alert-success mb-3">${ic('check_circle')} Đã giữ chỗ thành công! Mã giữ chỗ: <strong class="font-mono">PNR-7X4B2</strong></div>
+          <div class="summary-row">
+            <div class="row"><span class="key">Chuyến bay</span><span class="val">${f.airline} · ${f.code}</span></div>
+            <div class="row"><span class="key">Tuyến</span><span class="val">${f.dep} → ${f.arr}</span></div>
+            <div class="row"><span class="key">Thời hạn giữ chỗ</span><span class="val" style="color:var(--warning)">23:59 hôm nay</span></div>
+            <div class="row divider"><span class="key">Giá đã khóa</span><span class="val orange font-mono font-700">${fmt(f.price)}</span></div>
+          </div>`,
+          `<button class="btn btn-outline" onclick="closeModal()">Đóng</button><div style="flex:1"></div>
+           <button class="btn btn-primary" onclick="S.wizardStep=3;S.flightHoldState=null;renderModal()">${ic('arrow_forward')} Tiếp tục tạo đơn</button>`,
+          'modal-xl');
+      } else if(hs==='fail'){
+        html=wrap('Không thể giữ chỗ',
+          `${holdDemoBar}${stepBar}
+          <div class="alert alert-error mb-3">${ic('error')} Không thể giữ chỗ cho chuyến bay này. Chuyến bay đã hết chỗ hoặc không còn khả dụng.</div>
+          <div class="net-error" style="padding:20px 0"><div class="ne-icon">${ic('flight_off','font-size:48px')}</div><h3>Giữ chỗ thất bại</h3><p>Vui lòng chọn chuyến bay khác hoặc thử lại sau.</p></div>`,
+          `<button class="btn btn-outline" onclick="S.flightHoldState=null;renderModal()">Chọn lại</button><div style="flex:1"></div>
+           <button class="btn btn-primary" onclick="S.flightHoldState=null;renderModal()">${ic('refresh')} Thử lại</button>`,
+          'modal-xl');
+      } else if(hs==='price-change'){
+        const f=flights[S.wizardService||0]||flights[0];
+        const oldPrice=f.price;
+        const newPrice=Math.round(oldPrice*1.15);
+        html=wrap('Giá vé thay đổi',
+          `${holdDemoBar}${stepBar}
+          <div class="alert alert-warning mb-3">${ic('warning')} Giá vé đã thay đổi kể từ khi bạn chọn. Vui lòng xác nhận giá mới để tiếp tục.</div>
+          <div class="summary-row">
+            <div class="row"><span class="key">Chuyến bay</span><span class="val">${f.airline} · ${f.code}</span></div>
+            <div class="row"><span class="key">Giá cũ</span><span class="val font-mono" style="text-decoration:line-through;color:var(--on-surface-variant)">${fmt(oldPrice)}</span></div>
+            <div class="row divider"><span class="key">Giá mới</span><span class="val orange font-mono font-700" style="font-size:16px">${fmt(newPrice)} <span class="badge badge-warning">+${Math.round((newPrice-oldPrice)/1000)}K</span></span></div>
+          </div>`,
+          `<button class="btn btn-outline" onclick="S.flightHoldState=null;S.wizardService=null;renderModal()">Chọn lại</button><div style="flex:1"></div>
+           <button class="btn btn-primary" onclick="S.wizardStep=3;S.flightHoldState=null;renderModal()">${ic('check')} Chấp nhận giá mới</button>`,
+          'modal-xl');
+      } else {
+        // Normal flight list
+        const flightItems=flights.map((f,i)=>`<div class="flight-card ${S.wizardService===i?'selected':''}" onclick="S.wizardService=${i};renderModal()">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-size:11px;font-weight:700;color:var(--on-surface-variant);width:90px">${f.airline}</div>
+              <div><span style="font-size:15px;font-weight:700">${f.dep}</span> <span style="font-size:13px;color:var(--on-surface-variant)">→</span> <span style="font-size:15px;font-weight:700">${f.arr}</span></div>
+              <div style="font-size:12px;color:var(--on-surface-variant)">${f.code} · ${f.dur}</div>
+              <span class="badge badge-${f.seats<5?'warning':f.seats<10?'orange':'neutral'}" style="font-size:10px">${f.seats} ghế trống</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:16px;font-weight:700;color:var(--secondary);font-variant-numeric:tabular-nums">${fmt(f.price)}</div>
+              <div style="font-size:11px;color:var(--on-surface-variant)">/người</div>
+            </div>
+          </div>
+          ${S.wizardService===i?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;display:flex;gap:8px">
+            <span style="color:var(--secondary);font-weight:600">${ic('check_circle','color:var(--secondary);font-size:14px')} Đã chọn</span>
+            <button style="font-size:11px;color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline" onclick="S.flightDetailView=true;renderModal()">Xem chi tiết</button>
+            <button style="font-size:11px;color:var(--secondary);background:none;border:none;cursor:pointer;font-weight:600" onclick="S.flightHoldState='success';renderModal()">Giữ chỗ</button>
+          </div>`:''}
+        </div>`).join('');
+        html=wrap('Tạo đơn hộ — Chọn dịch vụ',
+          `${holdDemoBar}${stepBar}
+          <div class="summary-row mb-3"><div class="row"><span class="key">${ic('flight_takeoff','font-size:15px')} Tuyến bay</span><span class="val">SGN → HAN · 05/09/2026 · 1 người lớn</span></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-size:13px;font-weight:600;color:var(--on-surface)">${flights.length} chuyến bay phù hợp</div>
+            <select class="select" style="width:140px;height:32px;font-size:12px"><option>Giá tăng dần</option><option>Giá giảm dần</option><option>Giờ bay sớm</option></select>
+          </div>
+          ${flightItems}`,
+          `<button class="btn btn-outline" onclick="S.wizardStep=1;S.flightHoldState=null;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+           <button class="btn btn-primary" ${S.wizardService===null?'disabled style="opacity:.5;cursor:not-allowed"':''} onclick="S.wizardStep=3;S.orderBlocked=false;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
+          'modal-xl');
+      }
+    }
+    // Step 3: Details
+    else if(step===3){
+      const f=flights[S.wizardService||0];
+      html=wrap('Tạo đơn hộ — Chi tiết dịch vụ & giá',
+        `${stepBar}
+        <div class="form-row c2"><div class="fg"><label>Dịch vụ đã chọn</label><input class="input input-readonly w-full" readonly value="${f?f.airline+' — '+f.dep+'→'+f.arr:'Vé máy bay SGN→HAN'}"></div>
+        <div class="fg"><label>Nhà cung cấp</label><select class="select w-full"><option>Vietnam Airlines</option><option>Vietjet Air</option><option>Bamboo Airways</option></select></div></div>
+        <div class="form-row c2"><div class="fg"><label>Ngày đi <span class="req">*</span></label><input class="input w-full" value="05/09/2026"></div>
+        <div class="fg"><label>Hạng vé</label><select class="select w-full"><option>Phổ thông</option><option>Thương gia</option></select></div></div>
+        <div class="form-row c2"><div class="fg"><label>Số hành khách</label><input class="input w-full" type="number" value="2"></div>
+        <div class="fg"><label>Đơn giá (VNĐ/người)</label><input class="input w-full font-mono" value="${f?f.price.toLocaleString('vi-VN'):'2.500.000'}"></div></div>
+        <div class="fg"><label>Ghi chú</label><textarea class="textarea w-full" rows="2" placeholder="Ghi chú..."></textarea></div>`,
+        `<button class="btn btn-outline" onclick="S.wizardStep=2;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+         <button class="btn btn-outline" onclick="S.wizardStep=4;S.orderBlocked=true;renderModal()">Mô phỏng bị chặn</button>
+         <button class="btn btn-primary" onclick="S.wizardStep=4;S.orderBlocked=false;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
+        'modal-xl');
+    }
+    // Step 4: Confirm (normal or blocked)
+    else if(step===4){
+      const f=flights[S.wizardService||0];
+      const total=(f?f.price:2500000)*2;
+      const blockedBody=`<div class="alert alert-error mb-4">${ic('error','font-size:20px')} <div><strong>Không thể tạo đơn hàng</strong><br>Tài khoản này đang bị chặn. Vui lòng kiểm tra trạng thái hợp đồng hoặc liên hệ bộ phận quản lý.</div></div>
+        ${stepBar}<div class="summary-row"><div class="row"><span class="key">Tài khoản</span><span class="val">Công ty DEF</span></div><div class="row divider"><span class="key">Trạng thái hợp đồng</span><span class="val">${statusBadge('cancelled')}</span></div></div>`;
+      const normalBody=`${stepBar}<div class="summary-row mb-3">
+        <div class="row"><span class="key">Tài khoản</span><span class="val">Công ty ABC</span></div>
+        <div class="row"><span class="key">Dịch vụ</span><span class="val">${f?f.airline:'Vietnam Airlines'} · ${f?f.dep+'→'+f.arr:'SGN→HAN'}</span></div>
+        <div class="row"><span class="key">Ngày đi</span><span class="val">05/09/2026</span></div>
+        <div class="row"><span class="key">Số hành khách</span><span class="val">2 người</span></div>
+        <div class="row"><span class="key">Đơn giá/người</span><span class="val font-mono">${fmt(f?f.price:2500000)}</span></div>
+        <div class="row divider"><span class="key font-700" style="font-size:14px">Tổng thanh toán</span><span class="val orange font-mono" style="font-size:15px">${fmt(total)}</span></div>
+      </div>
+      <div class="alert alert-info" style="margin:0">${ic('info')} Đơn hàng sẽ được gửi đến nhà cung cấp ngay sau khi tạo.</div>`;
+      html=wrap('Tạo đơn hộ — Xác nhận',
+        S.orderBlocked?blockedBody:normalBody,
+        S.orderBlocked
+          ?`<button class="btn btn-outline" onclick="S.wizardStep=3;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div><button class="btn btn-outline" onclick="closeModal()">Đóng</button>`
+          :`<button class="btn btn-outline" onclick="S.wizardStep=3;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div><button class="btn btn-primary" onclick="closeModal();S.wizardStep=2;S.wizardService=null;showToast('Tạo đơn hàng thành công!','success')">${ic('check')} Xác nhận tạo đơn</button>`,
+        'modal-xl');
+    }
+  }
+
+  layer.innerHTML=html;
+}
+
+render();
+</script>
