@@ -334,7 +334,7 @@ const S={
   configNetErr:false, configTab:'planner', // planner|markup
   configMarkupVariant:'ready', // ready|def|network-err|validation-err|success
   // Wizard / modals
-  wizardStep:2, wizardService:null, wizardOrderBlocked:false, wizardStep1Err:false,
+  wizardStep:1, wizardService:null, wizardServiceType:null, wizardBooker:null, wizardOrderBlocked:false, wizardStep1Err:false,
   flightHoldState:null, // null|success|fail|price-change
   flightDetailView:false,
   modal:null,
@@ -880,84 +880,245 @@ function openOrder(id){S.selectedOrder=orders.find(o=>o.id===id);S.orderView='de
 
 function renderOrderDetail(){
   const o=S.selectedOrder;
-  const backBtn=`<button class="btn btn-outline mb-4" onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()">${ic('arrow_back')} Quay lại</button>`;
+  const backBtn=`<button class="btn btn-outline" onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()" style="margin-bottom:16px">${ic('arrow_back')} Quay lại</button>`;
   const canCancel=o.status==='processing'||o.status==='pending';
-  // Demo bars
-  const detailDemoBar=`<div class="demo-bar"><strong>Trạng thái chi tiết:</strong>
+  const detailDemoBar=`<div class="demo-bar"><strong>Trạng thái:</strong>
     <button class="demo-btn ${S.orderDetailVariant==='normal'?'active':''}" onclick="S.orderDetailVariant='normal';render()">Bình thường</button>
     <button class="demo-btn ${S.orderDetailVariant==='network-err'?'active':''}" onclick="S.orderDetailVariant='network-err';render()">Lỗi kết nối</button>
-    <button class="demo-btn ${S.orderDetailVariant==='inv-fail'?'active':''}" onclick="S.orderDetailVariant='inv-fail';render()">Gửi HĐ điện tử thất bại</button>
-    <button class="demo-btn ${S.orderDetailVariant==='inv-resent'?'active':''}" onclick="S.orderDetailVariant='inv-resent';render()">Gửi lại HĐ thành công</button>
-  </div>`;
-  const cancelDemoBar=canCancel?`<div class="demo-bar"><strong>Modal hủy đơn:</strong>
+    <button class="demo-btn ${S.orderDetailVariant==='inv-fail'?'active':''}" onclick="S.orderDetailVariant='inv-fail';render()">HĐ thất bại</button>
+    <button class="demo-btn ${S.orderDetailVariant==='inv-resent'?'active':''}" onclick="S.orderDetailVariant='inv-resent';render()">Gửi lại HĐ OK</button>
+    ${canCancel?`<span style="margin-left:8px;font-size:11px;color:var(--on-surface-variant)">Hủy đơn:</span>
     <button class="demo-btn" onclick="S.cancelVariant='default';showModal('cancel-order')">Đang xử lý</button>
-    <button class="demo-btn" onclick="S.cancelVariant='ncc';showModal('cancel-order')">Trước XN NCC</button>
-    <button class="demo-btn" onclick="S.cancelVariant='ncc2';showModal('cancel-order')">Sau XN NCC (phí hủy)</button>
-    <button class="demo-btn" onclick="S.cancelVariant='validation';showModal('cancel-order')">Lỗi validation</button>
-    <button class="demo-btn" onclick="S.cancelVariant='network';showModal('cancel-order')">Lỗi kết nối</button>
-    <button class="demo-btn" onclick="S.cancelVariant='success';showModal('cancel-order')">Hủy thành công</button>
-    <span style="margin-left:8px;font-size:11px;color:var(--on-surface-variant)">Phương thức TT:</span>
-    <button class="demo-btn" onclick="S.paymentVariant='1';showModal('payment-method')">Thanh toán ngay</button>
-    <button class="demo-btn" onclick="S.paymentVariant='debt-locked';showModal('payment-method')">Công nợ khóa</button>
-    <button class="demo-btn" onclick="S.paymentVariant='visa';showModal('payment-method')">Visa</button>
-    <span style="margin-left:8px;font-size:11px;color:var(--on-surface-variant)">Chi phí:</span>
-    <button class="demo-btn" onclick="S.addCostVariant='base';showModal('add-cost')">Thêm chi phí</button>
-    <button class="demo-btn" onclick="S.addCostVariant='visa';showModal('add-cost')">Chi phí visa</button>
-    <button class="demo-btn" onclick="S.addCostVariant='price-err';showModal('add-cost')">Lỗi giá</button>
-  </div>`:'';
-  // Network error state
-  if(S.orderDetailVariant==='network-err'){
-    return `${backBtn}${detailDemoBar}${cancelDemoBar}<div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải chi tiết đơn hàng</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary" onclick="S.orderDetailVariant='normal';render()">${ic('refresh')} Thử lại</button></div>`;
-  }
-  const invFailBanner=S.orderDetailVariant==='inv-fail'?`<div class="alert alert-error mb-3">${ic('error')} <div><strong>Gửi hóa đơn điện tử thất bại</strong><br>Email hóa đơn đến địa chỉ ketoan@congtyabc.vn bị từ chối. <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="S.orderDetailVariant='inv-resent';render()">Gửi lại</button></div></div>`
-    :S.orderDetailVariant==='inv-resent'?`<div class="alert alert-success mb-3">${ic('check_circle')} <strong>Đã gửi lại hóa đơn điện tử thành công!</strong> Email đã được gửi đến ketoan@congtyabc.vn lúc 14:32.</div>`:'';
-  // Tabs
-  const tabs=`<div class="tabs">
-    <button class="tab ${S.orderDetailTab==='info'?'active':''}" onclick="S.orderDetailTab='info';render()">Thông tin đơn hàng</button>
-    <button class="tab ${S.orderDetailTab==='payment'?'active':''}" onclick="S.orderDetailTab='payment';render()">${ic('payment','font-size:15px')} Giao dịch thanh toán</button>
-    <button class="tab ${S.orderDetailTab==='audit'?'active':''}" onclick="S.orderDetailTab='audit';render()">${ic('history','font-size:15px')} Lịch sử audit</button>
+    <button class="demo-btn" onclick="S.cancelVariant='ncc2';showModal('cancel-order')">Sau XN NCC</button>
+    <button class="demo-btn" onclick="S.cancelVariant='success';showModal('cancel-order')">Hủy thành công</button>`:''}
+    <span style="margin-left:8px;font-size:11px;color:var(--on-surface-variant)">TT:</span>
+    <button class="demo-btn" onclick="S.paymentVariant='1';showModal('payment-method')">Thanh toán</button>
+    <button class="demo-btn" onclick="S.addCostVariant='base';showModal('add-cost')">Chi phí</button>
   </div>`;
-  // Tab content
-  let tabContent='';
-  if(S.orderDetailTab==='payment'){
-    tabContent=`<div class="card"><div class="card-header"><h3 class="card-title">Giao dịch thanh toán</h3><button class="btn btn-primary btn-sm" onclick="showModal('payment-method')">${ic('add')} Thanh toán</button></div>
-      <div style="overflow-x:auto"><table><thead><tr><th>Mã giao dịch</th><th>Ngày</th><th>Phương thức</th><th class="text-right">Số tiền</th><th>Trạng thái</th></tr></thead>
-      <tbody>
-        <tr><td class="font-mono td-link">TXN-2026-0891</td><td>15/08/2026</td><td>${ic('credit_card','font-size:14px')} Công nợ</td><td class="font-mono text-right">${fmt(o.amount)}</td><td>${statusBadge('approved')}</td></tr>
-      </tbody></table></div></div>`;
-  } else if(S.orderDetailTab==='audit'){
-    const auditRows=[
-      {time:'28/08/2026 14:32',user:'Admin User',action:'Gửi lại hóa đơn điện tử'},
-      {time:'15/08/2026 09:15',user:'Admin User',action:'Tạo đơn hàng thành công'},
-      {time:'15/08/2026 09:10',user:'Hệ thống',action:'Khởi tạo yêu cầu đặt vé'},
-    ].map(r=>`<tr><td style="font-size:12px;color:var(--on-surface-variant)">${r.time}</td><td>${r.user}</td><td>${r.action}</td></tr>`).join('');
-    tabContent=`<div class="card"><div class="card-header"><h3 class="card-title">Lịch sử audit</h3></div>
-      <div style="overflow-x:auto"><table><thead><tr><th>Thời gian</th><th>Người thực hiện</th><th>Hành động</th></tr></thead>
-      <tbody>${auditRows}</tbody></table></div></div>`;
-  } else {
-    tabContent=`<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
-      <div class="card"><div class="card-header"><h3 class="card-title">Thông tin đơn hàng</h3>${statusBadge(o.status)}</div>
-        <div class="card-body"><div class="info-grid">
-          <div class="info-item"><div class="ilabel">Tài khoản</div><div class="ivalue bold">${o.account}</div></div>
-          <div class="info-item"><div class="ilabel">Dịch vụ</div><div class="ivalue">${o.service}</div></div>
-          <div class="info-item"><div class="ilabel">Nhà cung cấp</div><div class="ivalue">${o.provider}</div></div>
-          <div class="info-item"><div class="ilabel">Ngày tạo</div><div class="ivalue">${o.date}</div></div>
-          <div class="info-item"><div class="ilabel">Tổng tiền</div><div class="ivalue bold" style="color:var(--text-primary)">${fmt(o.amount)}</div></div>
-          <div class="info-item"><div class="ilabel">Người tạo</div><div class="ivalue">Admin User</div></div>
-        </div></div></div>
-      <div class="card"><div class="card-header"><h3 class="card-title">Dịch vụ bổ sung</h3><button class="btn btn-outline btn-sm" onclick="showModal('add-cost')">${ic('add')} Thêm chi phí</button></div>
-        <div class="card-body"><div class="empty" style="padding:20px 0;"><span class="material-symbols-outlined eicon" style="font-size:32px">inbox</span><p>Chưa có dịch vụ bổ sung</p></div></div></div>
-    </div>`;
+  if(S.orderDetailVariant==='network-err'){
+    return `${backBtn}${detailDemoBar}<div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải chi tiết đơn hàng</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary" onclick="S.orderDetailVariant='normal';render()">${ic('refresh')} Thử lại</button></div>`;
   }
-  return `${backBtn}${detailDemoBar}${cancelDemoBar}${invFailBanner}
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
-    <div><h2 style="font-family:Literata,serif;font-size:20px;font-weight:700;color:var(--text-primary)">${o.id}</h2>
-      <div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">${o.account} · ${o.date}</div></div>
-    <div style="display:flex;gap:8px">
-      ${canCancel?`<button class="btn btn-danger" onclick="showModal('cancel-order')">${ic('cancel')} Hủy đơn</button>`:''}
-      <button class="btn btn-outline" onclick="showModal('add-service')">${ic('add_circle')} Thêm dịch vụ bổ sung</button>
-    </div></div>
-  ${tabs}${tabContent}`;
+  const invFailBanner=S.orderDetailVariant==='inv-fail'
+    ?`<div class="alert alert-error mb-3">${ic('error')} <div><strong>Gửi hóa đơn điện tử thất bại</strong><br>Email hóa đơn bị từ chối. <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="S.orderDetailVariant='inv-resent';render()">Gửi lại</button></div></div>`
+    :S.orderDetailVariant==='inv-resent'
+    ?`<div class="alert alert-success mb-3">${ic('check_circle')} <strong>Đã gửi lại hóa đơn điện tử thành công!</strong></div>`:'';
+  // Derive extra detail fields for demo
+  const svcTypes={flight:'Vé máy bay',hotel:'Khách sạn','other_cost':'Chi phí khác',transfer:'Xe đưa đón',visa:'Visa',mice:'MICE',train_bus:'Vé xe/tàu',esim:'Esim'};
+  const svcType=o.service.startsWith('Vé máy bay')?'Vé máy bay':o.service.startsWith('Khách sạn')?'Khách sạn':o.service.startsWith('Vận')?'Xe đưa đón':'Chi phí khác';
+  const bookerName=o.id==='ORD-001'?'Nguyễn Văn An':o.id==='ORD-002'?'Phạm Văn Dũng':'Lê Minh Cường';
+  const bookerEmail=o.id==='ORD-001'?'an.nv@congtyabc.vn':o.id==='ORD-002'?'dung.pv@tapdongghi.vn':'cuong.lm@congtyjkl.vn';
+  const bookerPhone=o.id==='ORD-001'?'0901234567':o.id==='ORD-002'?'0912345678':'0923456789';
+  const reqId=`BR-2026${o.id.replace('ORD-','')}-${Math.floor(Math.random()*90000000+10000000)}`;
+  const tripCode=`TRIP-${o.id.replace('ORD-','')}`;
+  const costIn=Math.round(o.amount*0.85);
+
+  // ── Section header helper
+  const sh=(title,actions='')=>`<div style="background:var(--primary);color:#fff;padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;border-radius:var(--rlg) var(--rlg) 0 0">${title}${actions?`<div style="display:flex;gap:8px">${actions}</div>`:''}</div>`;
+  const infoRow=(k,v)=>`<div style="display:flex;border-bottom:1px solid var(--border);min-height:36px;align-items:center"><div style="width:180px;flex-shrink:0;padding:8px 14px;font-size:12px;color:var(--on-surface-variant);background:var(--surface-low)">${k}</div><div style="flex:1;padding:8px 14px;font-size:13px">${v}</div></div>`;
+  const actItem=(time,txt,link=false)=>`<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)"><span class="material-symbols-outlined" style="font-size:16px;color:var(--primary);flex-shrink:0;margin-top:1px">radio_button_checked</span><div><div style="font-size:12px;color:var(--on-surface-variant)">${time}</div><div style="font-size:12px;${link?'color:var(--primary)':''}">${txt}</div></div></div>`;
+
+  // ── THÔNG TIN CƠ BẢN
+  const basicInfo=`<div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('THÔNG TIN CƠ BẢN')}
+    <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);overflow:hidden">
+      ${infoRow('Chuyến công tác',`<span style="color:var(--primary);font-weight:600">${tripCode}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--primary)">arrow_forward</span>`)}
+      ${infoRow('Yêu cầu đặt hàng',`<span class="td-link">${reqId}</span>`)}
+      ${infoRow('Đặt lúc',`${o.date} 14:38`)}
+      ${infoRow('Hình thức thanh toán','Công nợ')}
+      ${infoRow('Phụ trách',`<span style="color:var(--primary)">${bookerName}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--on-surface-variant)">edit</span>`)}
+      ${infoRow('Trạng thái đơn hàng',statusBadge(o.status))}
+      ${infoRow('Thời hạn duyệt','Không có')}
+      ${infoRow('Thời hạn thanh toán','Không có')}
+      ${infoRow('Nguồn','ADMIN')}
+      ${infoRow('Loại đơn',svcType)}
+      ${infoRow('Hệ thống','VNT')}
+      ${infoRow('Luồng đặt đơn','Đơn trực tiếp')}
+      ${infoRow('Đơn đặt lại','Không có')}
+      ${infoRow('Phân loại đơn hàng','Thường')}
+    </div>
+  </div>`;
+
+  // ── THÔNG TIN KHÁCH HÀNG
+  const custInfo=`<div class="card" style="height:fit-content;border-radius:var(--rlg)">
+    ${sh('THÔNG TIN KHÁCH HÀNG')}
+    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);overflow:hidden">
+      ${infoRow('Tổ chức',`<span class="td-link">${o.account}</span>`)}
+      ${infoRow('Hạn mức công nợ',`<span style="color:var(--error);font-weight:600">0 / 0</span>`)}
+      ${infoRow('Hạn mức còn lại','0')}
+      ${infoRow('Mức khấu trừ %','')}
+      ${infoRow('Tổng công nợ hiện tại','0')}
+      ${infoRow('Họ và tên',`<span style="color:var(--primary)">${bookerName}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--on-surface-variant)">edit</span>`)}
+      ${infoRow('Email',bookerEmail)}
+      ${infoRow('Số điện thoại',bookerPhone)}
+    </div>
+    <div style="padding:10px 14px;background:var(--error-bg);border:1px solid var(--error);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
+      <span style="color:var(--error);font-size:12px;font-weight:600">${ic('error','font-size:14px;color:var(--error)')} Hợp đồng không hợp lệ</span>
+    </div>
+  </div>`;
+
+  // ── THÔNG TIN ĐƠN HÀNG
+  const orderInfoCard=`<div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('THÔNG TIN ĐƠN HÀNG')}
+    <div style="padding:14px 16px;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:12px;border-bottom:1px solid var(--border)">
+        <div style="font-size:12px;max-width:70%">${o.service}</div>
+        <div style="font-size:14px;font-weight:700;color:var(--on-surface);font-variant-numeric:tabular-nums;text-align:right">${fmt(o.amount)}</div>
+      </div>
+      <div style="padding-top:12px;font-size:12px;color:var(--on-surface-variant)">Công nợ</div>
+      <div style="font-size:13px;font-weight:600;margin-top:4px">${fmt(o.amount)}</div>
+    </div>
+  </div>`;
+
+  // ── LỊCH SỬ HOẠT ĐỘNG
+  const activityLog=`<div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('LỊCH SỬ HOẠT ĐỘNG')}
+    <div style="padding:0 16px;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
+      ${actItem(`${o.date} 14:38`,`${bookerName} đã tạo đơn hàng`)}
+      ${actItem(`${o.date} 14:38`,`${bookerName} đã gửi link thanh toán cho khách hàng`,true)}
+      ${o.status==='done'?actItem(`${o.date} 16:21`,'Hệ thống đã cập nhật trạng thái'):''}
+    </div>
+  </div>`;
+
+  // ── LỊCH SỬ YÊU CẦU
+  const reqLog=`<div class="card" style="border-radius:var(--rlg)">
+    ${sh('LỊCH SỬ YÊU CẦU')}
+    <div style="padding:0 16px 6px;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
+      ${actItem(`${o.date} 14:36`,`${bookerName} đã bàn giao cho ${bookerName}`)}
+      ${actItem(`${o.date} 14:38`,`${bookerName} đã thêm booking request vào trip ${tripCode}`)}
+      <div style="padding:10px 0">
+        <input class="input w-full" placeholder="Write a comment..." style="font-size:12px;margin-bottom:8px">
+        <button class="btn btn-primary btn-sm">Comment</button>
+      </div>
+    </div>
+  </div>`;
+
+  // ── TÊN CHI PHÍ (product detail)
+  const costDetail=`<div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('TÊN CHI PHÍ: '+o.service.toUpperCase(),`<button class="btn btn-outline btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3);font-size:11px" onclick="showModal('add-cost')">${ic('add','font-size:14px;color:#fff')} Thêm chi phí khác</button>`)}
+    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr">
+        ${infoRow('Nhà cung cấp',o.provider)}
+        ${infoRow('Loại dịch vụ',svcType)}
+        ${infoRow('Loại thanh toán','Chi phí thanh toán cho VNTRIP')}
+        ${infoRow('Vat','Không')}
+      </div>
+      <div style="padding:10px 14px;background:var(--surface-low);font-size:12px;font-weight:600;color:var(--on-surface-variant)">Thông tin giá</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:var(--surface-variant)">
+            <th style="padding:9px 14px;font-size:12px;font-weight:600;text-align:left;border-bottom:1px solid var(--border)">Giá nhập</th>
+            <th style="padding:9px 14px;font-size:12px;font-weight:600;text-align:left;border-bottom:1px solid var(--border)">Giá bán</th>
+            <th style="padding:9px 14px;font-size:12px;font-weight:600;text-align:center;border-bottom:1px solid var(--border)">Số lượng</th>
+            <th style="padding:9px 14px;font-size:12px;font-weight:600;text-align:right;border-bottom:1px solid var(--border)">Tổng tiền</th>
+          </tr></thead>
+          <tbody><tr>
+            <td style="padding:10px 14px;font-size:13px;font-variant-numeric:tabular-nums">${fmt(costIn)}</td>
+            <td style="padding:10px 14px;font-size:13px;font-variant-numeric:tabular-nums">${fmt(o.amount)}</td>
+            <td style="padding:10px 14px;font-size:13px;text-align:center">1</td>
+            <td style="padding:10px 14px;font-size:14px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;color:var(--text-primary)">${fmt(o.amount)}</td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+
+  // ── THÔNG TIN ĐÍNH KÈM
+  const attachments=`<div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('THÔNG TIN ĐÍNH KÈM',`<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.7)">LỊCH SỬ &nbsp; CHỈNH SỬA</span>`)}
+    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);padding:32px 0">
+      <div class="empty" style="padding:0"><span class="material-symbols-outlined eicon" style="font-size:36px">attach_file</span><p>No data</p></div>
+    </div>
+  </div>`;
+
+  // ── HÌNH THỨC THANH TOÁN
+  const paymentHistory=`<div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('HÌNH THỨC THANH TOÁN',`<span class="badge badge-info" style="font-size:11px">Công nợ</span>`)}
+    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
+      <div style="padding:6px 14px;background:var(--surface-low);font-size:11px;font-weight:600;color:var(--on-surface-variant)">LỊCH SỬ GIAO DỊCH</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:var(--surface-variant)">
+            <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:left">Ngày tạo</th>
+            <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:left">Loại / Trạng thái</th>
+            <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:left">Mã giao dịch / Note</th>
+            <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:left">Số tài khoản</th>
+            <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:right">Số tiền</th>
+          </tr></thead>
+          <tbody>
+            ${o.status==='done'?`<tr style="border-top:1px solid var(--border)">
+              <td style="padding:9px 12px;font-size:12px">${o.date} 16:21</td>
+              <td style="padding:9px 12px;font-size:12px"><div>Công nợ</div><div style="color:var(--success)">Thành công</div></td>
+              <td style="padding:9px 12px;font-size:12px;font-family:monospace">TXN${o.id.replace('ORD-','')}-OK</td>
+              <td style="padding:9px 12px;font-size:12px">—</td>
+              <td style="padding:9px 12px;font-size:12px;text-align:right;font-weight:600">${fmt(o.amount)}</td>
+            </tr>`:`<tr style="border-top:1px solid var(--border)">
+              <td style="padding:9px 12px;font-size:12px">${o.date} 14:38</td>
+              <td style="padding:9px 12px;font-size:12px"><div>Công nợ</div><div style="color:var(--warning)">Đang xử lý</div></td>
+              <td style="padding:9px 12px;font-size:12px;font-family:monospace">TXN${o.id.replace('ORD-','')}-PEND</td>
+              <td style="padding:9px 12px;font-size:12px">—</td>
+              <td style="padding:9px 12px;font-size:12px;text-align:right;font-weight:600">${fmt(o.amount)}</td>
+            </tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+
+  // ── GỬI EMAIL BẰNG TAY
+  const sendEmail=`<div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('GỬI EMAIL BẰNG TAY')}
+    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);padding:12px 16px">
+      <div style="color:var(--error);font-size:11px;margin-bottom:10px">${ic('info','font-size:13px;color:var(--error)')} Chỉ sử dụng chức năng này nếu hệ thống không tự động gửi email</div>
+      <div style="display:flex;gap:8px">
+        <input class="input" style="flex:1" placeholder="Email nhận">
+        <select class="select" style="width:180px"><option>Email bằng tiếng việt</option><option>Email bằng tiếng anh</option></select>
+        <button class="btn btn-primary btn-sm">${ic('send','font-size:14px')} Gửi email</button>
+      </div>
+    </div>
+  </div>`;
+
+  // ── YÊU CẦU XUẤT HOÁ ĐƠN
+  const invoiceReq=`<div class="card" style="border-radius:var(--rlg)">
+    ${sh('YÊU CẦU XUẤT HOÁ ĐƠN <span style="font-size:10px;font-weight:400;color:rgba(255,255,255,.6)">(KHÔNG HỖ TRỢ XUẤT HOÁ ĐƠN TỰ ĐỘNG)</span>',`<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.5)">Không tự động xuất hoá đơn</span>`)}
+    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:var(--surface-variant)">
+            <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:left">Yêu cầu xuất hoá đơn</th>
+            <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:left">Trạng thái</th>
+          </tr></thead>
+          <tbody><tr><td colspan="2" style="padding:28px;text-align:center">
+            <div class="empty" style="padding:0"><span class="material-symbols-outlined eicon" style="font-size:32px">receipt_long</span><p style="margin:0">Không có yêu cầu xuất hoá đơn</p></div>
+          </td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+
+  return `${backBtn}${detailDemoBar}${invFailBanner}
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+    <div>
+      <span style="font-family:Literata,serif;font-size:20px;font-weight:700;color:var(--text-primary)">${ic('arrow_back','font-size:16px;vertical-align:middle;cursor:pointer')} Chi tiết đơn hàng </span>
+      <span class="td-link" style="font-family:Literata,serif;font-size:20px;font-weight:700">${o.id}</span>
+      <span style="margin-left:8px">${statusBadge(o.status)}</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-outline btn-sm" onclick="showModal('add-cost')">${ic('add_circle','font-size:14px')} Tạo đơn chi phí khác</button>
+      ${canCancel?`<button class="btn btn-outline btn-sm" style="color:var(--warning);border-color:var(--warning)">${ic('refresh','font-size:14px')} Hủy để đặt lại (hoàn 100%)</button>
+      <button class="btn btn-danger btn-sm" onclick="showModal('cancel-order')">${ic('cancel','font-size:14px')} Hủy đơn hàng</button>`:''}
+    </div>
+  </div>
+  ${basicInfo}
+  <div style="display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:16px">
+    <div>${custInfo}</div>
+    <div>${orderInfoCard}${activityLog}</div>
+  </div>
+  ${costDetail}
+  <div style="display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:16px">
+    <div>${attachments}</div>
+    <div>${reqLog}</div>
+  </div>
+  ${paymentHistory}${sendEmail}${invoiceReq}`;
 }
 
 // ── Import from file ────────────────────────────────────────────────────────
@@ -2034,167 +2195,380 @@ function renderModal(){
   else if(m==='create-order'){
     const step=S.wizardStep;
     const stepBar=`<div class="stepper" style="margin-bottom:18px">
-      <div class="step"><div class="step-dot ${step===1?'active':'done'}">${step>1?ic('check','font-size:16px'):'1'}</div><span class="step-label ${step===1?'active':'done'}">Chọn tài khoản</span></div>
+      <div class="step"><div class="step-dot ${step===1?'active':'done'}">${step>1?ic('check','font-size:16px'):'1'}</div><span class="step-label ${step===1?'active':'done'}">Tài khoản</span></div>
       <div class="step-line ${step>1?'done':''}"></div>
-      <div class="step"><div class="step-dot ${step===2?'active':step>2?'done':'pending'}">${step>2?ic('check','font-size:16px'):'2'}</div><span class="step-label ${step===2?'active':step>2?'done':'pending'}">Chọn dịch vụ</span></div>
+      <div class="step"><div class="step-dot ${step===2?'active':step>2?'done':'pending'}">${step>2?ic('check','font-size:16px'):'2'}</div><span class="step-label ${step===2?'active':step>2?'done':'pending'}">Loại dịch vụ</span></div>
       <div class="step-line ${step>2?'done':''}"></div>
-      <div class="step"><div class="step-dot ${step===3?'active':step>3?'done':'pending'}">${step>3?ic('check','font-size:16px'):3}</div><span class="step-label ${step===3?'active':step>3?'done':'pending'}">Chi tiết & giá</span></div>
+      <div class="step"><div class="step-dot ${step===3?'active':step>3?'done':'pending'}">${step>3?ic('check','font-size:16px'):3}</div><span class="step-label ${step===3?'active':step>3?'done':'pending'}">Tìm & đặt</span></div>
       <div class="step-line ${step>3?'done':''}"></div>
       <div class="step"><div class="step-dot ${step===4?'active':'pending'}">${step===4?'4':4}</div><span class="step-label ${step===4?'active':'pending'}">Xác nhận</span></div>
     </div>`;
 
-    // Step 1: Account selection
+    // Step 1: Account + booker selection
     if(step===1){
       const err=S.wizardStep1Err;
-      const accRows=accounts.map((a,i)=>`<div style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;${S.selectedAcc&&S.selectedAcc.id===a.id?'background:var(--surface-container-low)':''}" onclick="S.selectedAcc=accounts[${i}];S.wizardStep=2;S.wizardStep1Err=false;renderModal()">
+      const bookerMap={
+        'ACC-001':['Nguyễn Văn An','Trần Thị Bình','Lê Minh Cường'],
+        'ACC-002':['Phạm Văn Dũng','Hoàng Thị Em'],
+        'ACC-003':['Vũ Quốc Phong','Đặng Thị Giang','Bùi Văn Hùng','Ngô Thị Hy'],
+        'ACC-004':['Đinh Văn Khoa','Lý Thị Lan'],
+        'ACC-005':['Dương Văn Nam','Phạm Thị Oanh','Cao Văn Phú'],
+      };
+      const accRows=accounts.map((a,i)=>`<div style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;${S.selectedAcc&&S.selectedAcc.id===a.id?'background:var(--surface-low)':''}" onclick="S.selectedAcc=accounts[${i}];S.wizardBooker=null;S.wizardStep1Err=false;renderModal()">
           <div><div style="font-weight:600;font-size:13px">${a.name}</div><div style="font-size:12px;color:var(--on-surface-variant)">${a.id} · Hạn mức: ${fmt(a.limit||300e6)}</div></div>
-          <span class="material-symbols-outlined" style="font-size:18px;color:var(--on-surface-variant)">chevron_right</span>
+          ${S.selectedAcc&&S.selectedAcc.id===a.id?`<span class="material-symbols-outlined" style="font-size:18px;color:var(--secondary)">check_circle</span>`:`<span class="material-symbols-outlined" style="font-size:18px;color:var(--on-surface-variant)">chevron_right</span>`}
         </div>`).join('');
-      html=wrap('Tạo đơn hộ — Chọn tài khoản',
+      const bookers=S.selectedAcc?(bookerMap[S.selectedAcc.id]||['Nguyễn Văn A','Trần Thị B']):[];
+      const bookerSection=S.selectedAcc?`<div class="fg mt-3">
+        <label style="font-size:12px;font-weight:500;color:var(--on-surface-variant)">Người đặt <span class="req">*</span></label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
+          ${bookers.map(b=>`<div onclick="S.wizardBooker='${b}';renderModal()" style="padding:7px 12px;border:1.5px solid ${S.wizardBooker===b?'var(--secondary)':'var(--border)'};border-radius:20px;cursor:pointer;font-size:12px;font-weight:500;background:${S.wizardBooker===b?'rgba(228,120,37,.08)':'var(--surface)'};color:${S.wizardBooker===b?'var(--secondary)':'var(--on-surface)'};display:flex;align-items:center;gap:4px">
+            ${S.wizardBooker===b?`<span class="material-symbols-outlined" style="font-size:14px;color:var(--secondary)">check</span>`:''}${b}
+          </div>`).join('')}
+        </div>
+        ${err&&!S.wizardBooker?'<div style="font-size:12px;color:var(--error);margin-top:4px">Vui lòng chọn người đặt</div>':''}
+      </div>`:'';
+      html=wrap('Tạo đơn hộ — Tài khoản & Người đặt',
         `${stepBar}
         <div class="fg mb-3"><label>Tìm kiếm tài khoản</label>
-          <input class="input w-full ${err?'error-field':''}" placeholder="Nhập tên hoặc mã tài khoản...">
-          ${err?'<div style="font-size:12px;color:var(--error);margin-top:4px">Vui lòng chọn một tài khoản trước khi tiếp tục</div>':''}
+          <input class="input w-full ${err&&!S.selectedAcc?'error-field':''}" placeholder="Nhập tên hoặc mã tài khoản...">
+          ${err&&!S.selectedAcc?'<div style="font-size:12px;color:var(--error);margin-top:4px">Vui lòng chọn tài khoản</div>':''}
         </div>
-        <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;max-height:260px;overflow-y:auto">${accRows}</div>
+        <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;max-height:220px;overflow-y:auto">${accRows}</div>
+        ${bookerSection}
         <div class="demo-bar" style="margin-top:14px"><strong>Demo:</strong>
           <button class="demo-btn ${!err?'active':''}" onclick="S.wizardStep1Err=false;renderModal()">Bình thường</button>
-          <button class="demo-btn ${err?'active':''}" onclick="S.wizardStep1Err=true;S.selectedAcc=null;renderModal()">Lỗi validation</button>
+          <button class="demo-btn ${err?'active':''}" onclick="S.wizardStep1Err=true;S.selectedAcc=null;S.wizardBooker=null;renderModal()">Lỗi validation</button>
         </div>`,
         `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><div style="flex:1"></div>
-         <button class="btn btn-primary" onclick="if(!S.selectedAcc){S.wizardStep1Err=true;renderModal();}else{S.wizardStep=2;renderModal();}">${ic('arrow_forward')} Tiếp theo</button>`,
+         <button class="btn btn-primary" onclick="if(!S.selectedAcc||!S.wizardBooker){S.wizardStep1Err=true;renderModal();}else{S.wizardStep=2;renderModal();}">${ic('arrow_forward')} Tiếp theo</button>`,
         'modal-xl');
     }
-    // Step 2: Flight results / hold state / detail
+    // Step 2: Service type selection
     else if(step===2){
-      const hs=S.flightHoldState;
-      const dv=S.flightDetailView;
-      const holdDemoBar=`<div class="demo-bar" style="margin-bottom:12px"><strong>Trạng thái:</strong>
-        <button class="demo-btn ${!hs&&!dv?'active':''}" onclick="S.flightHoldState=null;S.flightDetailView=false;renderModal()">Kết quả bay</button>
-        <button class="demo-btn ${dv?'active':''}" onclick="S.flightHoldState=null;S.flightDetailView=true;renderModal()">Chi tiết chuyến bay</button>
-        <button class="demo-btn ${hs==='success'?'active':''}" onclick="S.flightHoldState='success';S.flightDetailView=false;renderModal()">Giữ chỗ thành công</button>
-        <button class="demo-btn ${hs==='fail'?'active':''}" onclick="S.flightHoldState='fail';S.flightDetailView=false;renderModal()">Giữ chỗ thất bại</button>
-        <button class="demo-btn ${hs==='price-change'?'active':''}" onclick="S.flightHoldState='price-change';S.flightDetailView=false;renderModal()">Giá thay đổi</button>
-      </div>`;
-      if(dv){
-        // Flight detail view
-        const f=flights[S.wizardService||0]||flights[0];
-        html=wrap('Chi tiết chuyến bay',
-          `${holdDemoBar}${stepBar}
-          <div class="summary-row mb-3">
-            <div class="row"><span class="key">Hãng hàng không</span><span class="val font-600">${f.airline}</span></div>
-            <div class="row"><span class="key">Số hiệu chuyến</span><span class="val font-mono">${f.code}</span></div>
-            <div class="row"><span class="key">Tuyến bay</span><span class="val">${f.dep} → ${f.arr}</span></div>
-            <div class="row"><span class="key">Khởi hành</span><span class="val">${f.dep_time||'07:00'}</span></div>
-            <div class="row"><span class="key">Đến nơi</span><span class="val">${f.arr_time||'09:10'}</span></div>
-            <div class="row"><span class="key">Thời gian bay</span><span class="val">${f.dur}</span></div>
-            <div class="row"><span class="key">Hạng vé</span><span class="val">Phổ thông</span></div>
-            <div class="row"><span class="key">Số ghế còn</span><span class="val"><span class="badge badge-${f.seats<5?'warning':'neutral'}">${f.seats} ghế</span></span></div>
-            <div class="row divider"><span class="key">Giá/người</span><span class="val orange font-mono font-700" style="font-size:16px">${fmt(f.price)}</span></div>
-          </div>`,
-          `<button class="btn btn-outline" onclick="S.flightDetailView=false;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
-           <button class="btn btn-primary" onclick="S.wizardService=${S.wizardService||0};S.flightDetailView=false;renderModal()">${ic('check')} Chọn chuyến này</button>`,
-          'modal-xl');
-      } else if(hs==='success'){
-        const f=flights[S.wizardService||0]||flights[0];
-        html=wrap('Giữ chỗ thành công',
-          `${holdDemoBar}${stepBar}
-          <div class="alert alert-success mb-3">${ic('check_circle')} Đã giữ chỗ thành công! Mã giữ chỗ: <strong class="font-mono">PNR-7X4B2</strong></div>
-          <div class="summary-row">
-            <div class="row"><span class="key">Chuyến bay</span><span class="val">${f.airline} · ${f.code}</span></div>
-            <div class="row"><span class="key">Tuyến</span><span class="val">${f.dep} → ${f.arr}</span></div>
-            <div class="row"><span class="key">Thời hạn giữ chỗ</span><span class="val" style="color:var(--warning)">23:59 hôm nay</span></div>
-            <div class="row divider"><span class="key">Giá đã khóa</span><span class="val orange font-mono font-700">${fmt(f.price)}</span></div>
-          </div>`,
-          `<button class="btn btn-outline" onclick="closeModal()">Đóng</button><div style="flex:1"></div>
-           <button class="btn btn-primary" onclick="S.wizardStep=3;S.flightHoldState=null;renderModal()">${ic('arrow_forward')} Tiếp tục tạo đơn</button>`,
-          'modal-xl');
-      } else if(hs==='fail'){
-        html=wrap('Không thể giữ chỗ',
-          `${holdDemoBar}${stepBar}
-          <div class="alert alert-error mb-3">${ic('error')} Không thể giữ chỗ cho chuyến bay này. Chuyến bay đã hết chỗ hoặc không còn khả dụng.</div>
-          <div class="net-error" style="padding:20px 0"><div class="ne-icon">${ic('flight_off','font-size:48px')}</div><h3>Giữ chỗ thất bại</h3><p>Vui lòng chọn chuyến bay khác hoặc thử lại sau.</p></div>`,
-          `<button class="btn btn-outline" onclick="S.flightHoldState=null;renderModal()">Chọn lại</button><div style="flex:1"></div>
-           <button class="btn btn-primary" onclick="S.flightHoldState=null;renderModal()">${ic('refresh')} Thử lại</button>`,
-          'modal-xl');
-      } else if(hs==='price-change'){
-        const f=flights[S.wizardService||0]||flights[0];
-        const oldPrice=f.price;
-        const newPrice=Math.round(oldPrice*1.15);
-        html=wrap('Giá vé thay đổi',
-          `${holdDemoBar}${stepBar}
-          <div class="alert alert-warning mb-3">${ic('warning')} Giá vé đã thay đổi kể từ khi bạn chọn. Vui lòng xác nhận giá mới để tiếp tục.</div>
-          <div class="summary-row">
-            <div class="row"><span class="key">Chuyến bay</span><span class="val">${f.airline} · ${f.code}</span></div>
-            <div class="row"><span class="key">Giá cũ</span><span class="val font-mono" style="text-decoration:line-through;color:var(--on-surface-variant)">${fmt(oldPrice)}</span></div>
-            <div class="row divider"><span class="key">Giá mới</span><span class="val orange font-mono font-700" style="font-size:16px">${fmt(newPrice)} <span class="badge badge-warning">+${Math.round((newPrice-oldPrice)/1000)}K</span></span></div>
-          </div>`,
-          `<button class="btn btn-outline" onclick="S.flightHoldState=null;S.wizardService=null;renderModal()">Chọn lại</button><div style="flex:1"></div>
-           <button class="btn btn-primary" onclick="S.wizardStep=3;S.flightHoldState=null;renderModal()">${ic('check')} Chấp nhận giá mới</button>`,
-          'modal-xl');
-      } else {
-        // Normal flight list
-        const flightItems=flights.map((f,i)=>`<div class="flight-card ${S.wizardService===i?'selected':''}" onclick="S.wizardService=${i};renderModal()">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="font-size:11px;font-weight:700;color:var(--on-surface-variant);width:90px">${f.airline}</div>
-              <div><span style="font-size:15px;font-weight:700">${f.dep}</span> <span style="font-size:13px;color:var(--on-surface-variant)">→</span> <span style="font-size:15px;font-weight:700">${f.arr}</span></div>
-              <div style="font-size:12px;color:var(--on-surface-variant)">${f.code} · ${f.dur}</div>
-              <span class="badge badge-${f.seats<5?'warning':f.seats<10?'orange':'neutral'}" style="font-size:10px">${f.seats} ghế trống</span>
+      const svcs=[
+        {id:'flight',label:'Vé máy bay',icon:'flight'},
+        {id:'hotel',label:'Khách sạn',icon:'hotel'},
+        {id:'other_cost',label:'Chi phí khác',icon:'receipt_long'},
+        {id:'transfer',label:'Xe đưa đón',icon:'directions_car'},
+        {id:'visa',label:'Visa',icon:'badge'},
+        {id:'mice',label:'MICE',icon:'groups'},
+        {id:'train_bus',label:'Vé xe / tàu',icon:'train'},
+        {id:'esim',label:'Esim',icon:'sim_card'},
+      ];
+      const svcCards=svcs.map(sv=>`<div onclick="S.wizardServiceType='${sv.id}';S.wizardService=null;renderModal()" style="border:2px solid ${S.wizardServiceType===sv.id?'var(--secondary)':'var(--border)'};border-radius:8px;padding:16px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;background:${S.wizardServiceType===sv.id?'var(--surface-low)':'var(--surface)'};transition:border-color .15s">
+        <span class="material-symbols-outlined" style="font-size:30px;color:${S.wizardServiceType===sv.id?'var(--secondary)':'var(--primary)'}">${sv.icon}</span>
+        <span style="font-size:12px;font-weight:600;text-align:center;color:var(--on-surface)">${sv.label}</span>
+        ${S.wizardServiceType===sv.id?`<span class="material-symbols-outlined" style="font-size:16px;color:var(--secondary)">check_circle</span>`:''}
+      </div>`).join('');
+      html=wrap('Tạo đơn hộ — Chọn loại dịch vụ',
+        `${stepBar}
+        <div style="margin-bottom:14px;font-size:13px;color:var(--on-surface-variant)">Chọn loại dịch vụ bạn muốn đặt cho <strong>${S.selectedAcc?S.selectedAcc.name:'tài khoản'}</strong></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">${svcCards}</div>`,
+        `<button class="btn btn-outline" onclick="S.wizardStep=1;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+         <button class="btn btn-primary" ${!S.wizardServiceType?'disabled style="opacity:.5;cursor:not-allowed"':''} onclick="S.wizardStep=3;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
+        'modal-xl');
+    }
+    // Step 3: Service-specific booking
+    else if(step===3){
+      const stype=S.wizardServiceType||'flight';
+      if(stype==='flight'){
+        const hs=S.flightHoldState;
+        const dv=S.flightDetailView;
+        const holdDemoBar=`<div class="demo-bar" style="margin-bottom:12px"><strong>Trạng thái:</strong>
+          <button class="demo-btn ${!hs&&!dv?'active':''}" onclick="S.flightHoldState=null;S.flightDetailView=false;renderModal()">Kết quả bay</button>
+          <button class="demo-btn ${dv?'active':''}" onclick="S.flightHoldState=null;S.flightDetailView=true;renderModal()">Chi tiết chuyến bay</button>
+          <button class="demo-btn ${hs==='success'?'active':''}" onclick="S.flightHoldState='success';S.flightDetailView=false;renderModal()">Giữ chỗ thành công</button>
+          <button class="demo-btn ${hs==='fail'?'active':''}" onclick="S.flightHoldState='fail';S.flightDetailView=false;renderModal()">Giữ chỗ thất bại</button>
+          <button class="demo-btn ${hs==='price-change'?'active':''}" onclick="S.flightHoldState='price-change';S.flightDetailView=false;renderModal()">Giá thay đổi</button>
+        </div>`;
+        if(dv){
+          const f=flights[S.wizardService||0]||flights[0];
+          html=wrap('Vé máy bay — Chi tiết chuyến bay',
+            `${holdDemoBar}${stepBar}
+            <div class="summary-row mb-3">
+              <div class="row"><span class="key">Hãng hàng không</span><span class="val font-600">${f.airline}</span></div>
+              <div class="row"><span class="key">Số hiệu chuyến</span><span class="val font-mono">${f.code}</span></div>
+              <div class="row"><span class="key">Tuyến bay</span><span class="val">${f.dep} → ${f.arr}</span></div>
+              <div class="row"><span class="key">Khởi hành</span><span class="val">${f.dep_time||'07:00'}</span></div>
+              <div class="row"><span class="key">Đến nơi</span><span class="val">${f.arr_time||'09:10'}</span></div>
+              <div class="row"><span class="key">Thời gian bay</span><span class="val">${f.dur}</span></div>
+              <div class="row"><span class="key">Hạng vé</span><span class="val">Phổ thông</span></div>
+              <div class="row"><span class="key">Số ghế còn</span><span class="val"><span class="badge badge-${f.seats<5?'warning':'neutral'}">${f.seats} ghế</span></span></div>
+              <div class="row divider"><span class="key">Giá/người</span><span class="val orange font-mono font-700" style="font-size:16px">${fmt(f.price)}</span></div>
+            </div>`,
+            `<button class="btn btn-outline" onclick="S.flightDetailView=false;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+             <button class="btn btn-primary" onclick="S.wizardService=${S.wizardService||0};S.flightDetailView=false;renderModal()">${ic('check')} Chọn chuyến này</button>`,
+            'modal-xl');
+        } else if(hs==='success'){
+          const f=flights[S.wizardService||0]||flights[0];
+          html=wrap('Giữ chỗ thành công',
+            `${holdDemoBar}${stepBar}
+            <div class="alert alert-success mb-3">${ic('check_circle')} Đã giữ chỗ thành công! Mã giữ chỗ: <strong class="font-mono">PNR-7X4B2</strong></div>
+            <div class="summary-row">
+              <div class="row"><span class="key">Chuyến bay</span><span class="val">${f.airline} · ${f.code}</span></div>
+              <div class="row"><span class="key">Tuyến</span><span class="val">${f.dep} → ${f.arr}</span></div>
+              <div class="row"><span class="key">Thời hạn giữ chỗ</span><span class="val" style="color:var(--warning)">23:59 hôm nay</span></div>
+              <div class="row divider"><span class="key">Giá đã khóa</span><span class="val orange font-mono font-700">${fmt(f.price)}</span></div>
+            </div>`,
+            `<button class="btn btn-outline" onclick="closeModal()">Đóng</button><div style="flex:1"></div>
+             <button class="btn btn-primary" onclick="S.wizardStep=4;S.flightHoldState=null;renderModal()">${ic('arrow_forward')} Tiếp tục tạo đơn</button>`,
+            'modal-xl');
+        } else if(hs==='fail'){
+          html=wrap('Không thể giữ chỗ',
+            `${holdDemoBar}${stepBar}
+            <div class="alert alert-error mb-3">${ic('error')} Không thể giữ chỗ cho chuyến bay này. Chuyến bay đã hết chỗ hoặc không còn khả dụng.</div>
+            <div class="net-error" style="padding:20px 0"><div class="ne-icon">${ic('flight_off','font-size:48px')}</div><h3>Giữ chỗ thất bại</h3><p>Vui lòng chọn chuyến bay khác hoặc thử lại sau.</p></div>`,
+            `<button class="btn btn-outline" onclick="S.flightHoldState=null;renderModal()">Chọn lại</button><div style="flex:1"></div>
+             <button class="btn btn-primary" onclick="S.flightHoldState=null;renderModal()">${ic('refresh')} Thử lại</button>`,
+            'modal-xl');
+        } else if(hs==='price-change'){
+          const f=flights[S.wizardService||0]||flights[0];
+          const oldPrice=f.price;
+          const newPrice=Math.round(oldPrice*1.15);
+          html=wrap('Giá vé thay đổi',
+            `${holdDemoBar}${stepBar}
+            <div class="alert alert-warning mb-3">${ic('warning')} Giá vé đã thay đổi kể từ khi bạn chọn. Vui lòng xác nhận giá mới để tiếp tục.</div>
+            <div class="summary-row">
+              <div class="row"><span class="key">Chuyến bay</span><span class="val">${f.airline} · ${f.code}</span></div>
+              <div class="row"><span class="key">Giá cũ</span><span class="val font-mono" style="text-decoration:line-through;color:var(--on-surface-variant)">${fmt(oldPrice)}</span></div>
+              <div class="row divider"><span class="key">Giá mới</span><span class="val orange font-mono font-700" style="font-size:16px">${fmt(newPrice)} <span class="badge badge-warning">+${Math.round((newPrice-oldPrice)/1000)}K</span></span></div>
+            </div>`,
+            `<button class="btn btn-outline" onclick="S.flightHoldState=null;S.wizardService=null;renderModal()">Chọn lại</button><div style="flex:1"></div>
+             <button class="btn btn-primary" onclick="S.wizardStep=4;S.flightHoldState=null;renderModal()">${ic('check')} Chấp nhận giá mới</button>`,
+            'modal-xl');
+        } else {
+          const flightItems=flights.map((f,i)=>`<div class="flight-card ${S.wizardService===i?'selected':''}" onclick="S.wizardService=${i};renderModal()">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="font-size:11px;font-weight:700;color:var(--on-surface-variant);width:90px">${f.airline}</div>
+                <div><span style="font-size:15px;font-weight:700">${f.dep}</span> <span style="font-size:13px;color:var(--on-surface-variant)">→</span> <span style="font-size:15px;font-weight:700">${f.arr}</span></div>
+                <div style="font-size:12px;color:var(--on-surface-variant)">${f.code} · ${f.dur}</div>
+                <span class="badge badge-${f.seats<5?'warning':f.seats<10?'orange':'neutral'}" style="font-size:10px">${f.seats} ghế trống</span>
+              </div>
+              <div style="text-align:right;flex-shrink:0;padding-left:8px">
+                <div style="font-size:16px;font-weight:700;color:var(--secondary);font-variant-numeric:tabular-nums">${fmt(f.price)}</div>
+                <div style="font-size:11px;color:var(--on-surface-variant)">/người</div>
+              </div>
             </div>
-            <div style="text-align:right">
-              <div style="font-size:16px;font-weight:700;color:var(--secondary);font-variant-numeric:tabular-nums">${fmt(f.price)}</div>
-              <div style="font-size:11px;color:var(--on-surface-variant)">/người</div>
+            ${S.wizardService===i?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;display:flex;gap:8px">
+              <span style="color:var(--secondary);font-weight:600">${ic('check_circle','color:var(--secondary);font-size:14px')} Đã chọn</span>
+              <button style="font-size:11px;color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline" onclick="S.flightDetailView=true;renderModal()">Xem chi tiết</button>
+              <button style="font-size:11px;color:var(--secondary);background:none;border:none;cursor:pointer;font-weight:600" onclick="S.flightHoldState='success';renderModal()">Giữ chỗ</button>
+            </div>`:''}
+          </div>`).join('');
+          html=wrap('Vé máy bay — Chọn chuyến bay',
+            `${holdDemoBar}${stepBar}
+            <div class="form-row c2 mb-3" style="gap:10px">
+              <div class="fg"><label>Điểm đi</label><input class="input w-full" value="Hồ Chí Minh (SGN)"></div>
+              <div class="fg"><label>Điểm đến</label><input class="input w-full" value="Hà Nội (HAN)"></div>
+              <div class="fg"><label>Ngày đi</label><input class="input w-full" type="date" value="2026-09-05"></div>
+              <div class="fg"><label>Hành khách</label><select class="select w-full"><option>1 người lớn</option><option>2 người lớn</option></select></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <div style="font-size:13px;font-weight:600;color:var(--on-surface)">${flights.length} chuyến bay phù hợp</div>
+              <select class="select" style="width:140px;height:32px;font-size:12px"><option>Giá tăng dần</option><option>Giá giảm dần</option><option>Giờ bay sớm</option></select>
+            </div>
+            ${flightItems}`,
+            `<button class="btn btn-outline" onclick="S.wizardStep=2;S.flightHoldState=null;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+             <button class="btn btn-primary" ${S.wizardService===null?'disabled style="opacity:.5;cursor:not-allowed"':''} onclick="S.wizardStep=4;S.orderBlocked=false;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
+            'modal-xl');
+        }
+      }
+      else if(stype==='hotel'){
+        const hotels=[
+          {name:'Mường Thanh Luxury Hà Nội',stars:5,price:1850000,avail:3,addr:'Bà Triệu, Hoàn Kiếm, Hà Nội'},
+          {name:'Apricot Hotel Hà Nội',stars:5,price:2200000,avail:1,addr:'Nội thành, Hoàn Kiếm, Hà Nội'},
+          {name:'Silk Path Grand Hanoi Hotel & Spa',stars:5,price:1650000,avail:8,addr:'Đoàn Trần Nghiệp, Hoàn Kiếm'},
+          {name:'Crowne Plaza West Hanoi',stars:4,price:1200000,avail:5,addr:'Đường Láng, Đống Đa, Hà Nội'},
+          {name:'Hotel Nikko Hanoi',stars:5,price:1950000,avail:2,addr:'Tràng Tiền, Hoàn Kiếm, Hà Nội'},
+        ];
+        const hotelList=hotels.map((h,i)=>`<div style="border:1.5px solid ${S.wizardService===i?'var(--secondary)':'var(--border)'};border-radius:6px;padding:12px;cursor:pointer;margin-bottom:8px;background:${S.wizardService===i?'var(--surface-low)':'var(--surface)'};transition:border-color .15s" onclick="S.wizardService=${i};renderModal()">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:13px">${h.name}</div>
+              <div style="font-size:11px;color:var(--on-surface-variant);margin-top:2px">${'★'.repeat(h.stars)} · ${h.addr}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;padding-left:12px">
+              <div style="font-size:15px;font-weight:700;color:var(--secondary);font-variant-numeric:tabular-nums">${fmt(h.price)}</div>
+              <div style="font-size:11px;color:var(--on-surface-variant)">/đêm · ${h.avail} phòng trống</div>
             </div>
           </div>
-          ${S.wizardService===i?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;display:flex;gap:8px">
-            <span style="color:var(--secondary);font-weight:600">${ic('check_circle','color:var(--secondary);font-size:14px')} Đã chọn</span>
-            <button style="font-size:11px;color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline" onclick="S.flightDetailView=true;renderModal()">Xem chi tiết</button>
-            <button style="font-size:11px;color:var(--secondary);background:none;border:none;cursor:pointer;font-weight:600" onclick="S.flightHoldState='success';renderModal()">Giữ chỗ</button>
+          ${S.wizardService===i?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+            <div class="form-row c2" style="margin-bottom:0;gap:10px">
+              <div class="fg"><label style="font-size:11px">Loại phòng</label><select class="select w-full" style="height:30px;font-size:12px"><option>Phòng Superior</option><option>Phòng Deluxe</option><option>Suite</option></select></div>
+              <div class="fg"><label style="font-size:11px">Số phòng</label><input type="number" class="input w-full" style="height:30px;font-size:12px" value="1" min="1"></div>
+            </div>
           </div>`:''}
         </div>`).join('');
-        html=wrap('Tạo đơn hộ — Chọn dịch vụ',
-          `${holdDemoBar}${stepBar}
-          <div class="summary-row mb-3"><div class="row"><span class="key">${ic('flight_takeoff','font-size:15px')} Tuyến bay</span><span class="val">SGN → HAN · 05/09/2026 · 1 người lớn</span></div></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <div style="font-size:13px;font-weight:600;color:var(--on-surface)">${flights.length} chuyến bay phù hợp</div>
-            <select class="select" style="width:140px;height:32px;font-size:12px"><option>Giá tăng dần</option><option>Giá giảm dần</option><option>Giờ bay sớm</option></select>
+        html=wrap('Khách sạn — Chọn khách sạn',
+          `${stepBar}
+          <div class="form-row c2 mb-3" style="gap:10px">
+            <div class="fg"><label>Điểm đến</label><input class="input w-full" value="Hà Nội" placeholder="Thành phố hoặc tên khách sạn..."></div>
+            <div class="fg"><label>Số khách</label><select class="select w-full"><option>1 người</option><option>2 người</option><option>3 người</option></select></div>
+            <div class="fg"><label>Nhận phòng</label><input class="input w-full" type="date" value="2026-09-25"></div>
+            <div class="fg"><label>Trả phòng</label><input class="input w-full" type="date" value="2026-09-27"></div>
           </div>
-          ${flightItems}`,
-          `<button class="btn btn-outline" onclick="S.wizardStep=1;S.flightHoldState=null;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
-           <button class="btn btn-primary" ${S.wizardService===null?'disabled style="opacity:.5;cursor:not-allowed"':''} onclick="S.wizardStep=3;S.orderBlocked=false;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-size:13px;font-weight:600">${hotels.length} khách sạn phù hợp</div>
+            <select class="select" style="width:150px;height:32px;font-size:12px"><option>Giá tăng dần</option><option>Giá giảm dần</option><option>Đánh giá cao nhất</option></select>
+          </div>
+          ${hotelList}`,
+          `<button class="btn btn-outline" onclick="S.wizardStep=2;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+           <button class="btn btn-primary" ${S.wizardService===null?'disabled style="opacity:.5;cursor:not-allowed"':''} onclick="S.wizardStep=4;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
+          'modal-xl');
+      }
+      else if(stype==='other_cost'){
+        html=wrap('Chi phí khác — Nhập thông tin',
+          `${stepBar}
+          <div class="form-row c2 mb-3" style="gap:10px">
+            <div class="fg"><label>Đơn đoàn <span class="req">*</span></label>
+              <div style="display:flex;gap:16px;padding-top:6px">
+                <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="don_doan" checked> Có</label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="don_doan"> Không</label>
+              </div>
+            </div>
+            <div class="fg"><label>Đơn gốc <span class="req">*</span></label><input class="input w-full" placeholder="Số đơn gốc"></div>
+          </div>
+          <div class="fg mb-3"><label>Loại chi phí <span class="req">*</span></label>
+            <div style="display:flex;gap:16px;padding-top:6px">
+              <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="loai_cp" checked> Chi phí thanh toán cho khách sạn</label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="loai_cp"> Chi phí thanh toán cho VNTRIP</label>
+            </div>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px">
+            <div style="background:var(--surface-container);padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:12px;font-weight:600">Danh sách chi phí</span>
+              <button class="btn btn-sm btn-ghost" style="font-size:11px;padding:3px 8px">${ic('add','font-size:14px')} Thêm dòng</button>
+            </div>
+            <table style="width:100%;border-collapse:collapse">
+              <thead><tr style="background:var(--surface-variant)">
+                <th style="padding:7px 10px;font-size:11px;font-weight:600;text-align:left">Tên chi phí</th>
+                <th style="padding:7px 10px;font-size:11px;font-weight:600;text-align:left">Mô tả</th>
+                <th style="padding:7px 10px;font-size:11px;font-weight:600;text-align:center;width:70px">SL</th>
+                <th style="padding:7px 10px;font-size:11px;font-weight:600;text-align:right;width:120px">Đơn giá</th>
+                <th style="padding:7px 10px;font-size:11px;font-weight:600;text-align:right;width:120px">Thành tiền</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-top:1px solid var(--border)">
+                  <td style="padding:7px 10px"><input class="input w-full" style="height:28px;font-size:12px" placeholder="Tên chi phí"></td>
+                  <td style="padding:7px 10px"><input class="input w-full" style="height:28px;font-size:12px" placeholder="Mô tả"></td>
+                  <td style="padding:7px 10px;text-align:center"><input class="input" style="height:28px;font-size:12px;width:56px;text-align:center" type="number" value="1"></td>
+                  <td style="padding:7px 10px"><input class="input w-full font-mono" style="height:28px;font-size:12px" placeholder="0"></td>
+                  <td style="padding:7px 10px;color:var(--on-surface-variant);font-size:12px;text-align:right">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="fg"><label>VAT đầu vào <span class="req">*</span></label>
+            <div style="display:flex;gap:16px;padding-top:6px">
+              <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="vat_cp" checked> Có</label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="vat_cp"> Không</label>
+            </div>
+          </div>`,
+          `<button class="btn btn-outline" onclick="S.wizardStep=2;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+           <button class="btn btn-primary" onclick="S.wizardStep=4;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
+          'modal-xl');
+      }
+      else if(stype==='transfer'){
+        html=wrap('Xe đưa đón — Nhập thông tin',
+          `${stepBar}
+          <div class="form-row c2 mb-3" style="gap:10px">
+            <div class="fg"><label>Dịch vụ <span class="req">*</span></label>
+              <select class="select w-full"><option>Xe dài ngày</option><option>Xe đưa đón sân bay</option><option>Xe du lịch</option><option>Xe hội nghị</option></select>
+            </div>
+            <div class="fg"><label>Loại xe <span class="req">*</span></label>
+              <select class="select w-full"><option>4 chỗ</option><option>7 chỗ</option><option>16 chỗ</option><option>29 chỗ</option><option>45 chỗ</option></select>
+            </div>
+          </div>
+          <div class="form-row c2 mb-3" style="gap:10px">
+            <div class="fg"><label>Lịch trình</label><input class="input w-full" placeholder="Địa chỉ cụ thể"></div>
+            <div class="fg"><label>Nhà cung cấp <span class="req">*</span></label><input class="input w-full" placeholder="Tên nhà cung cấp"></div>
+          </div>
+          <div class="fg mb-3"><label>VAT đầu vào <span class="req">*</span></label>
+            <div style="display:flex;gap:16px;padding-top:6px">
+              <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="vat_xe" checked> Có</label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="vat_xe"> Không</label>
+            </div>
+          </div>
+          <div class="form-row c3 mb-3" style="gap:10px">
+            <div class="fg"><label>Giá nhập <span class="req">*</span></label><input class="input w-full font-mono" placeholder="0"></div>
+            <div class="fg"><label>Giá bán <span class="req">*</span></label><input class="input w-full font-mono" placeholder="0"></div>
+            <div class="fg"><label>Số lượng <span class="req">*</span></label><input class="input w-full" type="number" value="1"></div>
+          </div>
+          <div class="form-row c2 mb-3" style="gap:10px">
+            <div class="fg"><label>Hành trình <span class="req">*</span></label><input class="input w-full" placeholder="VD: Hà Nội → Nội Bài"></div>
+            <div class="fg"><label>Thời gian bắt đầu <span class="req">*</span></label><input class="input w-full" type="datetime-local"></div>
+          </div>
+          <div class="fg mb-3"><label>Hành khách <span class="req">*</span></label><input class="input w-full" placeholder="Họ và tên hành khách"></div>
+          <div class="form-row c2" style="gap:10px">
+            <div class="fg"><label>Yêu cầu</label><textarea class="textarea w-full" rows="2" placeholder="Yêu cầu khác..."></textarea></div>
+            <div class="fg"><label>Mô tả</label><textarea class="textarea w-full" rows="2" placeholder="Mô tả thêm..."></textarea></div>
+          </div>`,
+          `<button class="btn btn-outline" onclick="S.wizardStep=2;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+           <button class="btn btn-primary" onclick="S.wizardStep=4;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
+          'modal-xl');
+      }
+      else {
+        const svcLabel={visa:'Visa',mice:'MICE',train_bus:'Vé xe / tàu',esim:'Esim'}[stype]||'Dịch vụ';
+        const svcIcon={visa:'badge',mice:'groups',train_bus:'train',esim:'sim_card'}[stype]||'receipt_long';
+        html=wrap(`${svcLabel} — Nhập thông tin`,
+          `${stepBar}
+          <div style="text-align:center;padding:16px 0 20px;color:var(--on-surface-variant)">
+            <span class="material-symbols-outlined" style="font-size:40px;color:var(--primary)">${svcIcon}</span>
+            <div style="font-size:13px;margin-top:8px">Nhập thông tin đặt <strong>${svcLabel}</strong></div>
+          </div>
+          <div class="form-row c2 mb-3" style="gap:10px">
+            <div class="fg"><label>Nhà cung cấp <span class="req">*</span></label><input class="input w-full" placeholder="Tên nhà cung cấp"></div>
+            <div class="fg"><label>Số lượng <span class="req">*</span></label><input class="input w-full" type="number" value="1" min="1"></div>
+          </div>
+          <div class="form-row c2 mb-3" style="gap:10px">
+            <div class="fg"><label>Giá nhập <span class="req">*</span></label><input class="input w-full font-mono" placeholder="0"></div>
+            <div class="fg"><label>Giá bán <span class="req">*</span></label><input class="input w-full font-mono" placeholder="0"></div>
+          </div>
+          <div class="form-row c2 mb-3" style="gap:10px">
+            <div class="fg"><label>Thời gian sử dụng <span class="req">*</span></label><input class="input w-full" type="date"></div>
+            <div class="fg"><label>Hành khách / Người dùng <span class="req">*</span></label><input class="input w-full" placeholder="Họ và tên"></div>
+          </div>
+          <div class="fg"><label>Ghi chú</label><textarea class="textarea w-full" rows="2" placeholder="Ghi chú..."></textarea></div>`,
+          `<button class="btn btn-outline" onclick="S.wizardStep=2;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+           <button class="btn btn-primary" onclick="S.wizardStep=4;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
           'modal-xl');
       }
     }
-    // Step 3: Details
-    else if(step===3){
-      const f=flights[S.wizardService||0];
-      html=wrap('Tạo đơn hộ — Chi tiết dịch vụ & giá',
-        `${stepBar}
-        <div class="form-row c2"><div class="fg"><label>Dịch vụ đã chọn</label><input class="input input-readonly w-full" readonly value="${f?f.airline+' — '+f.dep+'→'+f.arr:'Vé máy bay SGN→HAN'}"></div>
-        <div class="fg"><label>Nhà cung cấp</label><select class="select w-full"><option>Vietnam Airlines</option><option>Vietjet Air</option><option>Bamboo Airways</option></select></div></div>
-        <div class="form-row c2"><div class="fg"><label>Ngày đi <span class="req">*</span></label><input class="input w-full" value="05/09/2026"></div>
-        <div class="fg"><label>Hạng vé</label><select class="select w-full"><option>Phổ thông</option><option>Thương gia</option></select></div></div>
-        <div class="form-row c2"><div class="fg"><label>Số hành khách</label><input class="input w-full" type="number" value="2"></div>
-        <div class="fg"><label>Đơn giá (VNĐ/người)</label><input class="input w-full font-mono" value="${f?f.price.toLocaleString('vi-VN'):'2.500.000'}"></div></div>
-        <div class="fg"><label>Ghi chú</label><textarea class="textarea w-full" rows="2" placeholder="Ghi chú..."></textarea></div>`,
-        `<button class="btn btn-outline" onclick="S.wizardStep=2;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
-         <button class="btn btn-outline" onclick="S.wizardStep=4;S.orderBlocked=true;renderModal()">Mô phỏng bị chặn</button>
-         <button class="btn btn-primary" onclick="S.wizardStep=4;S.orderBlocked=false;renderModal()">${ic('arrow_forward')} Tiếp theo</button>`,
-        'modal-xl');
-    }
-    // Step 4: Confirm (normal or blocked)
+    // Step 4: Confirm
     else if(step===4){
-      const f=flights[S.wizardService||0];
-      const total=(f?f.price:2500000)*2;
+      const stype=S.wizardServiceType||'flight';
+      const svcLabel={flight:'Vé máy bay',hotel:'Khách sạn',other_cost:'Chi phí khác',transfer:'Xe đưa đón',visa:'Visa',mice:'MICE',train_bus:'Vé xe/tàu',esim:'Esim'}[stype]||'Dịch vụ';
+      const f=stype==='flight'?(flights[S.wizardService!=null?S.wizardService:0]||flights[0]):null;
+      const hotelData=[
+        {name:'Mường Thanh Luxury Hà Nội',price:1850000},
+        {name:'Apricot Hotel Hà Nội',price:2200000},
+        {name:'Silk Path Grand Hanoi Hotel & Spa',price:1650000},
+        {name:'Crowne Plaza West Hanoi',price:1200000},
+        {name:'Hotel Nikko Hanoi',price:1950000},
+      ];
+      const h=stype==='hotel'?(hotelData[S.wizardService!=null?S.wizardService:0]||hotelData[0]):null;
+      const total=stype==='flight'?(f?f.price*2:5000000):stype==='hotel'?(h?h.price*2:3700000):2000000;
+      const serviceDetail=stype==='flight'
+        ?`<div class="row"><span class="key">Hãng bay</span><span class="val">${f?f.airline:'Vietnam Airlines'}</span></div>
+           <div class="row"><span class="key">Tuyến bay</span><span class="val">${f?f.dep+'→'+f.arr:'SGN→HAN'}</span></div>
+           <div class="row"><span class="key">Ngày đi</span><span class="val">05/09/2026</span></div>
+           <div class="row"><span class="key">Số hành khách</span><span class="val">2 người</span></div>
+           <div class="row"><span class="key">Đơn giá/người</span><span class="val font-mono">${fmt(f?f.price:2500000)}</span></div>`
+        :stype==='hotel'
+        ?`<div class="row"><span class="key">Khách sạn</span><span class="val">${h?h.name:'Mường Thanh Luxury Hà Nội'}</span></div>
+           <div class="row"><span class="key">Check-in</span><span class="val">25/09/2026</span></div>
+           <div class="row"><span class="key">Check-out</span><span class="val">27/09/2026</span></div>
+           <div class="row"><span class="key">Số đêm × phòng</span><span class="val">2 đêm × 1 phòng</span></div>
+           <div class="row"><span class="key">Giá/đêm</span><span class="val font-mono">${fmt(h?h.price:1850000)}</span></div>`
+        :`<div class="row"><span class="key">Ghi chú</span><span class="val">—</span></div>`;
       const blockedBody=`<div class="alert alert-error mb-4">${ic('error','font-size:20px')} <div><strong>Không thể tạo đơn hàng</strong><br>Tài khoản này đang bị chặn. Vui lòng kiểm tra trạng thái hợp đồng hoặc liên hệ bộ phận quản lý.</div></div>
-        ${stepBar}<div class="summary-row"><div class="row"><span class="key">Tài khoản</span><span class="val">Công ty DEF</span></div><div class="row divider"><span class="key">Trạng thái hợp đồng</span><span class="val">${statusBadge('cancelled')}</span></div></div>`;
+        ${stepBar}<div class="summary-row"><div class="row"><span class="key">Tài khoản</span><span class="val">${S.selectedAcc?S.selectedAcc.name:'Công ty DEF'}</span></div><div class="row divider"><span class="key">Trạng thái hợp đồng</span><span class="val">${statusBadge('cancelled')}</span></div></div>`;
       const normalBody=`${stepBar}<div class="summary-row mb-3">
-        <div class="row"><span class="key">Tài khoản</span><span class="val">Công ty ABC</span></div>
-        <div class="row"><span class="key">Dịch vụ</span><span class="val">${f?f.airline:'Vietnam Airlines'} · ${f?f.dep+'→'+f.arr:'SGN→HAN'}</span></div>
-        <div class="row"><span class="key">Ngày đi</span><span class="val">05/09/2026</span></div>
-        <div class="row"><span class="key">Số hành khách</span><span class="val">2 người</span></div>
-        <div class="row"><span class="key">Đơn giá/người</span><span class="val font-mono">${fmt(f?f.price:2500000)}</span></div>
+        <div class="row"><span class="key">Tài khoản</span><span class="val">${S.selectedAcc?S.selectedAcc.name:'Công ty ABC'}</span></div>
+        <div class="row"><span class="key">Loại dịch vụ</span><span class="val"><span class="badge badge-info">${svcLabel}</span></span></div>
+        ${serviceDetail}
         <div class="row divider"><span class="key font-700" style="font-size:14px">Tổng thanh toán</span><span class="val orange font-mono" style="font-size:15px">${fmt(total)}</span></div>
       </div>
       <div class="alert alert-info" style="margin:0">${ic('info')} Đơn hàng sẽ được gửi đến nhà cung cấp ngay sau khi tạo.</div>`;
@@ -2202,7 +2576,9 @@ function renderModal(){
         S.orderBlocked?blockedBody:normalBody,
         S.orderBlocked
           ?`<button class="btn btn-outline" onclick="S.wizardStep=3;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div><button class="btn btn-outline" onclick="closeModal()">Đóng</button>`
-          :`<button class="btn btn-outline" onclick="S.wizardStep=3;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div><button class="btn btn-primary" onclick="closeModal();S.wizardStep=2;S.wizardService=null;showToast('Tạo đơn hàng thành công!','success')">${ic('check')} Xác nhận tạo đơn</button>`,
+          :`<button class="btn btn-outline" onclick="S.wizardStep=3;renderModal()">${ic('arrow_back')} Quay lại</button><div style="flex:1"></div>
+           <button class="btn btn-outline" onclick="S.wizardStep=3;S.orderBlocked=true;renderModal()">Mô phỏng bị chặn</button>
+           <button class="btn btn-primary" onclick="closeModal();S.wizardStep=1;S.wizardServiceType=null;S.wizardService=null;S.wizardBooker=null;showToast('Tạo đơn hàng thành công!','success')">${ic('check')} Xác nhận tạo đơn</button>`,
         'modal-xl');
     }
   }
