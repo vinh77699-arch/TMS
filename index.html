@@ -423,6 +423,7 @@ function showToast(msg,type='info'){
 function render(){
   const views={accounts:renderAccounts,limits:renderLimits,orders:renderOrders,reports:renderReports,config:renderConfig,profile:renderProfile};
   document.getElementById('canvas').innerHTML=(views[S.nav]||renderAccounts)();
+  if(typeof applyMobile==='function') applyMobile();
 }
 
 // ═══════════════════════════════════════════════════════════════ ACCOUNTS ═══
@@ -2269,12 +2270,41 @@ function renderProfilePanel(){
   </div>`;
 }
 
-function checkMobile(){
+function applyMobile(){
   const m=window.innerWidth<768;
   document.documentElement.classList.toggle('mobile',m);
+  const sid=document.getElementById('sidebar');
+  const mainEl=document.querySelector('.main');
+  const bnav=document.getElementById('bottom-nav');
+  const cv=document.querySelector('.canvas');
+  if(!sid||!mainEl||!bnav) return;
+  if(m){
+    // Inline styles thắng mọi CSS rule — không cần !important
+    sid.style.display='none';
+    mainEl.style.marginLeft='0';
+    mainEl.style.width='100%';
+    mainEl.style.display='block';
+    document.body.style.overflowY='auto';
+    document.body.style.overflowX='hidden';
+    document.body.style.display='block';
+    bnav.style.display='block';
+    if(cv){cv.style.padding='12px 10px';cv.style.paddingBottom='74px';}
+    document.querySelectorAll('.hamburger').forEach(el=>el.style.display='flex');
+  } else {
+    sid.style.display='';
+    mainEl.style.marginLeft='';
+    mainEl.style.width='';
+    mainEl.style.display='';
+    document.body.style.overflowY='';
+    document.body.style.overflowX='';
+    document.body.style.display='';
+    bnav.style.display='none';
+    if(cv){cv.style.padding='';cv.style.paddingBottom='';}
+    document.querySelectorAll('.hamburger').forEach(el=>el.style.display='');
+  }
 }
-checkMobile();
-window.addEventListener('resize',checkMobile);
+applyMobile();
+window.addEventListener('resize',applyMobile);
 
 function openSidebar(){
   document.getElementById('sidebar').classList.add('open');
