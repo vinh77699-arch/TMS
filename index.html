@@ -163,6 +163,55 @@ tbody td{padding:11px 14px;font-size:13px;color:var(--on-surface)}
 .divider{border:none;border-top:1px solid var(--border);margin:16px 0}
 .notif-panel,.profile-panel{position:fixed;top:68px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rlg);box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:50;overflow:hidden;animation:modal-in .15s ease-out}
 .notif-panel{width:340px;right:16px}.profile-panel{width:220px;right:10px}
+/* ── Mobile responsive ─────────────────────────────────────────────── */
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:6px;border-radius:50%;color:var(--on-surface-variant);align-items:center;justify-content:center;font-family:inherit}
+.hamburger:hover{background:var(--surface-container)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:19}
+.sidebar-overlay.open{display:block}
+/* Bottom nav (mobile only) */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--primary);z-index:20;border-top:1px solid rgba(255,255,255,.1);-webkit-overflow-scrolling:touch}
+.bottom-nav-inner{display:flex;height:100%}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;cursor:pointer;color:rgba(255,255,255,.55);font-family:'Inter',sans-serif;font-size:10px;font-weight:500;padding:4px 2px;transition:color .15s;-webkit-tap-highlight-color:transparent}
+.bn-item.active{color:#fff}
+.bn-item.active .bn-icon{background:var(--secondary);border-radius:12px;padding:2px 10px}
+.bn-icon{font-size:20px;line-height:1;display:block;transition:all .15s}
+.bn-label{font-size:10px;line-height:1;white-space:nowrap}
+/* JS adds class "mobile" to <html> when width < 768 */
+html.mobile body{overflow-y:auto;overflow-x:hidden;display:block}
+html.mobile .sidebar{display:none!important}
+html.mobile .sidebar.open{display:flex!important;position:fixed;top:0;left:0;bottom:0;width:80vw;max-width:300px;z-index:21;overflow-y:auto}
+html.mobile .sidebar-overlay.open{display:block;z-index:20}
+html.mobile .hamburger{display:flex}
+html.mobile .main{margin-left:0!important;width:100%;min-height:100vh;display:block}
+html.mobile .topbar{padding:0 10px}
+html.mobile .topbar h2{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55vw}
+html.mobile .canvas{padding:12px 10px 74px}
+html.mobile .bottom-nav{display:block}
+html.mobile .stats-row{grid-template-columns:1fr 1fr!important}
+html.mobile .filter-bar{flex-direction:column;gap:8px}
+html.mobile .filter-bar .field{width:100%!important}
+html.mobile .filter-bar .field input,html.mobile .filter-bar .field select{width:100%!important}
+html.mobile .filter-bar>.btn{width:100%}
+html.mobile .form-row.c2,html.mobile .form-row.c3{grid-template-columns:1fr!important}
+html.mobile .info-grid{grid-template-columns:1fr!important}
+html.mobile .modal,html.mobile .modal-lg,html.mobile .modal-xl{max-width:calc(100vw - 24px)}
+html.mobile .modal-body{max-height:58vh}
+html.mobile .notif-panel{width:calc(100vw - 24px);right:12px}
+html.mobile .profile-panel{width:calc(100vw - 24px);right:12px}
+html.mobile .demo-bar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:6px;scrollbar-width:none}
+html.mobile .demo-bar::-webkit-scrollbar{display:none}
+html.mobile .demo-btn{flex-shrink:0}
+html.mobile .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap}
+html.mobile .tabs::-webkit-scrollbar{display:none}
+html.mobile .tab{padding:8px 10px;font-size:12px;white-space:nowrap;flex-shrink:0}
+html.mobile .stepper{overflow-x:auto;gap:4px;padding:10px;-webkit-overflow-scrolling:touch}
+html.mobile .step-label{font-size:10px}
+html.mobile .step-line{min-width:14px}
+html.mobile table{font-size:12px}
+html.mobile thead th,html.mobile tbody td{padding:7px 8px}
+html.mobile .card-header{flex-wrap:wrap;gap:8px}
+html.mobile .btn{font-size:12px;padding:6px 10px}
+html.mobile .btn-sm{padding:3px 7px;font-size:11px}
 .notif-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .notif-header h4{font-size:14px;font-weight:700;color:var(--on-surface);display:flex;align-items:center;gap:6px}
 .notif-item{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;cursor:pointer;transition:background .12s}
@@ -180,7 +229,8 @@ tbody td{padding:11px 14px;font-size:13px;color:var(--on-surface)}
 .profile-item.danger{color:var(--error)}
 </style>
 
-<div class="sidebar">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
   <div class="sidebar-brand">
     <h1>Nextus TMS</h1>
     <p>Admin Portal</p>
@@ -211,7 +261,10 @@ tbody td{padding:11px 14px;font-size:13px;color:var(--on-surface)}
 
 <div class="main">
   <header class="topbar">
-    <h2 id="page-title">Danh sách tài khoản B2B</h2>
+    <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
+      <button class="hamburger" onclick="openSidebar()"><span class="material-symbols-outlined" style="font-size:22px">menu</span></button>
+      <h2 id="page-title" style="margin:0">Danh sách tài khoản B2B</h2>
+    </div>
     <div class="topbar-actions">
       <div style="position:relative">
         <button class="icon-btn" onclick="toggleNotif()"><span class="material-symbols-outlined">notifications</span></button>
@@ -224,6 +277,30 @@ tbody td{padding:11px 14px;font-size:13px;color:var(--on-surface)}
   <div class="canvas" id="canvas"></div>
 </div>
 <div id="modal-layer"></div>
+<nav class="bottom-nav" id="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bn-item active" data-nav="accounts" onclick="navigate('accounts')">
+      <span class="bn-icon material-symbols-outlined">account_balance_wallet</span>
+      <span class="bn-label">Tài khoản</span>
+    </button>
+    <button class="bn-item" data-nav="limits" onclick="navigate('limits')">
+      <span class="bn-icon material-symbols-outlined">account_tree</span>
+      <span class="bn-label">Hạn mức</span>
+    </button>
+    <button class="bn-item" data-nav="orders" onclick="navigate('orders')">
+      <span class="bn-icon material-symbols-outlined">local_shipping</span>
+      <span class="bn-label">Đơn hàng</span>
+    </button>
+    <button class="bn-item" data-nav="reports" onclick="navigate('reports')">
+      <span class="bn-icon material-symbols-outlined">analytics</span>
+      <span class="bn-label">Báo cáo</span>
+    </button>
+    <button class="bn-item" data-nav="config" onclick="navigate('config')">
+      <span class="bn-icon material-symbols-outlined">settings_suggest</span>
+      <span class="bn-label">Cấu hình</span>
+    </button>
+  </div>
+</nav>
 <div id="toast-layer"></div>
 <div id="notif-layer"></div>
 <div id="profile-layer"></div>
@@ -307,8 +384,10 @@ function ic(name,style=''){return `<span class="material-symbols-outlined" style
 function navigate(nav){
   S.nav=nav;S.accountView='list';S.orderView='list';S.accountNetErr=false;S.reportNetErr=false;S.configNetErr=false;S.limitView='list';S.reportView='list';
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.nav===nav));
+  document.querySelectorAll('.bn-item').forEach(el=>el.classList.toggle('active',el.dataset.nav===nav));
   const titles={accounts:'Danh sách tài khoản B2B',limits:'Quản lý hạn mức',orders:'Quản lý đơn hàng',reports:'Báo cáo tổng hợp',config:'Cấu hình',profile:'Thông tin tài khoản'};
   document.getElementById('page-title').textContent=titles[nav];
+  if(window.innerWidth<768)closeSidebar();
   render();
 }
 function showModal(id){S.modal=id;renderModal()}
@@ -2188,6 +2267,22 @@ function renderProfilePanel(){
     <hr style="border:none;border-top:1px solid var(--border);margin:0">
     <button class="profile-item danger" onclick="closeAllPanels();showToast('Đã đăng xuất','info')">${ic('logout','font-size:16px')} Đăng xuất</button>
   </div>`;
+}
+
+function checkMobile(){
+  const m=window.innerWidth<768;
+  document.documentElement.classList.toggle('mobile',m);
+}
+checkMobile();
+window.addEventListener('resize',checkMobile);
+
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
 }
 
 render();
