@@ -8,8 +8,8 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--primary:#3d5499;--primary-container:#4e5b95;--bg:#0f1420;--surface:#1a1f2e;--surface-low:#1e2435;--surface-container:#222840;--surface-variant:#2a3048;--surface-high:#2e3550;--on-surface:#e4e8f4;--on-surface-variant:#9ca3c0;--border:#2e3550;--outline:#5a6080;--outline-variant:#3d4560;--text-primary:#8c98d7;--success-bg:#0d2b0d;--error-bg:#2b0a0c;--warning-bg:#2b1500}}
 :root[data-theme="dark"]{--primary:#3d5499;--primary-container:#4e5b95;--bg:#0f1420;--surface:#1a1f2e;--surface-low:#1e2435;--surface-container:#222840;--surface-variant:#2a3048;--surface-high:#2e3550;--on-surface:#e4e8f4;--on-surface-variant:#9ca3c0;--border:#2e3550;--outline:#5a6080;--outline-variant:#3d4560;--text-primary:#8c98d7;--success-bg:#0d2b0d;--error-bg:#2b0a0c;--warning-bg:#2b1500}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;font-size:14px;line-height:20px;color:var(--on-surface);background:var(--bg);display:flex;min-height:100vh;overflow:hidden}
-.sidebar{width:var(--sw);flex-shrink:0;background:var(--primary);display:flex;flex-direction:column;padding:24px 0;position:fixed;top:0;left:0;bottom:0;z-index:20}
+body{font-family:'Inter',sans-serif;font-size:14px;line-height:20px;color:var(--on-surface);background:var(--bg);display:flex;height:100vh;min-height:100vh;overflow:hidden}
+.sidebar{width:var(--sw);flex-shrink:0;background:var(--primary);display:flex;flex-direction:column;padding:24px 0;position:fixed;top:0;left:0;bottom:0;z-index:20;overflow-y:auto}
 .sidebar-brand{padding:0 20px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
 .sidebar-brand h1{font-family:'Literata',serif;font-size:22px;font-weight:700;color:#fff}
 .sidebar-brand p{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
@@ -22,13 +22,13 @@ body{font-family:'Inter',sans-serif;font-size:14px;line-height:20px;color:var(--
 .sidebar-footer:hover{background:rgba(255,255,255,.07)}
 .sidebar-footer .av{width:32px;height:32px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
 .sidebar-footer span{font-size:13px;color:rgba(255,255,255,.8);font-weight:500}
-.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;height:100vh;min-height:0;overflow:hidden}
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:10;flex-shrink:0}
 .topbar h2{font-family:'Literata',serif;font-size:20px;font-weight:700;color:var(--text-primary)}
 .topbar-actions{display:flex;align-items:center;gap:8px}
 .icon-btn{background:none;border:none;cursor:pointer;padding:6px;border-radius:50%;color:var(--on-surface-variant);display:flex;align-items:center;justify-content:center;transition:background .15s;font-family:inherit}
 .icon-btn:hover{background:var(--surface-container);color:var(--on-surface)}
-.canvas{flex:1;overflow-y:auto;padding:24px}
+.canvas{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:24px}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;white-space:nowrap;font-family:'Inter',sans-serif}
 .btn-primary{background:var(--secondary);color:#fff}.btn-primary:hover{background:var(--secondary-dark)}
 .btn-navy{background:var(--primary);color:#fff}.btn-navy:hover{background:var(--primary-container)}
@@ -47,7 +47,9 @@ body{font-family:'Inter',sans-serif;font-size:14px;line-height:20px;color:var(--
 .input-wrap{position:relative}
 .input-wrap .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--outline);pointer-events:none}
 .select{appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23767681' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
-.table-wrap{border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden;background:var(--surface)}
+.table-wrap{border:1px solid var(--border);border-radius:var(--rlg);overflow-x:auto;overflow-y:hidden;background:var(--surface);-webkit-overflow-scrolling:touch}
+.table-wrap>table{min-width:760px}
+.canvas{scroll-behavior:smooth}
 table{width:100%;border-collapse:collapse}
 thead{background:var(--primary);color:#fff}
 thead th{padding:10px 14px;font-size:13px;font-weight:600;white-space:nowrap}
@@ -71,7 +73,7 @@ tbody td{padding:11px 14px;font-size:13px;color:var(--on-surface)}
 .card-header.navy{background:var(--primary)}
 .card-body{padding:16px}
 .card-title{font-family:'Literata',serif;font-size:16px;font-weight:700;color:var(--text-primary)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(2px)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;backdrop-filter:blur(2px)}
 .modal{background:var(--surface);border-radius:var(--rlg);box-shadow:var(--shadow);width:100%;max-width:480px;border:1px solid var(--border);overflow:hidden;animation:modal-in .15s ease-out}
 .modal-lg{max-width:640px}.modal-xl{max-width:800px}
 @keyframes modal-in{from{opacity:0;transform:scale(.97) translateY(8px)}}
@@ -177,12 +179,12 @@ tbody td{padding:11px 14px;font-size:13px;color:var(--on-surface)}
 .bn-icon{font-size:20px;line-height:1;display:block;transition:all .15s}
 .bn-label{font-size:10px;line-height:1;white-space:nowrap}
 /* JS adds class "mobile" to <html> when width < 768 */
-html.mobile body{overflow-y:auto;overflow-x:hidden;display:block}
+html.mobile body{overflow-y:auto;overflow-x:hidden;display:block;height:auto}
 html.mobile .sidebar{display:none!important}
 html.mobile .sidebar.open{display:flex!important;position:fixed;top:0;left:0;bottom:0;width:80vw;max-width:300px;z-index:21;overflow-y:auto}
 html.mobile .sidebar-overlay.open{display:block;z-index:20}
 html.mobile .hamburger{display:flex}
-html.mobile .main{margin-left:0!important;width:100%;min-height:100vh;display:block}
+html.mobile .main{margin-left:0!important;width:100%;min-height:100vh;height:auto;display:block}
 html.mobile .topbar{padding:0 10px}
 html.mobile .topbar h2{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55vw}
 html.mobile .canvas{padding:12px 10px 74px}
@@ -348,11 +350,11 @@ const S={
 };
 
 const accounts=[
-  {id:'ACC-001',name:'Công ty ABC',tax:'0100000001',status:'active',limit:500e6,used:320e6,manager:'Nguyễn Văn A',ccs:'Trần Thị B'},
-  {id:'ACC-002',name:'Công ty DEF',tax:'0101234567',status:'inactive',limit:300e6,used:100e6,manager:'Nguyễn Văn A',ccs:'Trần Thị B'},
-  {id:'ACC-003',name:'Tập đoàn GHI',tax:'0201234568',status:'active',limit:1000e6,used:750e6,manager:'Lê Văn C',ccs:'Phạm Thị D'},
-  {id:'ACC-004',name:'Công ty JKL',tax:'0301234569',status:'active',limit:200e6,used:50e6,manager:'Hoàng Văn E',ccs:'Ngô Thị F'},
-  {id:'ACC-005',name:'CTCP MNO',tax:'0401234570',status:'inactive',limit:150e6,used:0,manager:'Lê Văn C',ccs:'Trần Thị B'},
+  {id:'ACC-001',name:'Công ty ABC',tax:'0100000001',status:'active',limit:500e6,used:320e6,manager:'Nguyễn Văn A',ccs:'Trần Thị B',type:'corporate',company:'Công ty TNHH Thương mại ABC',phone:'+84901234567',address:'Tầng 5, 123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh, Việt Nam',currency:'VND',autoApprove:false,allowBookForGuest:true,wallet:0,ccsEmail:'b.tt@nextus.vn'},
+  {id:'ACC-002',name:'Công ty DEF',tax:'0101234567',status:'inactive',limit:300e6,used:100e6,manager:'Nguyễn Văn A',ccs:'Trần Thị B',type:'corporate',company:'Công ty Cổ phần DEF',phone:'+84902345678',address:'56 Lê Lợi, Quận 1, TP. Hồ Chí Minh, Việt Nam',currency:'VND',autoApprove:false,allowBookForGuest:false,wallet:0,ccsEmail:'b.tt@nextus.vn'},
+  {id:'ACC-003',name:'Tập đoàn GHI',tax:'0201234568',status:'active',limit:1000e6,used:750e6,manager:'Lê Văn C',ccs:'Phạm Thị D',type:'corporate',company:'Tập đoàn GHI',phone:'+84903456789',address:'Tòa nhà GHI, 10 Phạm Văn Bạch, Cầu Giấy, Hà Nội, Việt Nam',currency:'VND',autoApprove:true,allowBookForGuest:true,wallet:453405,ccsEmail:'d.tp@nextus.vn'},
+  {id:'ACC-004',name:'Công ty JKL',tax:'0301234569',status:'active',limit:200e6,used:50e6,manager:'Hoàng Văn E',ccs:'Ngô Thị F',type:'agency',company:'Công ty TNHH Du lịch JKL',phone:'+84904567890',address:'12 Trần Phú, Hải Châu, Đà Nẵng, Việt Nam',currency:'VND',autoApprove:false,allowBookForGuest:true,wallet:0,ccsEmail:'f.nt@nextus.vn'},
+  {id:'ACC-005',name:'CTCP MNO',tax:'0401234570',status:'inactive',limit:150e6,used:0,manager:'Lê Văn C',ccs:'Trần Thị B',type:'agency',company:'Công ty Cổ phần MNO',phone:'+84905678901',address:'88 Nguyễn Trãi, Thanh Xuân, Hà Nội, Việt Nam',currency:'VND',autoApprove:false,allowBookForGuest:false,wallet:0,ccsEmail:'b.tt@nextus.vn'},
 ];
 const orders=[
   {id:'ORD-001',account:'Công ty ABC',service:'Vé máy bay SGN→HAN',date:'15/08/2026',amount:12500000,status:'processing',provider:'Vietnam Airlines'},
@@ -391,12 +393,16 @@ function navigate(nav){
   document.getElementById('page-title').textContent=titles[nav];
   if(window.innerWidth<768)closeSidebar();
   render();
+  toTop();
 }
+function toTop(){const c=document.getElementById('canvas');if(c)c.scrollTop=0;window.scrollTo&&window.scrollTo(0,0)}
 function showModal(id){S.modal=id;renderModal()}
 function closeModal(){S.modal=null;document.getElementById('modal-layer').innerHTML=''}
 function doCancelOrder(){
   if(S.cancelVariant==='validation'){renderModal();return}
-  S.cancelVariant='success';renderModal();
+  S.cancelVariant='success';
+  if(S.selectedOrder&&S.orderView==='detail'){S.selectedOrder.status='cancelled';odLog('Hủy đơn hàng');render()}
+  renderModal();
 }
 function doSaveMarkup(){
   if(S.configMarkupVariant==='validation-err'){showToast('Giá trị không hợp lệ, vui lòng kiểm tra lại','error');return;}
@@ -414,7 +420,8 @@ function doCreateAccount(){
 function doAddCost(){
   const av=S.addCostVariant;
   if(av==='price-err'||av==='date-err'){showToast('Dữ liệu không hợp lệ','error');return;}
-  closeModal();showToast('Thêm chi phí thành công!','success');
+  if(S.selectedOrder&&S.orderView==='detail'){odLog('Tạo đơn chi phí khác');}
+  closeModal();render();showToast('Thêm chi phí thành công!','success');
 }
 function showToast(msg,type='info'){
   const t=document.getElementById('toast-layer');
@@ -443,14 +450,17 @@ function renderAccountList(){
   </div>`;
 
   const filterBar=`<div class="filter-bar">
-    <div class="field" style="width:240px"><label>Tên tài khoản</label>
+    <div class="field" style="width:130px"><label>ID tài khoản</label>
+      <input class="input w-full" placeholder="ID tài khoản"/></div>
+    <div class="field" style="width:220px"><label>Tên tài khoản</label>
       <div class="input-wrap"><span class="material-symbols-outlined si">search</span>
         <input class="input input-search w-full" placeholder="Nhập tên tài khoản..."/></div></div>
-    <div class="field" style="width:180px"><label>Trạng thái</label>
-      <select class="select w-full"><option>Tất cả trạng thái</option><option>Đang hoạt động</option><option>Chưa kích hoạt</option></select></div>
-    <div class="field" style="width:180px"><label>Người phụ trách</label>
-      <select class="select w-full"><option>Tất cả</option><option>Nguyễn Văn A</option><option>Lê Văn C</option></select></div>
-    <button class="btn btn-outline">${ic('filter_list')} Lọc</button>
+    <div class="field" style="width:150px"><label>Loại tài khoản</label>
+      <select class="select w-full"><option>Tất cả loại</option><option>corporate</option><option>agency</option></select></div>
+    <div class="field" style="width:160px"><label>Trạng thái</label>
+      <select class="select w-full"><option>Tất cả trạng thái</option><option>Đang hoạt động</option><option>Chưa kích hoạt</option><option>Ngưng hoạt động</option></select></div>
+    <button class="btn btn-outline">${ic('filter_list')} Tìm kiếm</button>
+    <button class="btn btn-ghost">Xóa bộ lọc</button>
     <div style="flex:1"></div>
     <button class="btn btn-primary" onclick="showModal('create-account')">${ic('add')} Tạo tài khoản</button>
   </div>`;
@@ -459,28 +469,33 @@ function renderAccountList(){
     return `${demoBar}${filterBar}<div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải danh sách</h3><p>Lỗi kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.</p><button class="btn btn-primary" onclick="S.accountListState='data';render()">${ic('refresh')} Thử lại</button></div>`;
   }
   if(S.accountListState==='loading'){
-    const skRows=Array(5).fill(0).map(()=>`<tr>${Array(6).fill(0).map(()=>`<td><div class="skeleton" style="height:14px;border-radius:3px;width:${70+Math.random()*30}%"></div></td>`).join('')}</tr>`).join('');
-    return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>Tên tài khoản</th><th>Mã tài khoản</th><th>Trạng thái</th><th class="text-right">Hạn mức</th><th>Người phụ trách</th><th class="text-center">Hành động</th></tr></thead><tbody>${skRows}</tbody></table></div>`;
+    const skRows=Array(5).fill(0).map(()=>`<tr>${Array(8).fill(0).map(()=>`<td><div class="skeleton" style="height:14px;border-radius:3px;width:${70+Math.random()*30}%"></div></td>`).join('')}</tr>`).join('');
+    return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>ID</th><th>Loại / Tên tài khoản</th><th>Trạng thái / Tên công ty</th><th>Phụ trách</th><th class="text-right">Công nợ hiện tại</th><th class="text-right">Công nợ khả dụng</th><th class="text-right">Số dư ví</th><th class="text-center">Hành động</th></tr></thead><tbody>${skRows}</tbody></table></div>`;
   }
 
   if(S.accountListState==='empty'){
-    return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>Tên tài khoản</th><th>Mã tài khoản</th><th>Trạng thái</th><th class="text-right">Hạn mức</th><th>Người phụ trách</th><th class="text-center">Hành động</th></tr></thead>
-    <tbody><tr><td colspan="6"><div class="empty"><span class="material-symbols-outlined eicon">group</span><h3>Chưa có tài khoản B2B</h3><p class="mb-3">Bắt đầu bằng cách tạo tài khoản đầu tiên</p><button class="btn btn-primary" onclick="showModal('create-account')">${ic('add')} Tạo tài khoản</button></div></td></tr></tbody></table></div>`;
+    return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>ID</th><th>Loại / Tên tài khoản</th><th>Trạng thái / Tên công ty</th><th>Phụ trách</th><th class="text-right">Công nợ hiện tại</th><th class="text-right">Công nợ khả dụng</th><th class="text-right">Số dư ví</th><th class="text-center">Hành động</th></tr></thead>
+    <tbody><tr><td colspan="8"><div class="empty"><span class="material-symbols-outlined eicon">group</span><h3>Chưa có tài khoản B2B</h3><p class="mb-3">Bắt đầu bằng cách tạo tài khoản đầu tiên</p><button class="btn btn-primary" onclick="showModal('create-account')">${ic('add')} Tạo tài khoản</button></div></td></tr></tbody></table></div>`;
   }
 
+  const typeBadge=t=>`<span class="badge ${t==='corporate'?'badge-info':'badge-orange'}" style="font-size:10px">${t}</span>`;
   const rows=accounts.map(a=>`<tr>
-    <td><span class="td-link" onclick="openAcc('${a.id}')">${a.name}</span></td>
-    <td class="font-mono">${a.id}</td><td>${statusBadge(a.status)}</td>
-    <td class="text-right font-mono">${fmtM(a.limit)}</td><td>${a.manager}</td>
+    <td class="font-mono"><span class="td-link" onclick="openAcc('${a.id}')">${a.id.replace('ACC-','')}</span></td>
+    <td><div>${typeBadge(a.type)}</div><div class="font-600" style="margin-top:3px">${a.name}</div></td>
+    <td><div>${statusBadge(a.status)}</div><div style="margin-top:3px;font-size:12px">${a.company}</div></td>
+    <td style="font-size:12px"><div>CCS:</div><div>• ${a.ccs}</div><div style="font-style:italic;color:var(--on-surface-variant)">(${a.ccsEmail})</div></td>
+    <td class="text-right font-mono" style="color:var(--error)">${a.used.toLocaleString('vi-VN')}đ</td>
+    <td class="text-right font-mono" style="color:var(--primary)">${(a.limit-a.used).toLocaleString('vi-VN')}đ</td>
+    <td class="text-right font-mono" style="color:var(--success)">${a.wallet.toLocaleString('vi-VN')}đ</td>
     <td class="text-center"><button class="btn btn-ghost btn-sm" onclick="openAcc('${a.id}')">Xem chi tiết</button></td>
   </tr>`).join('');
 
-  return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>Tên tài khoản</th><th>Mã tài khoản</th><th>Trạng thái</th><th class="text-right">Hạn mức (VNĐ)</th><th>Người phụ trách</th><th class="text-center">Hành động</th></tr></thead><tbody>${rows}</tbody></table></div>
+  return `${demoBar}${filterBar}<div class="table-wrap"><table><thead><tr><th>ID</th><th>Loại / Tên tài khoản</th><th>Trạng thái / Tên công ty</th><th>Phụ trách</th><th class="text-right">Công nợ hiện tại</th><th class="text-right">Công nợ khả dụng</th><th class="text-right">Số dư ví</th><th class="text-center">Hành động</th></tr></thead><tbody>${rows}</tbody></table></div>
   <div style="padding:10px 14px;font-size:12px;color:var(--on-surface-variant);background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px">Hiển thị ${accounts.length} / ${accounts.length} tài khoản</div>`;
 }
 
-function openAcc(id){S.selectedAcc=accounts.find(a=>a.id===id);S.accountView='detail';S.accountTab='info';S.accountNetErr=false;document.getElementById('page-title').textContent='Chi tiết tài khoản';render()}
-function backToList(){S.accountView='list';document.getElementById('page-title').textContent='Danh sách tài khoản B2B';render()}
+function openAcc(id){S.selectedAcc=accounts.find(a=>a.id===id);S.accountView='detail';S.accountTab='info';S.accountNetErr=false;document.getElementById('page-title').textContent='Chi tiết tài khoản';render();toTop()}
+function backToList(){S.accountView='list';document.getElementById('page-title').textContent='Danh sách tài khoản B2B';render();toTop()}
 function setAccTab(t){S.accountTab=t;render()}
 
 function renderAccDetailDemoBar(){
@@ -521,8 +536,17 @@ function renderAccountDetail(){
         <div class="info-item"><div class="ilabel">Mã số thuế</div><div class="ivalue">${a.tax}</div></div>
         <div class="info-item"><div class="ilabel">Mã tài khoản</div><div class="ivalue font-mono">${a.id}</div></div>
         <div class="info-item"><div class="ilabel">Trạng thái</div><div class="ivalue">${statusBadge(a.status)}</div></div>
-        <div class="info-item"><div class="ilabel">Key Account</div><div class="ivalue">${ic('person','color:var(--primary)')} ${a.manager}</div></div>
-        <div class="info-item"><div class="ilabel">CCS vận hành</div><div class="ivalue">${ic('support_agent','color:var(--primary)')} ${a.ccs}</div></div>
+        <div class="info-item"><div class="ilabel">Loại tài khoản</div><div class="ivalue"><span class="badge ${a.type==='corporate'?'badge-info':'badge-orange'}">${a.type}</span></div></div>
+        <div class="info-item"><div class="ilabel">Tên pháp nhân</div><div class="ivalue">${a.company}</div></div>
+        <div class="info-item"><div class="ilabel">Số điện thoại</div><div class="ivalue">${a.phone}</div></div>
+        <div class="info-item"><div class="ilabel">Tiền tệ</div><div class="ivalue">${a.currency}</div></div>
+        <div class="info-item" style="grid-column:1/-1"><div class="ilabel">Địa chỉ công ty</div><div class="ivalue">${a.address}</div></div>
+        <div class="info-item"><div class="ilabel">CCS phụ trách</div><div class="ivalue">${ic('support_agent','color:var(--primary)')} ${a.ccs} <span style="font-size:11px;font-style:italic;color:var(--on-surface-variant)">- ${a.ccsEmail}</span></div></div>
+        <div class="info-item"><div class="ilabel">Saleman</div><div class="ivalue">${ic('person','color:var(--primary)')} ${a.manager}</div></div>
+        <div class="info-item"><div class="ilabel">Tự động duyệt</div><div class="ivalue"><span class="badge ${a.autoApprove?'badge-success':'badge-neutral'}">${a.autoApprove?'Có':'Không'}</span></div></div>
+        <div class="info-item"><div class="ilabel">Đặt cho khách</div><div class="ivalue"><span class="badge ${a.allowBookForGuest?'badge-success':'badge-neutral'}">${a.allowBookForGuest?'Có':'Không'}</span></div></div>
+        <div class="info-item"><div class="ilabel">Logo</div><div class="ivalue" style="color:var(--on-surface-variant)">Chưa có logo</div></div>
+        <div class="info-item"><div class="ilabel">CA Airline</div><div class="ivalue" style="color:var(--on-surface-variant)">—</div></div>
       </div></div></div>
     <div class="card"><div class="card-header"><h3 class="card-title">Hạn mức công nợ</h3></div><div class="card-body">
       <div class="progress-wrap"><div class="progress-label"><span class="text-muted" style="font-size:12px">Hạn mức tổng</span><span class="font-600" style="font-size:12px;color:var(--text-primary)">${fmtM(a.limit)}</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--primary)"></div></div></div>
@@ -530,12 +554,7 @@ function renderAccountDetail(){
       <div class="progress-wrap"><div class="progress-label"><span class="text-muted" style="font-size:12px">Còn lại</span><span class="font-600" style="font-size:12px;color:var(--success)">${fmtM(a.limit-a.used)}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${100-pct}%;background:var(--success)"></div></div></div>
       <div style="margin-top:10px;padding:8px;background:var(--surface-low);border-radius:4px;text-align:center;font-size:12px;color:var(--on-surface-variant)">Sử dụng <strong style="color:var(--warning)">${pct}%</strong> hạn mức</div>
     </div></div></div>
-  <div class="card" style="margin-top:16px"><div class="card-header navy"><h3 style="color:#fff;font-family:Literata,serif;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px">${ic('description','color:#fff')} Hợp đồng khung</h3></div>
-    <div style="overflow-x:auto"><table><thead><tr><th>Mã hợp đồng</th><th>Ngày ký</th><th>Ngày hết hạn</th><th>Trạng thái</th><th class="text-right">Thao tác</th></tr></thead>
-    <tbody>
-      <tr><td class="td-link font-mono" onclick="showModal('contract-detail-active')">HD-${a.id.replace('ACC-','')}-2026-001</td><td>01/01/2026</td><td>31/12/2026</td><td>${statusBadge('active')}</td><td class="text-right"><button class="btn btn-ghost btn-sm" onclick="showModal('contract-detail-active')">${ic('open_in_new','font-size:13px')} Xem</button></td></tr>
-      <tr><td class="td-link font-mono" onclick="showModal('contract-detail-old')">HD-${a.id.replace('ACC-','')}-2025-045</td><td>01/01/2025</td><td>31/12/2025</td><td>${statusBadge('cancelled')}</td><td class="text-right"><button class="btn btn-ghost btn-sm" onclick="showModal('contract-detail-old')">${ic('open_in_new','font-size:13px')} Xem</button></td></tr>
-    </tbody></table></div></div>`;
+  `;
 
   const annexDataTab=`<div class="card"><div class="card-header"><h3 class="card-title">Thành viên phụ lục bảo lãnh</h3><div style="display:flex;gap:8px"><button class="demo-btn ${!S.annexEmpty?'active':''}" onclick="S.annexEmpty=false;render()">Có dữ liệu</button><button class="demo-btn ${S.annexEmpty?'active':''}" onclick="S.annexEmpty=true;render()">Trống</button><button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="showModal('add-annex-member')">${ic('add')} Thêm thành viên</button></div></div>
     ${S.annexEmpty?`<div class="empty"><span class="material-symbols-outlined eicon">group_off</span><h3>Chưa có thành viên phụ lục bảo lãnh</h3><p class="mb-3">Thêm người ký và người bảo lãnh cho hợp đồng</p><button class="btn btn-primary btn-sm">${ic('add')} Thêm thành viên</button></div>`:`<div style="overflow-x:auto"><table><thead><tr><th>Họ tên</th><th>Chức vụ</th><th>CMND/CCCD</th><th>Điện thoại</th><th>Vai trò</th><th class="text-center">Thao tác</th></tr></thead>
@@ -546,6 +565,8 @@ function renderAccountDetail(){
   </div>`;
   const annexTab=annexDataTab;
 
+  const accTabBar=()=>`<div class="tabs">${[['info','Thông tin chung'],['contract','Hợp đồng'],['debt','Công nợ'],['orders','Đơn hàng'],['contacts','Liên hệ'],['invoice-entity','Trung tâm chi phí'],['reward','Reward'],['notify','Nhận thông báo'],['email-cfg','Cấu hình giao diện email'],['annex','Phụ lục bảo lãnh'],['ai-planner','Cấu hình AI Planner']].map(([k,l])=>`<button class="tab ${S.accountTab===k?'active':''}" style="white-space:nowrap" onclick="setAccTab('${k}')">${l}</button>`).join('')}</div>`;
+  const accBody=()=>({'ai-planner':renderAccAIPlanner,'invoice-entity':renderAccInvoiceEntity,contract:()=>renderAccContracts(a),debt:()=>renderAccDebt(a),orders:()=>renderAccOrders(a),contacts:renderAccContacts,reward:renderAccReward,notify:renderAccNotify,'email-cfg':renderAccEmailCfg,annex:()=>annexTab,info:()=>infoTab})[S.accountTab||'info']();
   // Extra account detail variants
   const dv=S.accountDetailVariant;
   if(dv==='blocked'){
@@ -560,8 +581,8 @@ function renderAccountDetail(){
         <button class="btn btn-outline disabled" style="opacity:.5;cursor:not-allowed" disabled>${ic('add_shopping_cart')} Tạo đơn hộ</button>
         <button class="btn btn-outline" onclick="showModal('block-contract')">${ic('lock_open')} Gỡ chặn</button>
       </div></div>
-    <div class="tabs"><button class="tab active" onclick="setAccTab('info')">Thông tin chung</button><button class="tab" onclick="setAccTab('annex')">${ic('group','font-size:15px')} Phụ lục bảo lãnh</button></div>
-    ${infoTab}`;
+    ${accTabBar()}
+    ${accBody()}`;
   }
   if(dv==='temp-limit'){
     const tempBanner=`<div class="alert alert-warning mb-4">${ic('schedule','font-size:20px')} <div><strong>Hạn mức tạm thời đang hiệu lực</strong><br>Hạn mức tăng thêm <strong>200.000.000 VNĐ</strong> có hiệu lực đến <strong>31/10/2026</strong>.</div></div>`;
@@ -575,8 +596,8 @@ function renderAccountDetail(){
         <button class="btn btn-outline" onclick="showModal('request-limit')">${ic('trending_up')} Đề xuất tăng hạn mức</button>
         <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add_shopping_cart')} Tạo đơn hộ</button>
       </div></div>
-    <div class="tabs"><button class="tab active" onclick="setAccTab('info')">Thông tin chung</button><button class="tab" onclick="setAccTab('annex')">${ic('group','font-size:15px')} Phụ lục bảo lãnh</button></div>
-    ${infoTab}`;
+    ${accTabBar()}
+    ${accBody()}`;
   }
   if(dv==='activated'){
     setTimeout(()=>showToast('Kích hoạt tài khoản thành công!','success'),80);
@@ -593,8 +614,8 @@ function renderAccountDetail(){
         <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add_shopping_cart')} Tạo đơn hộ</button>
       </div></div>
     <div class="alert alert-error mb-3">${ic('error')} <div><strong>Lỗi validation dữ liệu</strong><br>Một số trường thông tin không hợp lệ hoặc bị thiếu.</div></div>
-    <div class="tabs"><button class="tab active">Thông tin chung</button><button class="tab">${ic('group','font-size:15px')} Phụ lục bảo lãnh</button></div>
-    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+    ${accTabBar()}
+    ${S.accountTab!=='info'?accBody():`<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
       <div class="card"><div class="card-header"><h3 class="card-title">Thông tin chung</h3></div><div class="card-body">
         <div class="info-grid">
           <div class="info-item"><div class="ilabel">Tên công ty</div><div class="ivalue bold" style="color:var(--error)">${a.name} <span style="font-size:11px;color:var(--error)">⚠ Tên trùng lặp</span></div></div>
@@ -604,7 +625,7 @@ function renderAccountDetail(){
         </div></div></div>
       <div class="card"><div class="card-header"><h3 class="card-title">Hạn mức công nợ</h3></div><div class="card-body">
         <div style="padding:16px;text-align:center;color:var(--error);font-size:13px">${ic('error')} Không thể hiển thị hạn mức</div>
-      </div></div></div>`;
+      </div></div></div>`}`;
   }
 
   return `<button class="btn btn-outline mb-4" onclick="backToList()">${ic('arrow_back')} Quay lại danh sách</button>
@@ -618,13 +639,177 @@ function renderAccountDetail(){
       <button class="btn btn-outline" onclick="showModal('request-limit')">${ic('trending_up')} Đề xuất tăng hạn mức</button>
       <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add_shopping_cart')} Tạo đơn hộ</button>
     </div></div>
-  <div class="tabs">
-    <button class="tab ${S.accountTab==='info'?'active':''}" onclick="setAccTab('info')">Thông tin chung</button>
-    <button class="tab ${S.accountTab==='annex'?'active':''}" onclick="setAccTab('annex')">${ic('group','font-size:15px')} Phụ lục bảo lãnh</button>
-    <button class="tab ${S.accountTab==='ai-planner'?'active':''}" onclick="setAccTab('ai-planner')">${ic('smart_toy','font-size:15px')} Cấu hình AI Planner</button>
-    <button class="tab ${S.accountTab==='invoice-entity'?'active':''}" onclick="setAccTab('invoice-entity')">${ic('receipt_long','font-size:15px')} Pháp nhân HĐ</button>
-  </div>
-  ${S.accountTab==='ai-planner'?renderAccAIPlanner():S.accountTab==='invoice-entity'?renderAccInvoiceEntity():S.accountTab==='info'?infoTab:annexTab}`;
+  ${accTabBar()}
+  ${accBody()}`;
+}
+
+// ── Account detail sub-tabs ─────────────────────────────────────────────────
+function renderAccContracts(a){
+  const L=contractList(a);
+  const rows=L.map((c,i)=>`<tr>
+    <td>${ctBadge(c.status)}<div class="td-link font-mono" style="margin-top:3px;font-size:12px" onclick="S.contractIdx=${i};showModal('contract-view')">${c.code}</div></td>
+    <td><span class="badge badge-info" style="font-size:11px">00:00 ${fd(c.from)}</span> → <span class="badge badge-error" style="font-size:11px">23:59 ${fd(c.to)}</span></td>
+    <td>${c.type.replace('Hợp đồng ','')}</td>
+    <td class="td-link" style="font-size:12px" onclick="openPreview('${c.file}',${i})">${ic('picture_as_pdf','font-size:15px;color:var(--error)')} ${c.file}</td>
+    <td class="text-right" style="white-space:nowrap"><button class="btn btn-ghost btn-sm" onclick="S.contractIdx=${i};showModal('contract-view')">${ic('search','font-size:13px')} Chi tiết</button>${c.status==='rejected'?`<button class="btn btn-ghost btn-sm" onclick="openContractForm(${i})">${ic('edit','font-size:13px')} Sửa</button>`:''}</td></tr>`).join('');
+  return `<div class="card"><div class="card-header"><h3 class="card-title">${ic('description')} Hợp đồng</h3><button class="btn btn-primary btn-sm" onclick="openContractForm(null)">${ic('add')} Tạo hợp đồng mới</button></div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Trạng thái / Mã hợp đồng</th><th>Ngày hiệu lực → Ngày kết thúc</th><th>Loại hợp đồng</th><th>Tài liệu</th><th class="text-right">Hành động</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+function accData(){
+  const a=S.selectedAcc;S.accD=S.accD||{};
+  if(!S.accD[a.id]){
+    const dom=a.name.toLowerCase().replace(/[^a-z]/g,'');
+    S.accD[a.id]={
+      members:[{name:'Huỳnh Mai Trinh',gender:'Nữ',email:'trinh.hm@'+dom+'.vn',phone:'0901000001',role:'Thành viên',verified:false},{name:'Lưu Hải Yến',gender:'Nữ',email:'yen.lh@'+dom+'.vn',phone:'0901000002',role:'Người đặt',verified:false},{name:'Nguyễn Hồng Nam',gender:'Nam',email:'nam.nh@'+dom+'.vn',phone:'0901000003',role:'Người duyệt',verified:true}],
+      entities:[{name:'CHI NHÁNH '+a.company.toUpperCase(),mst:a.tax+'-001',address:a.address,email:'ketoan@'+dom+'.vn'},{name:'CÔNG TY '+a.company.toUpperCase(),mst:a.tax,address:a.address,email:'ketoan@'+dom+'.vn'}],
+      titles:[],orgs:[{name:a.company,parent:''},{name:'Phòng Hành chính',parent:a.company},{name:'Phòng Kinh doanh',parent:a.company}],rewards:[]};
+  }
+  return S.accD[a.id];
+}
+function debtRows(a){
+  return [['INV-0342','28/07/2026','28/08/2026','Vé máy bay tháng 7',Math.round(a.used*0.4),22],['INV-0331','30/06/2026','30/07/2026','Khách sạn tháng 6',Math.round(a.used*0.35),0],['INV-0320','31/05/2026','30/06/2026','Vé máy bay tháng 5',Math.round(a.used*0.25),0]];
+}
+function renderAccDebt(a){
+  const pct=Math.round(a.used/a.limit*100);
+  const inv=debtRows(a);
+  return `<div class="card mb-3"><div class="card-header"><h3 class="card-title">Công nợ</h3><button class="btn btn-outline btn-sm" onclick="showToast('Đã xuất báo cáo công nợ','success')">${ic('download','font-size:14px')} Xuất báo cáo</button></div><div class="card-body">
+    <div style="text-align:center;font-size:13px;font-weight:600;margin-bottom:6px">${a.used.toLocaleString('vi-VN')}đ / ${a.limit.toLocaleString('vi-VN')}đ</div>
+    <div class="progress-bar" style="height:10px"><div class="progress-fill" style="width:${pct}%;background:${pct>=80?'var(--error)':'var(--warning)'}"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--on-surface-variant);flex-wrap:wrap;gap:8px"><span>Công nợ hiện tại: <strong style="color:var(--error)">${fmt(a.used)}</strong></span><span>Khả dụng: <strong style="color:var(--primary)">${fmt(a.limit-a.used)}</strong></span><span>Số dư ví: <strong style="color:var(--success)">${fmt(a.wallet)}</strong></span></div></div></div>
+  <div class="table-wrap"><table><thead><tr><th>Mã kỳ đối soát</th><th>Ngày đối soát</th><th>Hạn thanh toán</th><th>Nội dung</th><th class="text-right">Số tiền</th><th class="text-right">Quá hạn (ngày)</th><th class="text-center">Thao tác</th></tr></thead>
+  <tbody>${inv.map((r,i)=>`<tr style="cursor:pointer" onclick="S.debtIdx=${i};showModal('debt-detail')"><td class="td-link font-mono">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="text-right font-mono">${fmt(r[4])}</td><td class="text-right" style="color:${r[5]?'var(--error)':'inherit'}">${r[5]||'—'}</td><td class="text-center"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();S.debtIdx=${i};showModal('debt-detail')">Chi tiết</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+function orderKind(o){return o.service.startsWith('Vé máy bay')?'Vé máy bay':o.service.startsWith('Khách sạn')?'Phòng khách sạn':o.service.startsWith('Vận')?'Xe đưa đón':'Chi phí khác'}
+function orderInfoHtml(o){
+  const k=orderKind(o);
+  return k==='Vé máy bay'
+    ?`<div style="font-size:12px">Hành khách: 1 người lớn</div><div style="font-size:12px">• <strong>${o.service.replace('Vé máy bay ','').replace('→',' → ')}</strong><br>Ngày đi: ${o.date} 11:45</div>`
+    :k==='Phòng khách sạn'
+    ?`<div style="font-size:12px">• Khách sạn: <strong>${o.provider}</strong><br>• CI->CO: <em>${o.date} -> ${o.date}</em><br>• Roomnights: 1</div>`
+    :`<div style="font-size:12px">${o.service}</div>`;
+}
+const ORD_ST={'Đang xử lý':'processing','Hoàn thành':'done','Chờ duyệt':'pending','Đã hủy':'cancelled'};
+function ordIso(d){return d.split('/').reverse().join('-')}
+function orderApplyFilter(list){
+  const f=S.of||{};
+  return list.filter(o=>{
+    const a=accounts.find(x=>x.name===o.account)||accounts[0];
+    if(f.code&&!o.id.toLowerCase().includes(f.code.toLowerCase()))return false;
+    if(f.account&&o.account!==f.account)return false;
+    if(f.phone&&!a.phone.replace(/\D/g,'').includes(f.phone.replace(/\D/g,'')))return false;
+    if(f.email&&!(a.manager+' '+a.name).toLowerCase().includes(f.email.toLowerCase())&&!a.ccsEmail.includes(f.email))return false;
+    if(f.status&&o.status!==ORD_ST[f.status])return false;
+    if(f.ccs&&a.ccs!==f.ccs)return false;
+    const d=ordIso(o.date);
+    if(f.from&&d<f.from)return false;
+    if(f.to&&d>f.to)return false;
+    return true;
+  });
+}
+function setOf(k,v){S.of=S.of||{};S.of[k]=v;render()}
+function clearOf(){S.of={};render()}
+function orderFilterBar(showAccount){
+  const f=S.of||{};
+  const F=(w,l,inner)=>`<div class="field" style="width:${w}px"><label>${l}</label>${inner}</div>`;
+  const inp=(k,ph)=>`<input class="input w-full" placeholder="${ph}" value="${(f[k]||'').replace(/"/g,'&quot;')}" onchange="setOf('${k}',this.value.trim())">`;
+  const sel=(k,all,opts)=>`<select class="select w-full" onchange="setOf('${k}',this.value)"><option value="">${all}</option>${opts.map(x=>`<option ${f[k]===x?'selected':''}>${x}</option>`).join('')}</select>`;
+  const dt=k=>`<input class="input w-full" type="date" value="${f[k]||''}" onchange="setOf('${k}',this.value)">`;
+  return `<div class="filter-bar">
+    ${F(130,'Mã đơn hàng',inp('code','Mã đơn hàng'))}
+    ${showAccount?F(160,'Tài khoản',sel('account','Tất cả tài khoản',accounts.map(a=>a.name))):''}
+    ${F(120,'SĐT khách',inp('phone','SĐT khách'))}${F(150,'Khách hàng / email',inp('email','Tên hoặc email'))}
+    ${F(130,'Trạng thái',sel('status','Tất cả',Object.keys(ORD_ST)))}
+    ${F(130,'CCS phụ trách',sel('ccs','Tất cả',[...new Set(accounts.map(a=>a.ccs))]))}
+    ${F(140,'Từ ngày',dt('from'))}${F(140,'Đến ngày',dt('to'))}
+    <button class="btn btn-ghost" onclick="clearOf()">${ic('filter_alt_off')} Xóa bộ lọc</button></div>`;
+}
+function orderTableHtml(list,withAccount){
+  list=orderApplyFilter(list);
+  const rows=list.map(o=>{const a=accounts.find(x=>x.name===o.account)||accounts[0];return `<tr style="cursor:pointer" onclick="openOrder('${o.id}')">
+    <td><span class="td-link font-mono" style="color:var(--secondary)">${o.id}</span><div style="font-size:12px">${o.date}</div></td>
+    <td style="font-size:12px">${a.ccsEmail}</td>
+    <td style="font-size:12px"><div class="td-link" onclick="event.stopPropagation();navigate('accounts');openAcc('${a.id}')">${o.account}</div><div class="font-600">${a.manager}</div><div>${a.phone}</div></td>
+    <td><span class="badge badge-neutral" style="font-size:10px">${orderKind(o)}</span></td>
+    <td>${orderInfoHtml(o)}<div style="font-size:11px;color:var(--on-surface-variant);margin-top:2px">NCC: ${o.provider}</div></td>
+    <td class="text-right font-mono">${o.amount.toLocaleString('vi-VN')}</td>
+    <td>${statusBadge(o.status)}</td><td style="font-size:12px">Nợ thanh toán</td></tr>`}).join('');
+  return `<div class="table-wrap"><table><thead><tr><th>Mã / Ngày tạo</th><th>Người phụ trách</th><th>Khách hàng</th><th>Loại đơn</th><th>Thông tin</th><th class="text-right">Tổng tiền</th><th>Tình trạng</th><th>Phương thức thanh toán</th></tr></thead><tbody>${rows||'<tr><td colspan="8"><div class="empty" style="padding:24px"><span class="material-symbols-outlined eicon">search_off</span><p>Không có đơn hàng phù hợp</p><button class="btn btn-outline btn-sm" onclick="clearOf()">Xóa bộ lọc</button></div></td></tr>'}</tbody></table></div><div style="padding:10px 14px;font-size:12px;color:var(--on-surface-variant)">Hiển thị ${list.length} đơn hàng</div>`;
+}
+function renderAccOrders(a){
+  const list=orders.filter(o=>o.account===a.name);
+  return orderFilterBar(false)+orderTableHtml(list.length?list:orders.slice(0,2),false);
+}
+function openGF(kind,idx){
+  const d=accData();let cfg;
+  const roles=['Thành viên','Người đặt','Người duyệt','Quản lý'];
+  if(kind==='member')cfg={title:idx==null?'Thêm thành viên':'Chỉnh sửa thành viên',fields:[{k:'name',l:'Họ và tên',req:1},{k:'gender',l:'Giới tính',opts:['Nam','Nữ']},{k:'email',l:'Email',req:1},{k:'phone',l:'Số điện thoại'},{k:'role',l:'Vai trò',opts:roles}],list:d.members};
+  if(kind==='entity')cfg={title:idx==null?'Thêm thông tin xuất hóa đơn':'Sửa thông tin xuất hóa đơn',fields:[{k:'name',l:'Tên pháp nhân',req:1},{k:'mst',l:'Mã số thuế',req:1},{k:'address',l:'Địa chỉ xuất hóa đơn',req:1},{k:'email',l:'Email nhận hóa đơn'}],list:d.entities};
+  if(kind==='title')cfg={title:idx==null?'Thêm chức danh':'Sửa chức danh',fields:[{k:'name',l:'Tên',req:1},{k:'code',l:'Mã'},{k:'desc',l:'Mô tả'}],list:d.titles};
+  if(kind==='org')cfg={title:'Thêm đơn vị',fields:[{k:'name',l:'Tên đơn vị',req:1},{k:'parent',l:'Đơn vị cha',opts:d.orgs.map(x=>x.name)}],list:d.orgs};
+  if(kind==='reward')cfg={title:'Thêm chương trình Reward',fields:[{k:'name',l:'Tên chương trình',req:1},{k:'airline',l:'Hãng',opts:['Vietnam Airlines','Vietjet Air','Bamboo Airways']},{k:'rate',l:'Tỷ lệ hoàn thưởng (%)'}],list:d.rewards};
+  S.gf={kind,idx,...cfg};showModal('gf');
+}
+function saveGF(){
+  const g=S.gf,obj={};
+  for(const f of g.fields){const el=document.getElementById('gf_'+f.k);obj[f.k]=el.type==='file'?(el.files[0]?el.files[0].name:''):el.value.trim();if(f.req&&!obj[f.k]){showToast('Vui lòng '+(f.type==='file'?'chọn ':'nhập ')+f.l.toLowerCase(),'error');return}}
+  if(g.onSave){g.onSave(obj);closeModal();render();showToast('Cập nhật thành công','success');return}
+  if(g.kind==='entity'&&g.list.some((x,i)=>x.mst===obj.mst&&i!==g.idx)){showToast('MST này đã được sử dụng bởi pháp nhân khác','error');return}
+  if(g.idx==null){if(g.kind==='member')obj.verified=false;g.list.push(obj)}else g.list[g.idx]={...g.list[g.idx],...obj};
+  closeModal();render();showToast(g.idx==null?'Thêm mới thành công':'Cập nhật thành công','success');
+}
+function askDel(kind,idx,label){S.del={kind,idx,label};showModal('confirm-del')}
+function doDel(){
+  const d=accData(),L={member:d.members,entity:d.entities,title:d.titles,org:d.orgs,reward:d.rewards}[S.del.kind];
+  L.splice(S.del.idx,1);closeModal();render();showToast('Đã xóa','success');
+}
+function renderAccContacts(){
+  const t=S.accContactTab||'members',d=accData(),a=S.selectedAcc;
+  const side=[['members','Thành viên'],['org','Sơ đồ tổ chức'],['titles','Chức danh']].map(([k,l])=>`<div onclick="S.accContactTab='${k}';render()" style="padding:10px 14px;cursor:pointer;font-size:13px;${t===k?'color:var(--secondary);font-weight:600;border-right:2px solid var(--secondary)':'color:var(--on-surface-variant)'}">${l}</div>`).join('');
+  const head=(title,actions)=>`<div class="card-header"><h3 class="card-title">${title}</h3><div style="display:flex;gap:8px">${actions}</div></div>`;
+  const imp=l=>`<button class="btn btn-outline btn-sm" onclick="S.importLabel='${l}';showModal('import-file')">${ic('upload_file','font-size:14px')} ${l}</button>`;
+  const add=(l,k)=>`<button class="btn btn-primary btn-sm" onclick="openGF('${k}')">${ic('add','font-size:14px')} ${l}</button>`;
+  let body='';
+  if(t==='members'){
+    const q=(S.memberQ||'').toLowerCase(),role=S.memberRole||'';
+    const ms=d.members.map((m,i)=>({m,i})).filter(x=>(!q||(x.m.name+x.m.email+x.m.phone).toLowerCase().includes(q))&&(!role||x.m.role===role));
+    body=`<div class="card">${head('DANH SÁCH THÀNH VIÊN',imp('Import thành viên')+add('Thêm thành viên','member'))}
+    <div class="filter-bar" style="margin:0;border-radius:0"><input class="input" style="width:220px" placeholder="Tìm theo tên / email / SĐT" value="${S.memberQ||''}" onchange="S.memberQ=this.value;render()"><select class="select" style="width:150px" onchange="S.memberRole=this.value;render()"><option value="">Mọi vai trò</option>${['Thành viên','Người đặt','Người duyệt','Quản lý'].map(r=>`<option ${role===r?'selected':''}>${r}</option>`).join('')}</select></div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Họ và tên / Trạng thái</th><th>Giới tính</th><th>Email / Số điện thoại</th><th>Vai trò</th><th>Bộ phận</th><th class="text-center">Thao tác</th></tr></thead>
+    <tbody>${ms.length?ms.map(({m,i})=>`<tr><td><span class="td-link" onclick="S.memberIdx=${i};showModal('member-detail')">${m.name}</span><div><span class="badge ${m.verified?'badge-success':'badge-error'}" style="font-size:10px">${m.verified?'Đã xác nhận':'Chưa xác nhận'}</span></div></td><td>${m.gender}</td><td style="font-size:12px">${m.email}<div>${m.phone||''}</div></td><td>${m.role}</td><td style="font-size:12px">${a.company}</td><td class="text-center" style="font-size:12px;white-space:nowrap"><span class="td-link" onclick="S.memberIdx=${i};showModal('member-detail')">Chi tiết</span> · <span style="color:var(--error);cursor:pointer" onclick="askDel('member',${i},'${m.name}')">Xóa</span>${m.verified?'':` · <span class="td-link" onclick="showToast('Đã gửi lại email xác nhận tới ${m.email}','success')">Gửi lại email xác nhận</span>`}</td></tr>`).join(''):'<tr><td colspan="6"><div class="empty"><p>Không tìm thấy thành viên</p></div></td></tr>'}</tbody></table></div></div>`;
+  } else if(t==='org'){
+    body=`<div class="card">${head('SƠ ĐỒ TỔ CHỨC DOANH NGHIỆP',imp('Import dữ liệu')+add('Thêm mới dữ liệu','org'))}
+    <div class="card-body" style="font-size:13px">${d.orgs.map((o,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;margin-left:${o.parent?24:0}px;border-bottom:1px solid var(--border)">${ic(o.parent?'subdirectory_arrow_right':'account_tree','color:var(--primary)')}<span style="flex:1">${o.name}</span>${o.parent?`<button class="btn btn-ghost btn-sm" style="color:var(--error)" onclick="askDel('org',${i},'${o.name}')">${ic('delete','font-size:14px')}</button>`:''}</div>`).join('')}</div></div>`;
+  } else {
+    body=`<div class="card">${head('DANH SÁCH CHỨC DANH/CHỨC VỤ',imp('Import chức danh')+add('Thêm chức danh','title'))}
+    <div style="overflow-x:auto"><table><thead><tr><th>Tên</th><th>Mã</th><th>Mô tả</th><th class="text-center">Thao tác</th></tr></thead><tbody>${d.titles.length?d.titles.map((x,i)=>`<tr><td>${x.name}</td><td>${x.code||'—'}</td><td>${x.desc||'—'}</td><td class="text-center"><button class="btn btn-ghost btn-sm" onclick="openGF('title',${i})">${ic('edit','font-size:14px')}</button><button class="btn btn-ghost btn-sm" style="color:var(--error)" onclick="askDel('title',${i},'${x.name}')">${ic('delete','font-size:14px')}</button></td></tr>`).join(''):'<tr><td colspan="4"><div class="empty"><span class="material-symbols-outlined eicon">inbox</span><p>No data</p></div></td></tr>'}</tbody></table></div></div>`;
+  }
+  return `<div style="display:grid;grid-template-columns:130px 1fr;gap:16px"><div>${side}</div><div>${body}</div></div>`;
+}
+function renderAccReward(){
+  const d=accData();
+  return `<div class="card"><div class="card-header"><h3 class="card-title">Reward</h3><button class="btn btn-primary btn-sm" onclick="openGF('reward')">${ic('add','font-size:14px')} Thêm chương trình</button></div>
+  ${d.rewards.length?`<div style="overflow-x:auto"><table><thead><tr><th>Chương trình</th><th>Hãng</th><th>Tỷ lệ hoàn thưởng</th><th class="text-center">Thao tác</th></tr></thead><tbody>${d.rewards.map((r,i)=>`<tr><td>${r.name}</td><td>${r.airline}</td><td>${r.rate||'0'}%</td><td class="text-center"><button class="btn btn-ghost btn-sm" style="color:var(--error)" onclick="askDel('reward',${i},'${r.name}')">${ic('delete','font-size:14px')}</button></td></tr>`).join('')}</tbody></table></div>`
+  :`<div class="empty"><span class="material-symbols-outlined eicon">card_giftcard</span><h3>Chưa cấu hình chương trình Reward</h3><p class="mb-3">Chương trình tích điểm / hoàn thưởng áp dụng cho tài khoản sẽ hiển thị tại đây.</p><button class="btn btn-primary btn-sm" onclick="openGF('reward')">${ic('add')} Thêm chương trình</button></div>`}</div>`;
+}
+function renderAccNotify(){
+  const grp=(title,hint)=>`<div style="margin-bottom:18px"><div class="font-600" style="font-size:13px;margin-bottom:6px">• ${title} <span style="font-weight:400;color:var(--on-surface-variant)">(vui lòng chọn người nhận bên dưới)</span></div>
+    ${['Người đặt','Người đi công tác','Tài khoản khác'].map(x=>`<label style="display:flex;align-items:center;gap:6px;font-size:13px;margin:4px 0 4px 14px"><input type="checkbox" style="accent-color:var(--secondary)"> ${x}</label>`).join('')}
+    <div style="margin:8px 0 0 14px"><div style="font-size:12px;color:var(--on-surface-variant);margin-bottom:4px">◦ ${hint}</div><input class="input w-full" placeholder="${hint}" style="max-width:520px"></div></div>`;
+  return `<div class="card"><div class="card-header"><h3 class="card-title">Nhận email từ hãng hàng không</h3></div><div class="card-body">
+    ${grp('Mail giữ chỗ thành công','Người nhận email giữ chỗ')}${grp('Mail đặt vé thành công','Người nhận email đặt vé thành công')}${grp('Mail khác','Người nhận email khác')}
+    <button class="btn btn-primary" onclick="showToast('Đã lưu cấu hình nhận thông báo','success')">${ic('save')} Lưu</button></div></div>`;
+}
+function renderAccEmailCfg(){
+  const tg=(l,on)=>`<div class="fg"><label>${l}</label><label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-top:4px"><input type="checkbox" ${on?'checked':''} style="accent-color:var(--secondary)"> ${on?'Có':'Không'}</label></div>`;
+  const ta=l=>`<div class="fg"><label>${l}</label><textarea class="textarea w-full" rows="2" placeholder="${l}"></textarea></div>`;
+  return `<div class="card"><div class="card-header"><h3 class="card-title">Cấu hình giao diện email</h3></div><div class="card-body">
+    <div class="form-row c2 mb-3">${tg('Nhận tệp đính kèm trong mail',false)}${tg('Hiển thị giá trong mail',true)}</div>
+    <div class="form-row c2 mb-3">${ta('Cài đặt header trong mail')}${ta('Cài đặt footer trong mail')}</div>
+    <div class="form-row c2 mb-3">${ta('Cài đặt header trong pdf đơn')}${ta('Cài đặt footer trong pdf đơn')}</div>
+    <div class="form-row c2 mb-3">${ta('Cài đặt header trong pdf trip')}${ta('Cài đặt footer trong pdf trip')}</div>
+    <div class="form-row c2 mb-3">${tg('Đánh giá khách sạn qua email',false)}${tg('Hiển thị button xem chi tiết trong email',true)}</div>
+    <div class="form-row c2 mb-3">${tg('Hiển thị button xét duyệt trong mail',false)}${tg('Hiển thị giá trong pdf trip',true)}</div>
+    <button class="btn btn-primary" onclick="showToast('Đã lưu cấu hình email','success')">${ic('save')} Lưu</button></div></div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════ LIMITS ═════
@@ -673,12 +858,16 @@ function renderAccInvoiceEntity(){
     return `${demoBar}<div class="net-error"><div class="ne-icon">${ic('wifi_off','font-size:52px')}</div><h3>Không thể tải dữ liệu</h3><p>Lỗi kết nối mạng. Vui lòng thử lại.</p><button class="btn btn-primary" onclick="S.invoiceEntityVariant='data';render()">${ic('refresh')} Thử lại</button></div>`;
   }
   if(ev==='empty'){
-    return `${demoBar}<div class="empty"><span class="material-symbols-outlined eicon">receipt_long</span><h3>Chưa có pháp nhân xuất hóa đơn</h3><p class="mb-3">Thêm thông tin pháp nhân để hệ thống xuất hóa đơn đúng quy định</p><button class="btn btn-primary btn-sm" onclick="S.invoiceEntityVariant='data';render()">${ic('add')} Thêm pháp nhân</button></div>`;
+    return `${demoBar}<div class="empty"><span class="material-symbols-outlined eicon">receipt_long</span><h3>Chưa có pháp nhân xuất hóa đơn</h3><p class="mb-3">Thêm thông tin pháp nhân để hệ thống xuất hóa đơn đúng quy định</p><button class="btn btn-primary btn-sm" onclick="S.invoiceEntityVariant='data';openGF('entity')">${ic('add')} Thêm pháp nhân</button></div>`;
   }
   const isSuccess=ev==='success';
   const isMstErr=ev==='mst-err';
   return `${demoBar}
   ${isSuccess?`<div class="alert alert-success mb-3">${ic('check_circle')} Đã lưu thông tin pháp nhân xuất hóa đơn thành công!</div>`:''}
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn btn-primary btn-sm" onclick="openGF('entity')">${ic('add')} Thêm mới thông tin xuất hóa đơn</button></div>
+  <div class="table-wrap mb-3"><table><thead><tr><th>Id</th><th>Mã</th><th>Tên pháp nhân</th><th>Mã số thuế</th><th>Địa chỉ xuất hóa đơn</th><th class="text-center">Thao tác</th></tr></thead><tbody>
+    ${accData().entities.map((r,i)=>`<tr><td>${1936+i}</td><td class="font-mono" style="font-size:12px">${S.selectedAcc.id.replace('ACC-','')}-${r.mst}</td><td>${r.name}</td><td class="font-mono">${r.mst}</td><td style="font-size:12px">${r.address}</td><td class="text-center" style="white-space:nowrap"><button class="btn btn-ghost btn-sm" onclick="openGF('entity',${i})">${ic('edit','font-size:14px')}</button><button class="btn btn-ghost btn-sm" style="color:var(--error)" onclick="askDel('entity',${i},'${r.name.replace(/'/g,'')}')">${ic('delete','font-size:14px')}</button></td></tr>`).join('')||'<tr><td colspan="6"><div class="empty"><p>Chưa có dữ liệu</p></div></td></tr>'}
+  </tbody></table></div>
   <div class="card" style="max-width:640px"><div class="card-header"><h3 class="card-title">Pháp nhân xuất hóa đơn</h3></div>
     <div class="card-body">
       <div class="form-row c2 mb-3">
@@ -846,39 +1035,152 @@ function renderOrderList(){
       <div class="field" style="width:200px"><label>Mã / Tên đơn hàng</label><div class="input-wrap"><span class="material-symbols-outlined si">search</span><input class="input input-search w-full" placeholder="Tìm đơn hàng..."/></div></div>
       <button class="btn btn-outline">${ic('filter_list')} Lọc</button><div style="flex:1"></div>
       <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add')} Tạo đơn hộ</button></div>
-    <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Tài khoản</th><th>Dịch vụ</th><th>Ngày tạo</th><th class="text-right">Tổng tiền</th><th>Trạng thái</th><th class="text-center">Thao tác</th></tr></thead>
-    <tbody><tr><td colspan="7"><div class="empty"><span class="material-symbols-outlined eicon">local_shipping</span><h3>Chưa có đơn hàng nào</h3><p class="mb-3">Tạo đơn hàng đầu tiên cho khách hàng</p><button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add')} Tạo đơn hộ</button></div></td></tr></tbody></table></div>`;
+    <div class="table-wrap"><table><thead><tr><th>Mã / Ngày tạo</th><th>Người phụ trách</th><th>Khách hàng</th><th>Loại đơn</th><th>Thông tin</th><th class="text-right">Tổng tiền</th><th>Tình trạng</th><th>Phương thức thanh toán</th></tr></thead>
+    <tbody><tr><td colspan="8"><div class="empty"><span class="material-symbols-outlined eicon">local_shipping</span><h3>Chưa có đơn hàng nào</h3><p class="mb-3">Tạo đơn hàng đầu tiên cho khách hàng</p><button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add')} Tạo đơn hộ</button></div></td></tr></tbody></table></div>`;
   }
   if(S.orderListState==='by-account'){
     const accOrders=orders.filter(o=>o.account==='Công ty DEF');
     const rows2=accOrders.length?accOrders.map(o=>`<tr><td class="font-mono"><span class="td-link" onclick="openOrder('${o.id}')">${o.id}</span></td><td>${o.account}</td><td>${o.service}</td><td>${o.provider}</td><td>${o.date}</td><td class="font-mono text-right">${fmt(o.amount)}</td><td>${statusBadge(o.status)}</td><td class="text-center"><button class="btn btn-outline btn-sm" onclick="openOrder('${o.id}')">Chi tiết</button></td></tr>`).join('')
     :`<tr><td colspan="8"><div class="empty" style="padding:24px"><p>Không có đơn hàng cho Công ty DEF</p></div></td></tr>`;
     return `${listDemoBar}<div class="alert alert-info mb-3">${ic('filter_list')} Đang lọc: <strong>Công ty DEF</strong> <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="S.orderListState='data';render()">Xóa bộ lọc</button></div>
-    <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Tài khoản</th><th>Dịch vụ</th><th>Nhà cung cấp</th><th>Ngày tạo</th><th class="text-right">Tổng tiền</th><th>Trạng thái</th><th class="text-center">Thao tác</th></tr></thead><tbody>${rows2}</tbody></table></div>`;
+    ${orderTableHtml(accOrders,true)}`;
   }
-  const rows=orders.map(o=>`<tr>
-    <td class="font-mono"><span class="td-link" onclick="openOrder('${o.id}')">${o.id}</span></td>
-    <td>${o.account}</td><td>${o.service}</td><td>${o.provider}</td><td>${o.date}</td>
-    <td class="font-mono text-right">${fmt(o.amount)}</td><td>${statusBadge(o.status)}</td>
-    <td class="text-center"><button class="btn btn-outline btn-sm" onclick="openOrder('${o.id}')">Chi tiết</button></td>
-  </tr>`).join('');
-  return `${listDemoBar}<div class="filter-bar">
-    <div class="field" style="width:200px"><label>Mã / Tên đơn hàng</label>
-      <div class="input-wrap"><span class="material-symbols-outlined si">search</span><input class="input input-search w-full" placeholder="Tìm đơn hàng..."/></div></div>
-    <div class="field" style="width:180px"><label>Tài khoản</label>
-      <select class="select w-full"><option>Tất cả tài khoản</option>${accounts.map(a=>`<option>${a.name}</option>`).join('')}</select></div>
-    <div class="field" style="width:130px"><label>Trạng thái</label>
-      <select class="select w-full"><option>Tất cả</option><option>Đang xử lý</option><option>Hoàn thành</option><option>Đã hủy</option></select></div>
-    <button class="btn btn-outline">${ic('filter_list')} Lọc</button>
+  return `${listDemoBar}${orderFilterBar(true)}
+  <div class="filter-bar" style="margin-top:-8px">
     <div style="flex:1"></div>
     <button class="btn btn-outline" onclick="S.orderView='invoice';S.orderInvoiceVariant='empty';document.getElementById('page-title').textContent='Phê duyệt hóa đơn';render()">${ic('receipt_long')} Phê duyệt hóa đơn</button>
     <button class="btn btn-outline" onclick="S.orderView='import';S.orderImportState='idle';document.getElementById('page-title').textContent='Nhập dữ liệu từ file';render()">${ic('upload_file')} Nhập từ file</button>
     <button class="btn btn-primary" onclick="S.wizardStep=1;S.wizardStep1Err=false;showModal('create-order')">${ic('add')} Tạo đơn hộ</button>
   </div>
-  <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Tài khoản</th><th>Dịch vụ</th><th>Nhà cung cấp</th><th>Ngày tạo</th><th class="text-right">Tổng tiền</th><th>Trạng thái</th><th class="text-center">Thao tác</th></tr></thead>
-  <tbody>${rows}</tbody></table></div>`;
+  ${orderTableHtml(orders,true)}`;
 }
-function openOrder(id){S.selectedOrder=orders.find(o=>o.id===id);S.orderView='detail';document.getElementById('page-title').textContent=`Chi tiết ${id}`;render()}
+function openOrder(id){if(S.nav!=='orders')navigate('orders');S.selectedOrder=orders.find(o=>o.id===id);S.orderView='detail';document.getElementById('page-title').textContent=`Chi tiết ${id}`;render();toTop()}
+
+
+// ── Order detail interactive helpers ────────────────────────────────────────
+function od(o){S.od=S.od||{};return S.od[o.id]=S.od[o.id]||{pic:null,comments:[],files:[],fileHist:[],biz:'',inv:[],auto:false,log:[],cust:null}}
+function nowStr(){return new Date().toLocaleString('vi-VN',{hour12:false})}
+function odLog(txt){const o=S.selectedOrder;od(o).log.push({t:nowStr(),txt})}
+function openCustomGF(title,fields,cur,onSave){S.gf={kind:'custom',idx:0,title,fields,list:[cur],onSave};showModal('gf')}
+function openLink(title,rows){S.link={title,rows};showModal('od-link')}
+function odTrip(){const o=S.selectedOrder;openLink('Chuyến công tác TRIP-'+o.id.replace('ORD-',''),[['Mã chuyến',`TRIP-${o.id.replace('ORD-','')}`],['Mục đích','Công tác nghiệp vụ'],['Dịch vụ',o.service],['Tổng chi phí',fmt(o.amount)],['Trạng thái','Thành công']])}
+function odVoucher(){const o=S.selectedOrder;openLink('Voucher công tác',[['Mã voucher','VCH-'+o.id.replace('ORD-','')],['Đơn hàng',o.id],['Hiệu lực',o.date+' - '+o.date],['Trạng thái','Đã phát hành']])}
+function odReq(r){const o=S.selectedOrder;openLink('Yêu cầu đặt hàng',[['Mã yêu cầu',r],['Đơn hàng',o.id],['Nguồn','ADMIN'],['Thời gian',o.date+' 14:36'],['Trạng thái','Đã xử lý']])}
+function odEditPic(){
+  const o=S.selectedOrder,d=od(o),cur=d.pic||(accounts.find(x=>x.name===o.account)||accounts[0]).ccsEmail;
+  openCustomGF('Đổi người phụ trách',[{k:'pic',l:'Người phụ trách',opts:[...new Set(accounts.map(a=>a.ccsEmail))]}],{pic:cur},v=>{d.pic=v.pic;odLog('Đổi người phụ trách thành '+v.pic)});
+}
+function odEditCust(bn,be,bp){
+  const o=S.selectedOrder,d=od(o),c=d.cust||{name:bn,email:be,phone:bp};
+  openCustomGF('Sửa thông tin khách hàng',[{k:'name',l:'Họ và tên',req:1},{k:'email',l:'Email',req:1},{k:'phone',l:'Số điện thoại'}],c,v=>{d.cust=v;odLog('Cập nhật thông tin khách hàng')});
+}
+function odAddFile(){
+  const o=S.selectedOrder,d=od(o);
+  openCustomGF('Thêm tệp đính kèm',[{k:'file',l:'Tệp đính kèm',type:'file',req:1},{k:'note',l:'Ghi chú'}],{},v=>{d.files.push({name:v.file,note:v.note,t:nowStr()});d.fileHist.push(nowStr()+' · Thêm tệp '+v.file);odLog('Thêm tệp đính kèm '+v.file)});
+}
+function odDelFile(i){const d=od(S.selectedOrder),f=d.files.splice(i,1)[0];d.fileHist.push(nowStr()+' · Xóa tệp '+f.name);render();showToast('Đã xóa tệp','success')}
+function odFileHist(){const d=od(S.selectedOrder);openLink('Lịch sử đính kèm',d.fileHist.length?d.fileHist.map((h,i)=>[i+1,h]):[['—','Chưa có thay đổi']])}
+function odEditBiz(){const d=od(S.selectedOrder);openCustomGF('Yêu cầu của doanh nghiệp',[{k:'biz',l:'Nội dung yêu cầu',ta:1}],{biz:d.biz},v=>{d.biz=v.biz;odLog('Cập nhật yêu cầu của doanh nghiệp')})}
+function odComment(){
+  const el=document.getElementById('od_cmt'),v=el.value.trim();
+  if(!v){showToast('Vui lòng nhập nội dung comment','error');return}
+  od(S.selectedOrder).comments.push({t:nowStr(),txt:'Admin: '+v});render();
+}
+function odSendEmail(){
+  const e=document.getElementById('od_em').value.trim(),lang=document.getElementById('od_lang').value;
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){showToast('Email nhận không hợp lệ','error');return}
+  odLog(`Gửi email (${lang}) tới ${e}`);render();showToast('Đã gửi email tới '+e,'success');
+}
+function odAddInv(){
+  const o=S.selectedOrder,a=accounts.find(x=>x.name===o.account)||accounts[0],d=od(o);
+  openCustomGF('Tạo yêu cầu xuất hóa đơn',[{k:'name',l:'Tên pháp nhân',req:1},{k:'mst',l:'Mã số thuế',req:1},{k:'address',l:'Địa chỉ',req:1},{k:'email',l:'Email nhận hóa đơn'}],{name:a.company,mst:a.tax,address:a.address,email:''},v=>{d.inv.push({...v,status:'Chờ xuất',t:nowStr()});odLog('Tạo yêu cầu xuất hóa đơn cho '+v.name)});
+}
+function odInvSet(i,st){const d=od(S.selectedOrder);d.inv[i].status=st;odLog(`Yêu cầu xuất hóa đơn #${i+1}: ${st}`);render()}
+function odRebook(){
+  const o=S.selectedOrder;o.status='cancelled';odLog('Hủy để đặt lại (hoàn 100%)');closeModal();render();showToast('Đã hủy đơn và hoàn 100%. Bạn có thể tạo đơn mới','success');
+}
+
+// ── PDF preview ────────────────────────────────────────────────────────────
+function openPreview(name,ctIdx){S.preview={name,ctIdx};showModal('file-preview')}
+function previewDocHtml(){
+  const pv=S.preview,a=S.selectedAcc;
+  const c=(pv.ctIdx!=null&&a)?contractList(a)[pv.ctIdx]:null;
+  const P='style="margin:0 0 8px;text-indent:24px;text-align:justify"';
+  const dots='...........................................................';
+  if(!c){
+    return `<div style="text-align:center;padding:60px 20px;color:#555">${ic('picture_as_pdf','font-size:56px;color:var(--error)')}<div style="margin-top:12px;font-weight:600">${pv.name}</div><div style="font-size:12px;margin-top:6px">Bản xem trước tài liệu. Tải xuống để xem đầy đủ nội dung.</div></div>`;
+  }
+  const co=a.company,d=c.from.split('-');
+  return `<div style="font-family:'Times New Roman',serif;font-size:14px;line-height:1.55;color:#111;padding:36px 44px">
+    <div style="display:flex;justify-content:space-between;gap:16px;margin-bottom:6px">
+      <div style="font-weight:700">Đơn vị: NEXTUS<br>Số: ${c.code}/HĐ</div>
+      <div style="text-align:center;font-weight:700">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br><span style="text-decoration:underline">Độc lập – Tự do – Hạnh phúc</span></div>
+    </div>
+    <div style="text-align:right;font-style:italic;margin-bottom:16px">Hà Nội, ngày ${d[2]} tháng ${d[1]} năm ${d[0]}</div>
+    <div style="text-align:center;font-weight:700;font-size:16px">${c.type.toUpperCase()}</div>
+    <div style="text-align:center;font-weight:700;margin-bottom:14px">CUNG CẤP DỊCH VỤ ĐẶT VÉ MÁY BAY, KHÁCH SẠN VÀ DỊCH VỤ DU LỊCH CÔNG TÁC</div>
+    <p ${P}><i>Căn cứ Bộ luật Dân sự ngày 24 tháng 11 năm 2015;</i></p>
+    <p ${P}><i>Căn cứ Luật Thương mại ngày 14 tháng 06 năm 2005;</i></p>
+    <p ${P}><i>Căn cứ nhu cầu và khả năng thực tế của các bên trong hợp đồng;</i></p>
+    <p ${P}>Hôm nay, ngày ${d[2]} tháng ${d[1]} năm ${d[0]}, chúng tôi gồm các bên dưới đây:</p>
+    <p style="font-weight:700;margin:10px 0 4px">BÊN A: ĐƠN VỊ CUNG CẤP DỊCH VỤ (NEXTUS)</p>
+    <p style="margin:0">Cơ quan, đơn vị: CÔNG TY CỔ PHẦN NEXTUS</p>
+    <p style="margin:0">Địa chỉ: Tầng 5, Tòa nhà Nextus, Cầu Giấy, Hà Nội</p>
+    <p style="margin:0 0 8px">Điện thoại: 1900 088 865</p>
+    <p style="font-weight:700;margin:10px 0 4px">BÊN B: KHÁCH HÀNG</p>
+    <p style="margin:0">Cơ quan, đơn vị: ${co.toUpperCase()}</p>
+    <p style="margin:0">Mã số thuế: ${a.tax}</p>
+    <p style="margin:0">Địa chỉ: ${a.address}</p>
+    <p style="margin:0 0 8px">Điện thoại: ${a.phone}</p>
+    <p ${P}>Hai bên thống nhất ký kết hợp đồng với các điều khoản sau:</p>
+    <p style="font-weight:700;margin:10px 0 4px">Điều 1. Thời hạn hợp đồng</p>
+    <p ${P}>Hợp đồng có hiệu lực từ ${fd(c.from)} đến ${fd(c.to)}. ${c.auto?'Hợp đồng được tự động gia hạn nếu không bên nào có thông báo chấm dứt.':'Hợp đồng không tự động gia hạn.'}</p>
+    <p style="font-weight:700;margin:10px 0 4px">Điều 2. Hạn mức công nợ và thanh toán</p>
+    <p ${P}>Hạn mức công nợ: ${c.limit.toLocaleString('vi-VN')} VNĐ. Ngày chốt đối soát: ngày ${c.cutoff} hằng tháng. Thời hạn thanh toán: ${c.pay} ngày kể từ ngày đối soát. Chiết khấu từ giá OTA: ${c.discount}%.</p>
+    <p style="font-weight:700;margin:10px 0 4px">Điều 3. Quyền và nghĩa vụ các bên</p>
+    <p ${P}>${dots}${dots}</p><p ${P}>${dots}${dots}</p>
+    <div style="display:flex;justify-content:space-around;text-align:center;font-weight:700;margin-top:28px"><div>ĐẠI DIỆN BÊN A<br><span style="font-weight:400;font-style:italic">(Ký, ghi rõ họ tên)</span></div><div>ĐẠI DIỆN BÊN B<br><span style="font-weight:400;font-style:italic">(Ký, ghi rõ họ tên)</span></div></div>
+  </div>`;
+}
+
+// ── Contracts (per account) ────────────────────────────────────────────────
+function fd(iso){return iso?iso.split('-').reverse().join('/'):'—'}
+function contractList(a){
+  const d=accData();
+  if(!d.contracts){
+    const c=a.id.replace('ACC-','');
+    d.contracts=[
+      {code:`20260101${c}/NXT-${c}`,type:'Hợp đồng khung',status:'active',from:'2026-01-01',to:'2026-12-31',discount:0,limit:a.limit,cutoff:25,pay:31,auto:false,file:'20260101_HD_CUNG_CAP_DV_VNT.pdf',created:'linh.h.khuong · 01/04/2026',updated:'linh.t.nguyen.1 · 02/04/2026'},
+      {code:`20250101${c}/NXT-${c}`,type:'Hợp đồng khung',status:'expired',from:'2025-01-01',to:'2025-12-31',discount:0,limit:200e6,cutoff:25,pay:31,auto:false,file:'20250101_HD_CUNG_CAP_DV_VNT.pdf',created:'linh.h.khuong · 01/01/2025',updated:'linh.t.nguyen.1 · 02/01/2025'},
+      {code:`20260309${c}/NXT-${c}`,type:'Hợp đồng khung',status:'rejected',from:'2026-03-09',to:'2027-03-08',discount:0,limit:a.limit,cutoff:25,pay:31,auto:false,file:'20260309_HD_CUNG_CAP_DV_VNT.pdf',created:'linh.h.khuong · 09/03/2026',updated:'linh.t.nguyen.1 · 10/03/2026'}
+    ];
+  }
+  return d.contracts;
+}
+const CT_ST={active:['badge-success','Kích hoạt'],expired:['badge-error','Hết hạn'],rejected:['badge-error','Từ chối'],pending:['badge-warning','Chờ duyệt']};
+function ctBadge(st){const x=CT_ST[st];return `<span class="badge ${x[0]}" style="font-size:10px">${x[1]}</span>`}
+function openContractForm(idx){S.contractIdx=idx;showModal('create-contract')}
+function saveContract(){
+  const a=S.selectedAcc,L=contractList(a),g=id=>document.getElementById(id);
+  const v={code:g('ct_code').value.trim(),type:g('ct_type').value,from:g('ct_from').value,term:+g('ct_term').value,discount:g('ct_disc').value,limit:g('ct_limit').value.replace(/\D/g,''),cutoff:g('ct_cut').value,pay:g('ct_pay').value,auto:g('ct_auto').checked};
+  const f=g('ct_file').files[0];
+  const miss=[[!v.code,'mã hợp đồng'],[!v.from,'ngày hiệu lực'],[!v.term,'thời hạn'],[v.discount==='','discount'],[!v.limit,'hạn mức công nợ'],[!v.cutoff,'ngày đối soát'],[!v.pay,'thời hạn thanh toán']].find(x=>x[0]);
+  if(miss){showToast('Vui lòng nhập '+miss[1],'error');return}
+  const idx=S.contractIdx,old=idx!=null?L[idx]:null;
+  if(!f&&!old){showToast('Vui lòng upload file hợp đồng','error');return}
+  if(L.some((c,i)=>c.code===v.code&&i!==idx)){showToast('Mã hợp đồng đã tồn tại','error');return}
+  const dt=new Date(v.from);dt.setMonth(dt.getMonth()+v.term);dt.setDate(dt.getDate()-1);
+  const rec={code:v.code,type:v.type,status:'pending',from:v.from,to:dt.toISOString().slice(0,10),discount:+v.discount,limit:+v.limit,cutoff:+v.cutoff,pay:+v.pay,auto:v.auto,file:f?f.name:old.file,fileUrl:f?URL.createObjectURL(f):(old&&old.fileUrl)||'',created:old?old.created:'admin · '+nowStr(),updated:'admin · '+nowStr()};
+  if(old)L[idx]=rec;else L.unshift(rec);
+  closeModal();render();showToast(old?'Đã cập nhật hợp đồng, chờ duyệt lại':'Đã tạo hợp đồng, chờ duyệt','success');
+}
+function contractAct(idx,act){
+  const c=contractList(S.selectedAcc)[idx];
+  if(act==='approve'){c.status='active';showToast('Đã duyệt hợp đồng','success')}
+  if(act==='reject'){c.status='rejected';showToast('Đã từ chối hợp đồng','error')}
+  if(act==='end'){c.status='expired';showToast('Đã chấm dứt hợp đồng','success')}
+  c.updated='admin · '+nowStr();closeModal();render();
+}
 
 function renderOrderDetail(){
   const o=S.selectedOrder;
@@ -913,6 +1215,8 @@ function renderOrderDetail(){
   const reqId=`BR-2026${o.id.replace('ORD-','')}-${Math.floor(Math.random()*90000000+10000000)}`;
   const tripCode=`TRIP-${o.id.replace('ORD-','')}`;
   const costIn=Math.round(o.amount*0.85);
+  const acc=accounts.find(x=>x.name===o.account)||accounts[0];
+  const D=od(o);
 
   // ── Section header helper
   const sh=(title,actions='')=>`<div style="background:var(--primary);color:#fff;padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;border-radius:var(--rlg) var(--rlg) 0 0">${title}${actions?`<div style="display:flex;gap:8px">${actions}</div>`:''}</div>`;
@@ -923,18 +1227,24 @@ function renderOrderDetail(){
   const basicInfo=`<div class="card mb-3" style="border-radius:var(--rlg)">
     ${sh('THÔNG TIN CƠ BẢN')}
     <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);overflow:hidden">
-      ${infoRow('Chuyến công tác',`<span style="color:var(--primary);font-weight:600">${tripCode}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--primary)">arrow_forward</span>`)}
-      ${infoRow('Yêu cầu đặt hàng',`<span class="td-link">${reqId}</span>`)}
-      ${infoRow('Đặt lúc',`${o.date} 14:38`)}
-      ${infoRow('Hình thức thanh toán','Công nợ')}
-      ${infoRow('Phụ trách',`<span style="color:var(--primary)">${bookerName}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--on-surface-variant)">edit</span>`)}
-      ${infoRow('Trạng thái đơn hàng',statusBadge(o.status))}
-      ${infoRow('Thời hạn duyệt','Không có')}
-      ${infoRow('Thời hạn thanh toán','Không có')}
+      ${infoRow('Chuyến công tác',`<span style="color:var(--primary);font-weight:600;cursor:pointer" onclick="odTrip()">${tripCode}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--primary)">arrow_forward</span>`)}
+      ${infoRow('Voucher công tác',`<span style="color:var(--primary);font-weight:600;cursor:pointer" onclick="odVoucher()">VCH-${o.id.replace('ORD-','')}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--primary)">arrow_forward</span>`)}
+      ${infoRow('Yêu cầu đặt hàng',`<span class="td-link" onclick="odReq('${reqId}')">${reqId}</span>`)}
       ${infoRow('Nguồn','ADMIN')}
+      ${infoRow('Đặt lúc',`${o.date} 14:38`)}
+      ${infoRow('Hình thức thanh toán','Nợ thanh toán')}
       ${infoRow('Loại đơn',svcType)}
-      ${infoRow('Hệ thống','VNT')}
+      ${svcType==='Khách sạn'?`${infoRow('Tình trạng thanh toán cho khách sạn','<span class="badge badge-success">Đã thanh toán</span>')}
+      ${infoRow('Chu kì thanh toán','Theo đơn')}
+      ${infoRow('Tần suất thanh toán','Thanh toán trong vòng 24h - Thanh toán 3 ngày trước ngày checkin')}
+      ${infoRow('Hạn thanh toán cho khách sạn',`${o.date} 17:00:00`)}`:''}
+      ${infoRow('Phụ trách',`<span style="color:var(--primary)">${D.pic||acc.ccsEmail}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--on-surface-variant);cursor:pointer" onclick="odEditPic()">edit</span>`)}
+      ${infoRow('Trạng thái đơn hàng',statusBadge(o.status))}
+      ${infoRow('Hệ thống','<span class="badge badge-neutral">NXT</span>')}
+      ${infoRow('Thời hạn duyệt',`${o.date} 14:19:12`)}
+      ${infoRow('Thời hạn thanh toán',`${o.date} 14:19:12`)}
       ${infoRow('Luồng đặt đơn','Đơn trực tiếp')}
+      ${infoRow('Nơi xuất hóa đơn',acc.company.toUpperCase())}
       ${infoRow('Đơn đặt lại','Không có')}
       ${infoRow('Phân loại đơn hàng','Thường')}
     </div>
@@ -945,17 +1255,17 @@ function renderOrderDetail(){
     ${sh('THÔNG TIN KHÁCH HÀNG')}
     <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);overflow:hidden">
       ${infoRow('Tổ chức',`<span class="td-link">${o.account}</span>`)}
-      ${infoRow('Hạn mức công nợ',`<span style="color:var(--error);font-weight:600">0 / 0</span>`)}
-      ${infoRow('Hạn mức còn lại','0')}
-      ${infoRow('Mức khấu trừ %','')}
-      ${infoRow('Tổng công nợ hiện tại','0')}
-      ${infoRow('Họ và tên',`<span style="color:var(--primary)">${bookerName}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--on-surface-variant)">edit</span>`)}
-      ${infoRow('Email',bookerEmail)}
-      ${infoRow('Số điện thoại',bookerPhone)}
+      ${infoRow('Hạn mức công nợ',`<span style="font-weight:600">${acc.limit.toLocaleString('vi-VN')}</span>`)}
+      ${infoRow('Hạn mức công nợ còn lại',(acc.limit-acc.used).toLocaleString('vi-VN'))}
+      ${infoRow('Mức khấu trừ','0%')}
+      ${infoRow('Tổng công nợ hiện tại',acc.used.toLocaleString('vi-VN'))}
+      ${infoRow('Họ và tên',`<span style="color:var(--primary)">${(D.cust||{name:bookerName}).name}</span> <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;color:var(--on-surface-variant);cursor:pointer" onclick="odEditCust('${bookerName}','${bookerEmail}','${bookerPhone}')">edit</span>`)}
+      ${infoRow('Email',(D.cust||{email:bookerEmail}).email)}
+      ${infoRow('Số điện thoại',(D.cust||{phone:bookerPhone}).phone||'—')}
     </div>
-    <div style="padding:10px 14px;background:var(--error-bg);border:1px solid var(--error);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
+    ${acc.status==='inactive'?`<div style="padding:10px 14px;background:var(--error-bg);border:1px solid var(--error);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
       <span style="color:var(--error);font-size:12px;font-weight:600">${ic('error','font-size:14px;color:var(--error)')} Hợp đồng không hợp lệ</span>
-    </div>
+    </div>`:''}
   </div>`;
 
   // ── THÔNG TIN ĐƠN HÀNG
@@ -966,9 +1276,27 @@ function renderOrderDetail(){
         <div style="font-size:12px;max-width:70%">${o.service}</div>
         <div style="font-size:14px;font-weight:700;color:var(--on-surface);font-variant-numeric:tabular-nums;text-align:right">${fmt(o.amount)}</div>
       </div>
-      <div style="padding-top:12px;font-size:12px;color:var(--on-surface-variant)">Công nợ</div>
-      <div style="font-size:13px;font-weight:600;margin-top:4px">${fmt(o.amount)}</div>
+      ${svcType==='Khách sạn'?`<div style="padding:10px 0;font-size:12px;border-bottom:1px solid var(--border)"><div style="display:flex;justify-content:space-between"><span style="color:var(--on-surface-variant)">Nhận phòng</span><span>${o.date}</span></div><div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--on-surface-variant)">Trả phòng</span><span>${o.date}</span></div></div>`:''}
+      <div style="padding-top:10px;font-size:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--on-surface-variant)">Tổng tiền</span><span class="font-mono">${fmt(o.amount)}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--on-surface-variant)">Thuế (VAT)</span><span class="font-mono" style="color:var(--error)">+0</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--on-surface-variant)">Phí cổng thanh toán</span><span class="font-mono">0</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;padding-top:8px;border-top:1px solid var(--border)"><span>Tổng đơn hàng</span><span class="font-mono" style="color:var(--secondary)">${fmt(o.amount)}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-weight:600"><span>Tổng hạn mức</span><span class="font-mono" style="color:var(--success)">${fmt(Math.min(o.amount*2,acc.limit))}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;color:var(--on-surface-variant)"><span>Thanh toán công nợ</span><span class="font-mono">${fmt(o.amount)}</span></div>
+      </div>
     </div>
+  </div>
+  <div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('TRẠNG THÁI VÀ QUY TRÌNH DUYỆT CHUYẾN CÔNG TÁC')}
+    <div style="padding:12px 16px;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);font-size:12px">
+      <div>• Thành viên: <strong>${bookerName}</strong></div>
+      <div style="margin:8px 0 0 14px">Cấp duyệt: <strong>${acc.manager}</strong><div style="color:var(--success);margin-top:2px">${ic('check_circle','font-size:13px;color:var(--success)')} ${acc.autoApprove?'Tự động duyệt':'Không cần duyệt'} - ${o.date} 14:19 · ${acc.manager}</div></div>
+    </div>
+  </div>
+  <div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('TRẠNG THÁI VÀ QUY TRÌNH DUYỆT CỦA ĐƠN')}
+    <div style="padding:12px 16px;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);font-size:12px;color:var(--on-surface-variant)">Đơn không yêu cầu quy trình duyệt riêng.</div>
   </div>`;
 
   // ── LỊCH SỬ HOẠT ĐỘNG
@@ -976,8 +1304,11 @@ function renderOrderDetail(){
     ${sh('LỊCH SỬ HOẠT ĐỘNG')}
     <div style="padding:0 16px;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
       ${actItem(`${o.date} 14:38`,`${bookerName} đã tạo đơn hàng`)}
+      ${actItem(`${o.date} 14:38`,'Hệ thống')}
+      ${actItem(`${o.date} 14:38`,`Hệ thống chuyển trạng thái đơn hàng từ <span style="color:var(--primary)">[Chờ nhà cung cấp xác nhận]</span> thành <span style="color:var(--primary)">[${o.status==='done'?'Thành công':'Đang xử lý'}]</span>`)}
       ${actItem(`${o.date} 14:38`,`${bookerName} đã gửi link thanh toán cho khách hàng`,true)}
       ${o.status==='done'?actItem(`${o.date} 16:21`,'Hệ thống đã cập nhật trạng thái'):''}
+      ${D.log.map(l=>actItem(l.t,'Admin: '+l.txt)).join('')}
     </div>
   </div>`;
 
@@ -987,9 +1318,10 @@ function renderOrderDetail(){
     <div style="padding:0 16px 6px;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
       ${actItem(`${o.date} 14:36`,`${bookerName} đã bàn giao cho ${bookerName}`)}
       ${actItem(`${o.date} 14:38`,`${bookerName} đã thêm booking request vào trip ${tripCode}`)}
+      ${D.comments.map(c=>actItem(c.t,c.txt)).join('')}
       <div style="padding:10px 0">
-        <input class="input w-full" placeholder="Write a comment..." style="font-size:12px;margin-bottom:8px">
-        <button class="btn btn-primary btn-sm">Comment</button>
+        <input id="od_cmt" class="input w-full" placeholder="Write a comment..." style="font-size:12px;margin-bottom:8px" onkeydown="if(event.key==='Enter')odComment()">
+        <button class="btn btn-primary btn-sm" onclick="odComment()">Comment</button>
       </div>
     </div>
   </div>`;
@@ -1001,7 +1333,7 @@ function renderOrderDetail(){
       <div style="display:grid;grid-template-columns:1fr 1fr">
         ${infoRow('Nhà cung cấp',o.provider)}
         ${infoRow('Loại dịch vụ',svcType)}
-        ${infoRow('Loại thanh toán','Chi phí thanh toán cho VNTRIP')}
+        ${infoRow('Loại thanh toán','Chi phí thanh toán cho NEXTUS')}
         ${infoRow('Vat','Không')}
       </div>
       <div style="padding:10px 14px;background:var(--surface-low);font-size:12px;font-weight:600;color:var(--on-surface-variant)">Thông tin giá</div>
@@ -1026,9 +1358,9 @@ function renderOrderDetail(){
 
   // ── THÔNG TIN ĐÍNH KÈM
   const attachments=`<div class="card mb-3" style="border-radius:var(--rlg)">
-    ${sh('THÔNG TIN ĐÍNH KÈM',`<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.7)">LỊCH SỬ &nbsp; CHỈNH SỬA</span>`)}
-    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);padding:32px 0">
-      <div class="empty" style="padding:0"><span class="material-symbols-outlined eicon" style="font-size:36px">attach_file</span><p>No data</p></div>
+    ${sh('THÔNG TIN ĐÍNH KÈM',`<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.85);cursor:pointer" onclick="odFileHist()">LỊCH SỬ</span><span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.85);cursor:pointer" onclick="odAddFile()">+ THÊM / CHỈNH SỬA</span>`)}
+    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);padding:${D.files.length?'6px 14px':'32px 0'}">
+      ${D.files.length?D.files.map((f,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px">${ic('attach_file','font-size:16px;color:var(--primary)')}<span class="td-link" onclick="openPreview('${f.name}',null)">${f.name}</span><span style="color:var(--on-surface-variant);flex:1">${f.note||''} · ${f.t}</span><button class="btn btn-ghost btn-sm" style="color:var(--error)" onclick="odDelFile(${i})">${ic('delete','font-size:14px')}</button></div>`).join(''):`<div class="empty" style="padding:0"><span class="material-symbols-outlined eicon" style="font-size:36px">attach_file</span><p>No data</p></div>`}
     </div>
   </div>`;
 
@@ -1072,26 +1404,27 @@ function renderOrderDetail(){
     <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);padding:12px 16px">
       <div style="color:var(--error);font-size:11px;margin-bottom:10px">${ic('info','font-size:13px;color:var(--error)')} Chỉ sử dụng chức năng này nếu hệ thống không tự động gửi email</div>
       <div style="display:flex;gap:8px">
-        <input class="input" style="flex:1" placeholder="Email nhận">
-        <select class="select" style="width:180px"><option>Email bằng tiếng việt</option><option>Email bằng tiếng anh</option></select>
-        <button class="btn btn-primary btn-sm">${ic('send','font-size:14px')} Gửi email</button>
+        <input id="od_em" class="input" style="flex:1" placeholder="Email nhận">
+        <select id="od_lang" class="select" style="width:180px"><option>Email bằng tiếng việt</option><option>Email bằng tiếng anh</option></select>
+        <button class="btn btn-primary btn-sm" onclick="odSendEmail()">${ic('send','font-size:14px')} Gửi email</button>
       </div>
     </div>
   </div>`;
 
   // ── YÊU CẦU XUẤT HOÁ ĐƠN
   const invoiceReq=`<div class="card" style="border-radius:var(--rlg)">
-    ${sh('YÊU CẦU XUẤT HOÁ ĐƠN <span style="font-size:10px;font-weight:400;color:rgba(255,255,255,.6)">(KHÔNG HỖ TRỢ XUẤT HOÁ ĐƠN TỰ ĐỘNG)</span>',`<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.5)">Không tự động xuất hoá đơn</span>`)}
+    ${sh('YÊU CẦU XUẤT HOÁ ĐƠN <span style="font-size:10px;font-weight:400;color:rgba(255,255,255,.6)">(KHÔNG HỖ TRỢ XUẤT HOÁ ĐƠN TỰ ĐỘNG)</span>',`<label style="font-size:11px;font-weight:400;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" ${D.auto?'checked':''} onchange="od(S.selectedOrder).auto=this.checked;render()" style="accent-color:var(--secondary)"> ${D.auto?'Tự động xuất hoá đơn':'Không tự động xuất hoá đơn'}</label><button class="btn btn-outline btn-sm" style="color:#fff;border-color:rgba(255,255,255,.4);font-size:11px;padding:2px 8px" onclick="odAddInv()">+ Tạo yêu cầu</button>`)}
     <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg)">
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse">
           <thead><tr style="background:var(--surface-variant)">
             <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:left">Yêu cầu xuất hoá đơn</th>
             <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:left">Trạng thái</th>
+            <th style="padding:8px 12px;font-size:11px;font-weight:600;text-align:center">Thao tác</th>
           </tr></thead>
-          <tbody><tr><td colspan="2" style="padding:28px;text-align:center">
+          <tbody>${D.inv.length?D.inv.map((r,i)=>`<tr style="border-top:1px solid var(--border)"><td style="padding:9px 12px;font-size:12px"><strong>${r.name}</strong><div style="color:var(--on-surface-variant)">MST: ${r.mst} · ${r.address}${r.email?' · '+r.email:''}</div></td><td style="padding:9px 12px;font-size:12px"><span class="badge ${r.status==='Đã xuất'?'badge-success':r.status==='Đã hủy'?'badge-error':'badge-warning'}">${r.status}</span></td><td style="padding:9px 12px;text-align:center;white-space:nowrap">${r.status==='Chờ xuất'?`<button class="btn btn-outline btn-sm" onclick="odInvSet(${i},'Đã xuất')">Đánh dấu đã xuất</button> <button class="btn btn-ghost btn-sm" style="color:var(--error)" onclick="odInvSet(${i},'Đã hủy')">Hủy</button>`:'—'}</td></tr>`).join(''):`<tr><td colspan="3" style="padding:28px;text-align:center">
             <div class="empty" style="padding:0"><span class="material-symbols-outlined eicon" style="font-size:32px">receipt_long</span><p style="margin:0">Không có yêu cầu xuất hoá đơn</p></div>
-          </td></tr></tbody>
+          </td></tr>`}</tbody>
         </table>
       </div>
     </div>
@@ -1100,13 +1433,13 @@ function renderOrderDetail(){
   return `${backBtn}${detailDemoBar}${invFailBanner}
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
     <div>
-      <span style="font-family:Literata,serif;font-size:20px;font-weight:700;color:var(--text-primary)">${ic('arrow_back','font-size:16px;vertical-align:middle;cursor:pointer')} Chi tiết đơn hàng </span>
+      <span style="font-family:Literata,serif;font-size:20px;font-weight:700;color:var(--text-primary)"><span onclick="S.orderView='list';document.getElementById('page-title').textContent='Quản lý đơn hàng';render()" style="cursor:pointer">${ic('arrow_back','font-size:16px;vertical-align:middle')}</span> Chi tiết đơn hàng </span>
       <span class="td-link" style="font-family:Literata,serif;font-size:20px;font-weight:700">${o.id}</span>
       <span style="margin-left:8px">${statusBadge(o.status)}</span>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-outline btn-sm" onclick="showModal('add-cost')">${ic('add_circle','font-size:14px')} Tạo đơn chi phí khác</button>
-      ${canCancel?`<button class="btn btn-outline btn-sm" style="color:var(--warning);border-color:var(--warning)">${ic('refresh','font-size:14px')} Hủy để đặt lại (hoàn 100%)</button>
+      ${canCancel?`<button class="btn btn-outline btn-sm" style="color:var(--warning);border-color:var(--warning)" onclick="showModal('od-rebook')">${ic('refresh','font-size:14px')} Hủy để đặt lại (hoàn 100%)</button>
       <button class="btn btn-danger btn-sm" onclick="showModal('cancel-order')">${ic('cancel','font-size:14px')} Hủy đơn hàng</button>`:''}
     </div>
   </div>
@@ -1119,6 +1452,10 @@ function renderOrderDetail(){
   <div style="display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:16px">
     <div>${attachments}</div>
     <div>${reqLog}</div>
+  </div>
+  <div class="card mb-3" style="border-radius:var(--rlg)">
+    ${sh('YÊU CẦU CỦA DOANH NGHIỆP',`<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.85);cursor:pointer" onclick="odEditBiz()">CHỈNH SỬA</span>`)}
+    <div style="border:1px solid var(--border);border-top:none;border-radius:0 0 var(--rlg) var(--rlg);padding:14px 16px;font-size:12px;${D.biz?'':'color:var(--on-surface-variant)'};white-space:pre-wrap">${D.biz||'Không có yêu cầu từ doanh nghiệp.'}</div>
   </div>
   ${paymentHistory}${sendEmail}${invoiceReq}`;
 }
@@ -2160,18 +2497,124 @@ function renderModal(){
     html=wrap(`Chi tiết hợp đồng ${code}`,
       `<div class="summary-row mb-3">
         <div class="row"><span class="key">Mã hợp đồng</span><span class="val font-mono">${code}</span></div>
+        <div class="row"><span class="key">Loại hợp đồng</span><span class="val"><span class="badge badge-neutral">Hợp đồng khung</span></span></div>
         <div class="row"><span class="key">Tên công ty</span><span class="val">${a.name}</span></div>
         <div class="row"><span class="key">Mã số thuế</span><span class="val font-mono">${a.tax}</span></div>
-        <div class="row"><span class="key">Ngày ký</span><span class="val">${isActive?'01/01/2026':'01/01/2025'}</span></div>
-        <div class="row"><span class="key">Ngày hết hạn</span><span class="val">${isActive?'31/12/2026':'31/12/2025'}</span></div>
+        <div class="row"><span class="key">Trạng thái</span><span class="val">${statusBadge(isActive?'active':'cancelled')}</span></div>
+        <div class="row"><span class="key">Ngày hiệu lực</span><span class="val">00:00 ${isActive?'01/01/2026':'01/01/2025'}</span></div>
+        <div class="row"><span class="key">Ngày kết thúc</span><span class="val" style="color:var(--error)">23:59 ${isActive?'31/12/2026':'31/12/2025'}</span></div>
+        <div class="row"><span class="key">Discount từ giá OTA</span><span class="val">0%</span></div>
         <div class="row"><span class="key">Hạn mức công nợ</span><span class="val font-mono orange">${isActive?fmt(a.limit||300e6):'200.000.000 VNĐ'}</span></div>
-        <div class="row divider"><span class="key">Trạng thái</span><span class="val">${statusBadge(isActive?'active':'cancelled')}</span></div>
+        <div class="row"><span class="key">Ngày đối soát (cut off date)</span><span class="val">25</span></div>
+        <div class="row"><span class="key">Thời hạn thanh toán</span><span class="val">31 ngày</span></div>
+        <div class="row"><span class="key">Tự động gia hạn</span><span class="val">Không</span></div>
+        <div class="row"><span class="key">Tài liệu</span><span class="val td-link">${isActive?'20260101':'20250101'}_Hop_dong_khung_Sales_corp.pdf</span></div>
+        <div class="row"><span class="key">Thông tin tạo</span><span class="val">linh.h.khuong · 01/04/2026</span></div>
+        <div class="row"><span class="key">Thông tin cập nhật</span><span class="val">linh.t.nguyen.1 · 02/04/2026</span></div>
+        <div class="row divider"><span class="key">Lịch sử</span><span class="val">linh.t.nguyen.1 · 02/04/2026</span></div>
       </div>
       ${isActive?`<div class="alert alert-info" style="margin:0">${ic('info')} Hợp đồng đang hiệu lực. Có thể tạo đơn hàng và sử dụng hạn mức.</div>`:
         `<div class="alert alert-warning" style="margin:0">${ic('warning')} Hợp đồng đã hết hạn và không còn hiệu lực.</div>`}`,
       isActive
         ?`<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-danger" onclick="closeModal();showModal('block-contract')">${ic('block')} Chặn hợp đồng</button>`
         :`<button class="btn btn-primary" onclick="closeModal()">Đóng</button>`);
+  }
+  // ── Account sub-tab modals ────────────────────────────────────────────────
+  else if(m==='debt-detail'){
+    const a=S.selectedAcc,r=debtRows(a)[S.debtIdx||0];
+    html=wrap(`Kỳ đối soát ${r[0]}`,
+      `<div class="summary-row mb-3">
+        <div class="row"><span class="key">Tài khoản</span><span class="val">${a.name}</span></div>
+        <div class="row"><span class="key">Ngày đối soát</span><span class="val">${r[1]}</span></div>
+        <div class="row"><span class="key">Hạn thanh toán</span><span class="val">${r[2]}</span></div>
+        <div class="row"><span class="key">Nội dung</span><span class="val">${r[3]}</span></div>
+        <div class="row"><span class="key">Quá hạn</span><span class="val" style="color:${r[5]?'var(--error)':'inherit'}">${r[5]?r[5]+' ngày':'Không'}</span></div>
+        <div class="row divider"><span class="key font-700">Số tiền</span><span class="val orange font-mono">${fmt(r[4])}</span></div></div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:6px">Đơn hàng trong kỳ</div>
+      <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Dịch vụ</th><th class="text-right">Số tiền</th></tr></thead><tbody>${orders.slice(0,3).map(o=>`<tr><td class="td-link font-mono" onclick="closeModal();navigate('orders');openOrder('${o.id}')">${o.id}</td><td>${o.service}</td><td class="text-right font-mono">${fmt(Math.round(r[4]/3))}</td></tr>`).join('')}</tbody></table></div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-primary" onclick="closeModal();showToast('Đã tải bảng kê ${r[0]}','success')">${ic('download')} Tải bảng kê</button>`);
+  }
+  else if(m==='member-detail'){
+    const mb=accData().members[S.memberIdx];
+    html=wrap('Chi tiết thành viên',
+      `<div class="summary-row"><div class="row"><span class="key">Họ và tên</span><span class="val">${mb.name}</span></div><div class="row"><span class="key">Giới tính</span><span class="val">${mb.gender}</span></div><div class="row"><span class="key">Email</span><span class="val">${mb.email}</span></div><div class="row"><span class="key">Số điện thoại</span><span class="val">${mb.phone||'—'}</span></div><div class="row"><span class="key">Vai trò</span><span class="val">${mb.role}</span></div><div class="row divider"><span class="key">Trạng thái</span><span class="val"><span class="badge ${mb.verified?'badge-success':'badge-error'}">${mb.verified?'Đã xác nhận':'Chưa xác nhận'}</span></span></div></div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-outline" onclick="openGF('member',${S.memberIdx})">${ic('edit')} Chỉnh sửa</button>`);
+  }
+  else if(m==='gf'){
+    const g=S.gf,cur=g.idx!=null?g.list[g.idx]:{};
+    html=wrap(g.title,
+      g.fields.map(f=>`<div class="fg mb-3"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label>${f.opts?`<select id="gf_${f.k}" class="select w-full">${f.opts.map(o=>`<option ${cur[f.k]===o?'selected':''}>${o}</option>`).join('')}</select>`:f.ta?`<textarea id="gf_${f.k}" class="textarea w-full" rows="4">${cur[f.k]||''}</textarea>`:f.type==='file'?`<input id="gf_${f.k}" type="file" class="input w-full">`:`<input id="gf_${f.k}" class="input w-full" value="${(cur[f.k]||'').replace(/"/g,'&quot;')}">`}</div>`).join(''),
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-primary" onclick="saveGF()">${ic('save')} Lưu</button>`);
+  }
+  else if(m==='confirm-del'){
+    html=wrap('Xác nhận xóa',`<div class="alert alert-warning">${ic('warning')} Bạn có chắc muốn xóa <strong>${S.del.label}</strong>? Hành động này không thể hoàn tác.</div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-danger" onclick="doDel()">${ic('delete')} Xóa</button>`);
+  }
+  else if(m==='import-file'){
+    html=wrap(S.importLabel||'Import dữ liệu',
+      `<div class="fg"><label>Chọn file (.xlsx, .csv)</label><input type="file" class="input w-full" accept=".xlsx,.csv"></div><div style="font-size:12px;margin-top:8px"><span class="td-link" onclick="showToast('Đã tải file mẫu','success')">Tải file mẫu</span></div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-primary" onclick="closeModal();showToast('Import dữ liệu thành công','success')">${ic('upload')} Import</button>`);
+  }
+  // ── File preview ──────────────────────────────────────────────────────────
+  else if(m==='file-preview'){
+    const pv=S.preview,a=S.selectedAcc,c=(pv.ctIdx!=null&&a)?contractList(a)[pv.ctIdx]:null;
+    html=wrap(`${ic('picture_as_pdf','color:var(--error)')} ${pv.name}`,
+      c&&c.fileUrl?`<iframe src="${c.fileUrl}" style="width:100%;height:62vh;border:1px solid var(--border);border-radius:4px;background:#fff"></iframe>`
+        :`<div style="background:#e9ecef;padding:16px;border-radius:4px"><div style="background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.2);max-width:760px;margin:0 auto">${previewDocHtml()}</div></div>`,
+      `<span style="font-size:12px;color:var(--on-surface-variant)">Bản xem trước</span><div style="flex:1"></div><button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-primary" onclick="showToast('Đã tải ${pv.name}','success')">${ic('download')} Tải xuống</button>`,
+      'modal-xl');
+  }
+  // ── Contract view / create / edit ─────────────────────────────────────────
+  else if(m==='contract-view'){
+    const a=S.selectedAcc,idx=S.contractIdx,c=contractList(a)[idx];
+    const R=(k,v)=>`<div class="row"><span class="key">${k}</span><span class="val">${v}</span></div>`;
+    const foot=c.status==='active'?`<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-outline" onclick="openContractForm(${idx})">${ic('edit')} Chỉnh sửa</button><button class="btn btn-danger" onclick="contractAct(${idx},'end')">${ic('block')} Chấm dứt</button>`
+      :c.status==='pending'?`<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-danger" onclick="contractAct(${idx},'reject')">Từ chối</button><button class="btn btn-primary" onclick="contractAct(${idx},'approve')">${ic('check')} Duyệt</button>`
+      :c.status==='rejected'?`<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-primary" onclick="openContractForm(${idx})">${ic('edit')} Sửa và gửi lại</button>`
+      :`<button class="btn btn-outline" onclick="closeModal()">Đóng</button><button class="btn btn-primary" onclick="S.contractIdx=${idx};showModal('create-contract')">${ic('autorenew')} Gia hạn / tạo lại</button>`;
+    html=wrap('Chi tiết hợp đồng '+c.code,
+      `<div class="summary-row">${R('Mã hợp đồng',`<span class="font-mono">${c.code}</span>`)}${R('Loại hợp đồng',`<span class="badge badge-neutral">${c.type}</span>`)}${R('Trạng thái',ctBadge(c.status))}
+      ${R('Ngày hiệu lực','00:00 '+fd(c.from))}${R('Ngày kết thúc',`<span style="color:var(--error)">23:59 ${fd(c.to)}</span>`)}${R('Discount từ giá OTA',c.discount+'%')}
+      ${R('Hạn mức công nợ',`<span class="font-mono orange">${fmt(c.limit)}</span>`)}${R('Ngày đối soát (cut off date)',c.cutoff)}${R('Thời hạn thanh toán',c.pay+' ngày')}${R('Tự động gia hạn',c.auto?'Có':'Không')}
+      ${R('Hợp đồng',`<span class="td-link" onclick="openPreview('${c.file}',${idx})">${ic('picture_as_pdf','font-size:15px;color:var(--error)')} ${c.file}</span>`)}${R('Thông tin tạo',c.created)}${R('Thông tin cập nhật',c.updated)}</div>`,
+      foot,'modal-xl');
+  }
+  else if(m==='create-contract'){
+    const a=S.selectedAcc,L=contractList(a),idx=S.contractIdx,c=idx!=null?L[idx]:null;
+    const rq='<span class="req">*</span>',iv=(x)=>c&&x!=null?x:'';
+    const term=c?Math.max(1,Math.round((new Date(c.to)-new Date(c.from))/(30.4*864e5))):'';
+    const renew=c&&c.status==='expired';
+    html=wrap(c?(renew?'Gia hạn hợp đồng':'Chỉnh sửa hợp đồng'):'Tạo mới hợp đồng',
+      `<div class="form-row c2 mb-3">
+        <div class="fg"><label>Mã hợp đồng ${rq}</label><input id="ct_code" class="input w-full" placeholder="Mã hợp đồng" value="${renew?'':iv(c&&c.code)}"></div>
+        <div class="fg"><label>Loại hợp đồng ${rq}</label><select id="ct_type" class="select w-full">${['Hợp đồng khung','Hợp đồng nguyên tắc'].map(x=>`<option ${c&&c.type===x?'selected':''}>${x}</option>`).join('')}</select></div>
+      </div>
+      <div class="form-row c2 mb-3">
+        <div class="fg"><label>Ngày hiệu lực ${rq}</label><input id="ct_from" class="input w-full" type="date" value="${renew?c.to:iv(c&&c.from)}"></div>
+        <div class="fg"><label>Thời hạn ${rq}</label><select id="ct_term" class="select w-full"><option value="">Chọn thời hạn</option>${[6,12,24].map(x=>`<option value="${x}" ${term===x?'selected':''}>${x} tháng</option>`).join('')}</select></div>
+      </div>
+      <div class="form-row c2 mb-3">
+        <div class="fg"><label>Discount từ giá OTA ${rq}</label><div style="display:flex;align-items:center;gap:6px"><input id="ct_disc" class="input w-full" type="number" min="0" max="100" value="${iv(c&&c.discount)}"><span>%</span></div></div>
+        <div class="fg"><label>Hạn mức công nợ ${rq}</label><div style="display:flex;align-items:center;gap:6px"><input id="ct_limit" class="input w-full font-mono" value="${c?c.limit:''}"><span>đ</span></div></div>
+      </div>
+      <div class="form-row c2 mb-3">
+        <div class="fg"><label>Ngày đối soát ${rq}</label><select id="ct_cut" class="select w-full"><option value="">Ngày đối soát</option>${[5,10,15,20,25,30].map(x=>`<option ${c&&c.cutoff===x?'selected':''}>${x}</option>`).join('')}</select></div>
+        <div class="fg"><label>Thời hạn thanh toán ${rq}</label><div style="display:flex;align-items:center;gap:6px"><input id="ct_pay" class="input w-full" type="number" min="0" value="${iv(c&&c.pay)}"><span>ngày</span></div></div>
+      </div>
+      <div class="form-row c2">
+        <div class="fg"><label style="display:flex;align-items:center;gap:6px"><input id="ct_auto" type="checkbox" ${c&&c.auto?'checked':''} style="accent-color:var(--secondary)"> Tự động gia hạn?</label></div>
+        <div class="fg"><label>Hợp đồng ${rq}</label><input id="ct_file" type="file" class="input w-full">${c&&!renew?`<div style="font-size:11px;color:var(--on-surface-variant);margin-top:4px">Hiện tại: ${c.file}</div>`:''}</div>
+      </div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy</button><button class="btn btn-primary" onclick="${renew?'S.contractIdx=null;':''}saveContract()">${ic('save')} Lưu</button>`,
+      'modal-xl');
+  }
+  else if(m==='od-link'){
+    html=wrap(S.link.title,`<div class="summary-row">${S.link.rows.map(r=>`<div class="row"><span class="key">${r[0]}</span><span class="val">${r[1]}</span></div>`).join('')}</div>`,`<button class="btn btn-outline" onclick="closeModal()">Đóng</button>`);
+  }
+  else if(m==='od-rebook'){
+    const o=S.selectedOrder;
+    html=wrap('Hủy để đặt lại',`<div class="alert alert-warning">${ic('warning')} Đơn <strong>${o.id}</strong> sẽ bị hủy và <strong>hoàn 100%</strong> để đặt lại. Không phát sinh phí hủy.</div>`,
+      `<button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button><button class="btn btn-primary" onclick="odRebook()">${ic('refresh')} Xác nhận</button>`);
   }
   // ── Add annex member ──────────────────────────────────────────────────────
   else if(m==='add-annex-member'){
@@ -2453,7 +2896,7 @@ function renderModal(){
           <div class="fg mb-3"><label>Loại chi phí <span class="req">*</span></label>
             <div style="display:flex;gap:16px;padding-top:6px">
               <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="loai_cp" checked> Chi phí thanh toán cho khách sạn</label>
-              <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="loai_cp"> Chi phí thanh toán cho VNTRIP</label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="loai_cp"> Chi phí thanh toán cho NEXTUS</label>
             </div>
           </div>
           <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px">
