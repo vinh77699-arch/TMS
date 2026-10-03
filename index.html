@@ -335,6 +335,8 @@ const S={
   configMarkupVariant:'ready', // ready|def|network-err|validation-err|success
   // Wizard / modals
   wizardStep:1, wizardService:null, wizardServiceType:null, wizardBooker:null, wizardOrderBlocked:false, wizardStep1Err:false,
+  flightTripType:'oneway', // oneway|roundtrip|multicity
+  flightSegs:[{from:'Hồ Chí Minh (SGN)',to:'Hà Nội (HAN)',date:'2026-09-05'},{from:'Hà Nội (HAN)',to:'Đà Nẵng (DAD)',date:'2026-09-08'}],
   flightHoldState:null, // null|success|fail|price-change
   flightDetailView:false,
   modal:null,
@@ -2275,6 +2277,8 @@ function renderModal(){
       if(stype==='flight'){
         const hs=S.flightHoldState;
         const dv=S.flightDetailView;
+        const tt=S.flightTripType;
+        const tripTypeBar=`<div style="display:flex;gap:8px;margin-bottom:12px">${[['oneway','Một chiều','arrow_right_alt'],['roundtrip','Khứ hồi','sync_alt'],['multicity','Nhiều chặng','alt_route']].map(([id,l,icn])=>`<div onclick="S.flightTripType='${id}';S.wizardService=null;renderModal()" style="padding:7px 14px;border:1.5px solid ${tt===id?'var(--secondary)':'var(--border)'};border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;background:${tt===id?'rgba(228,120,37,.08)':'var(--surface)'};color:${tt===id?'var(--secondary)':'var(--on-surface)'}">${ic(icn,'font-size:15px')}${l}</div>`).join('')}</div>`;
         const holdDemoBar=`<div class="demo-bar" style="margin-bottom:12px"><strong>Trạng thái:</strong>
           <button class="demo-btn ${!hs&&!dv?'active':''}" onclick="S.flightHoldState=null;S.flightDetailView=false;renderModal()">Kết quả bay</button>
           <button class="demo-btn ${dv?'active':''}" onclick="S.flightHoldState=null;S.flightDetailView=true;renderModal()">Chi tiết chuyến bay</button>
@@ -2359,14 +2363,30 @@ function renderModal(){
           </div>`).join('');
           html=wrap('Vé máy bay — Chọn chuyến bay',
             `${holdDemoBar}${stepBar}
-            <div class="form-row c2 mb-3" style="gap:10px">
+            ${tripTypeBar}
+            ${tt==='multicity'?`<div style="border:1px solid var(--border);border-radius:4px;padding:10px;margin-bottom:12px">
+              ${S.flightSegs.map((s,i)=>`<div style="display:grid;grid-template-columns:70px 1fr 1fr 150px 32px;gap:8px;align-items:end;margin-bottom:8px">
+                <div style="font-size:12px;font-weight:600;color:var(--primary);padding-bottom:8px">Chặng ${i+1}</div>
+                <div class="fg"><label style="font-size:11px">Điểm đi</label><input class="input w-full" value="${s.from}" onchange="S.flightSegs[${i}].from=this.value"></div>
+                <div class="fg"><label style="font-size:11px">Điểm đến</label><input class="input w-full" value="${s.to}" onchange="S.flightSegs[${i}].to=this.value"></div>
+                <div class="fg"><label style="font-size:11px">Ngày bay</label><input class="input w-full" type="date" value="${s.date}" onchange="S.flightSegs[${i}].date=this.value"></div>
+                ${S.flightSegs.length>2?`<button class="btn btn-ghost btn-sm" title="Xóa chặng" onclick="S.flightSegs.splice(${i},1);renderModal()">${ic('delete','font-size:16px')}</button>`:'<div></div>'}
+              </div>`).join('')}
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                ${S.flightSegs.length<6?`<button class="btn btn-outline btn-sm" onclick="const l=S.flightSegs[S.flightSegs.length-1];S.flightSegs.push({from:l.to,to:'',date:l.date});renderModal()">${ic('add','font-size:14px')} Thêm chặng</button>`:'<span style="font-size:11px;color:var(--on-surface-variant)">Tối đa 6 chặng</span>'}
+                <div class="fg" style="margin:0;display:flex;align-items:center;gap:8px"><label style="margin:0">Hành khách</label><select class="select"><option>1 người lớn</option><option>2 người lớn</option></select></div>
+              </div>
+            </div>`:`<div class="form-row c2 mb-3" style="gap:10px">
               <div class="fg"><label>Điểm đi</label><input class="input w-full" value="Hồ Chí Minh (SGN)"></div>
               <div class="fg"><label>Điểm đến</label><input class="input w-full" value="Hà Nội (HAN)"></div>
               <div class="fg"><label>Ngày đi</label><input class="input w-full" type="date" value="2026-09-05"></div>
+              ${tt==='roundtrip'?`<div class="fg"><label>Ngày về</label><input class="input w-full" type="date" value="2026-09-08"></div>`:''}
               <div class="fg"><label>Hành khách</label><select class="select w-full"><option>1 người lớn</option><option>2 người lớn</option></select></div>
-            </div>
+            </div>`}
+            ${tt==='roundtrip'?`<div class="alert alert-info mb-3">${ic('info')} Vé khứ hồi: chọn chuyến đi <strong>SGN→HAN</strong> và chuyến về <strong>HAN→SGN</strong>. Giá hiển thị là giá 1 chiều/người, tổng giá = đi + về.</div>`:''}
+            ${tt==='multicity'?`<div class="alert alert-info mb-3">${ic('info')} Vé nhiều chặng: mỗi chặng chọn một chuyến bay riêng. Chọn chuyến cho từng chặng ở danh sách bên dưới.</div>`:''}
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-              <div style="font-size:13px;font-weight:600;color:var(--on-surface)">${flights.length} chuyến bay phù hợp</div>
+              <div style="font-size:13px;font-weight:600;color:var(--on-surface)">${flights.length} chuyến bay phù hợp${tt==='roundtrip'?' — chuyến đi':''}</div>
               <select class="select" style="width:140px;height:32px;font-size:12px"><option>Giá tăng dần</option><option>Giá giảm dần</option><option>Giờ bay sớm</option></select>
             </div>
             ${flightItems}`,
@@ -2549,11 +2569,18 @@ function renderModal(){
         {name:'Hotel Nikko Hanoi',price:1950000},
       ];
       const h=stype==='hotel'?(hotelData[S.wizardService!=null?S.wizardService:0]||hotelData[0]):null;
-      const total=stype==='flight'?(f?f.price*2:5000000):stype==='hotel'?(h?h.price*2:3700000):2000000;
+      const tt=S.flightTripType;
+      const legs=tt==='roundtrip'?2:tt==='multicity'?S.flightSegs.length:1;
+      const total=stype==='flight'?(f?f.price*2*legs:5000000*legs):stype==='hotel'?(h?h.price*2:3700000):2000000;
       const serviceDetail=stype==='flight'
         ?`<div class="row"><span class="key">Hãng bay</span><span class="val">${f?f.airline:'Vietnam Airlines'}</span></div>
-           <div class="row"><span class="key">Tuyến bay</span><span class="val">${f?f.dep+'→'+f.arr:'SGN→HAN'}</span></div>
+           <div class="row"><span class="key">Loại vé</span><span class="val"><span class="badge badge-neutral">${{oneway:'Một chiều',roundtrip:'Khứ hồi',multicity:'Nhiều chặng'}[tt]}</span></span></div>
+           ${tt==='multicity'
+             ?S.flightSegs.map((s,i)=>`<div class="row"><span class="key">Chặng ${i+1}</span><span class="val">${s.from.replace(/.*\((\w+)\)/,'$1')||'—'}→${s.to.replace(/.*\((\w+)\)/,'$1')||'—'} · ${s.date.split('-').reverse().join('/')}</span></div>`).join('')
+             :`<div class="row"><span class="key">Tuyến bay</span><span class="val">${f?f.dep+(tt==='roundtrip'?'⇄':'→')+f.arr:'SGN→HAN'}</span></div>
            <div class="row"><span class="key">Ngày đi</span><span class="val">05/09/2026</span></div>
+           ${tt==='roundtrip'?'<div class="row"><span class="key">Ngày về</span><span class="val">08/09/2026</span></div>':''}`}
+           <div class="row"><span class="key">Số chặng bay</span><span class="val">${legs}</span></div>
            <div class="row"><span class="key">Số hành khách</span><span class="val">2 người</span></div>
            <div class="row"><span class="key">Đơn giá/người</span><span class="val font-mono">${fmt(f?f.price:2500000)}</span></div>`
         :stype==='hotel'
